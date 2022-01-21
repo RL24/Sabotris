@@ -33,6 +33,10 @@ namespace Sabotris
         
         private float _prevAdvance, _prevStrafe;
 
+        [SerializeField] private float inputRotateYaw;
+        [SerializeField] private float inputRotatePitch;
+        [SerializeField] private float inputRotateRoll;
+
         public readonly Dictionary<Guid, Block> Blocks = new Dictionary<Guid, Block>();
 
         private void Start()
@@ -53,25 +57,38 @@ namespace Sabotris
         {
             networkController.Client.DeregisterListener(this);
         }
-        
+
+        private void Update()
+        {
+            if (parentContainer.controllingShape != this)
+                return;
+
+            DoMove();
+
+            if (inputRotateYaw.Same(0, 1f)) inputRotateYaw = InputUtil.GetRotateYaw();
+            if (inputRotatePitch.Same(0, 1f)) inputRotatePitch = InputUtil.GetRotatePitch();
+            if (inputRotateRoll.Same(0, 1f)) inputRotateRoll = InputUtil.GetRotateRoll();
+        }
+
         private void FixedUpdate()
         {
             if (parentContainer.controllingShape == this)
             {
-                DoMove();
                 DoRotate();
-                
-                var roundedRotationActivator = Quaternion.Euler(rotateActivator.eulerAngles.Round(parentContainer.RotateThreshold));
+
+                var roundedRotationActivator =
+                    Quaternion.Euler(rotateActivator.eulerAngles.Round(parentContainer.RotateThreshold));
                 if (RawRotation != roundedRotationActivator)
                 {
-                    var offsets = GetOffsets(RawPosition, roundedRotationActivator).Select((offset) => offset.Value + RawPosition).ToArray();
+                    var offsets = GetOffsets(RawPosition, roundedRotationActivator)
+                        .Select((offset) => offset.Value + RawPosition).ToArray();
                     if (!parentContainer.DoesCollide(offsets))
                         RawRotation = rotateActivator = roundedRotationActivator;
                     else
                         rotateActivator = RawRotation;
                 }
             }
-
+            
             transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.TransitionSpeed);
             transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.TransitionSpeed);
         }
@@ -143,7 +160,7 @@ namespace Sabotris
             var advance = InputUtil.GetMoveAdvance();
             var strafe = InputUtil.GetMoveStrafe();
 
-            if (((advance == 0 && strafe == 0) || !_prevAdvance.Same(advance) || !_prevStrafe.Same(strafe) ||
+            if (((advance == 0 && strafe == 0) || !_prevAdvance.Same(advance, 0.5f) || !_prevStrafe.Same(strafe, 0.5f) ||
                  _moveTimer.ElapsedMilliseconds > parentContainer.MoveSpeedMs) && _moveTimer.IsRunning && !_moveResetTimer.IsRunning)
                 _moveResetTimer.Start();
 
@@ -202,7 +219,13 @@ namespace Sabotris
 
         private void DoRotate()
         {
-            if (!InputUtil.ShouldRotateShape())
+            var inputYaw = inputRotateYaw;
+            var inputPitch = inputRotatePitch;
+            var inputRoll = inputRotateRoll;
+
+            inputRotateYaw = inputRotatePitch = inputRotateRoll = 0;
+
+            if (Math.Abs(inputYaw) < 1 && Math.Abs(inputPitch) < 1 && Math.Abs(inputRoll) < 1)
                 return;
 
             var prevPosition = transform.position;
@@ -213,8 +236,10 @@ namespace Sabotris
             Physics.SyncTransforms();
 
             var pitchAxis = Quaternion.AngleAxis(cameraController.Yaw, Vector3.up) * Vector3Int.right;
-            transform.RotateAround(RawPosition, Vector3.up, InputUtil.GetRotateYaw());
-            transform.RotateAround(RawPosition, pitchAxis, InputUtil.GetRotatePitch());
+            var rollAxis = Quaternion.AngleAxis(cameraController.Yaw, Vector3.up) * Vector3Int.back;
+            transform.RotateAround(RawPosition, Vector3.up, inputYaw);
+            transform.RotateAround(RawPosition, pitchAxis, inputPitch);
+            transform.RotateAround(RawPosition, rollAxis, inputRoll);
             Physics.SyncTransforms();
 
             rotateActivator = transform.rotation;

@@ -30,7 +30,7 @@ namespace Sabotris.Util
         #region Mouse
 
         public const float MouseCameraSensitivity = 1;
-        public const float MouseRotateSensitivity = 10;
+        public const float MouseRotateSensitivity = 5;
 
         public static Vector2Control MouseDelta => Mouse.current?.delta;
         public static Vector2Control MouseScroll => Mouse.current?.scroll;
@@ -102,7 +102,7 @@ namespace Sabotris.Util
         public static float GetRotateYaw()
         {
             var mouseValue = Mathf.Clamp(MouseDelta?.x.ReadValue() ?? 0, -MouseRotateSensitivity,
-                MouseRotateSensitivity);
+                MouseRotateSensitivity) * Int(ShouldRotateShape());
             var gamepadValue = Int(WasPressed(GamepadRightShoulder)) - Int(WasPressed(GamepadLeftShoulder));
             return mouseValue * MouseRotateSensitivity * Int(ShouldRotateShape()) +
                    gamepadValue * GamepadRotateSensitivity;
@@ -111,7 +111,7 @@ namespace Sabotris.Util
         public static float GetRotatePitch()
         {
             var mouseValue = Mathf.Clamp(MouseDelta?.y.ReadValue() ?? 0, -MouseRotateSensitivity,
-                MouseRotateSensitivity);
+                MouseRotateSensitivity) * Int(ShouldRotateShape());
             var gamepadValue = Int(WasPressed(GamepadButtonY)) - Int(WasPressed(GamepadButtonA));
             return mouseValue * MouseRotateSensitivity * Int(ShouldRotateShape()) +
                    gamepadValue * GamepadRotateSensitivity;

@@ -28,7 +28,7 @@ namespace Sabotris.Util
             );
         }
 
-        public static bool Same(this float self, float compare) => Math.Abs(self - compare) <= Tolerance;
+        public static bool Same(this float self, float compare, float tolerance = Tolerance) => Math.Abs(self - compare) <= tolerance;
 
         public static float GetMinValue(this Vector3 self) => Mathf.Min(Math.Abs(self.x), Math.Abs(self.y), Math.Abs(self.z));
 

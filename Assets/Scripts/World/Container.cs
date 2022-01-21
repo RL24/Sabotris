@@ -67,7 +67,7 @@ namespace Sabotris
             if (gameController.ControllingContainer != this)
                 return;
             
-            var offsets = ShapeUtil.Generate(6, true, GenerateBottomLeft, GenerateTopRight);
+            var offsets = ShapeUtil.Generate(4, false, GenerateBottomLeft, GenerateTopRight);
 
             if (!DoesCollide(offsets.Select((offset) => offset.Value + DropPosition).ToArray()))
             {

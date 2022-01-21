@@ -62,6 +62,7 @@
      <Compile Include="Assets\Scripts\Network\Packets\PacketTypes.cs" />
      <Compile Include="Assets\Scripts\Network\Networker.cs" />
      <Compile Include="Assets\Scripts\World\Shape.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerDead.cs" />
      <Compile Include="Assets\Scripts\Util\ClassUtil.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Packet.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Game\PacketGameStart.cs" />
@@ -88,7 +89,6 @@
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeCreate.cs" />
      <Compile Include="Assets\Scripts\Util\InputUtil.cs" />
      <Compile Include="Assets\Scripts\Game\GameSettings.cs" />
-     <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerDead.cs" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.25f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>

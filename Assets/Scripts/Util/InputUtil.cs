@@ -12,7 +12,8 @@ namespace Sabotris.Util
 
         public static IEnumerable<KeyControl> KeyEscape => new[] {Keyboard.current?.escapeKey};
 
-        public static IEnumerable<KeyControl> KeyLeft => new[] {Keyboard.current?.aKey, Keyboard.current?.leftArrowKey};
+        public static IEnumerable<KeyControl> KeyLeft =>
+            new[] {Keyboard.current?.aKey, Keyboard.current?.leftArrowKey};
 
         public static IEnumerable<KeyControl> KeyRight =>
             new[] {Keyboard.current?.dKey, Keyboard.current?.rightArrowKey};
@@ -25,6 +26,20 @@ namespace Sabotris.Util
 
         public static IEnumerable<KeyControl> KeySpace => new[] {Keyboard.current?.spaceKey};
 
+        #region UI
+        
+        public static IEnumerable<KeyControl> KeyUILeft => new[] {Keyboard.current?.leftArrowKey};
+
+        public static IEnumerable<KeyControl> KeyUIRight => new[] {Keyboard.current?.rightArrowKey};
+
+        public static IEnumerable<KeyControl> KeyUIUp => new[] {Keyboard.current?.upArrowKey};
+
+        public static IEnumerable<KeyControl> KeyUIDown => new[] {Keyboard.current?.downArrowKey};
+        
+        public static IEnumerable<KeyControl> KeyUISelect => new[] {Keyboard.current?.spaceKey, Keyboard.current?.enterKey};
+        
+        #endregion
+        
         #endregion
 
         #region Mouse
@@ -74,22 +89,17 @@ namespace Sabotris.Util
         public static bool ShouldPause() => WasPressed(KeyEscape) || WasPressed(GamepadPause);
         public static bool ShouldRotateShape() => IsPressed(MouseRightButton);
 
-        private static int Int(bool condition)
-        {
-            return condition ? 1 : 0;
-        }
-
         public static float GetMoveStrafe()
         {
-            var keyboardValue = Int(IsPressed(KeyRight)) - Int(IsPressed(KeyLeft));
+            var keyboardValue = IsPressed(KeyRight).Int() - IsPressed(KeyLeft).Int();
             var gamepadValue = GamepadLeftStick?.x.ReadValue() ?? 0;
             return Mathf.Clamp(keyboardValue + gamepadValue, -1, 1);
         }
 
         public static float GetMoveAdvance()
         {
-            var keyboardValue = Int(IsPressed(KeyBackward)) - Int(IsPressed(KeyForward));
-            var gamepadValue = GamepadLeftStick?.y.ReadValue() ?? 0;
+            var keyboardValue = IsPressed(KeyBackward).Int() - IsPressed(KeyForward).Int();
+            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadButtonUp).Int() - IsPressed(GamepadButtonDown).Int()) ?? 0;
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
 
@@ -99,27 +109,44 @@ namespace Sabotris.Util
                    IsPressed(GamepadLeftTrigger);
         }
 
+        public static float GetMoveUINavigate()
+        {
+            var keyboardValue = IsPressed(KeyUIDown).Int() - IsPressed(KeyUIUp).Int();
+            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadButtonUp).Int() - IsPressed(GamepadButtonDown).Int()) ?? 0;
+            return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
+        }
+        
+        public static bool GetUISelect()
+        {
+            return WasPressed(KeyUISelect) || WasPressed(GamepadButtonA);
+        }
+
+        public static bool GetUIBack()
+        {
+            return WasPressed(KeyEscape) || WasPressed(GamepadButtonB);
+        }
+
         public static float GetRotateYaw()
         {
             var mouseValue = Mathf.Clamp(MouseDelta?.x.ReadValue() ?? 0, -MouseRotateSensitivity,
-                MouseRotateSensitivity) * Int(ShouldRotateShape());
-            var gamepadValue = Int(WasPressed(GamepadRightShoulder)) - Int(WasPressed(GamepadLeftShoulder));
-            return mouseValue * MouseRotateSensitivity * Int(ShouldRotateShape()) +
+                MouseRotateSensitivity) * ShouldRotateShape().Int();
+            var gamepadValue = WasPressed(GamepadRightShoulder).Int() - WasPressed(GamepadLeftShoulder).Int();
+            return mouseValue * MouseRotateSensitivity * ShouldRotateShape().Int() +
                    gamepadValue * GamepadRotateSensitivity;
         }
 
         public static float GetRotatePitch()
         {
             var mouseValue = Mathf.Clamp(MouseDelta?.y.ReadValue() ?? 0, -MouseRotateSensitivity,
-                MouseRotateSensitivity) * Int(ShouldRotateShape());
-            var gamepadValue = Int(WasPressed(GamepadButtonY)) - Int(WasPressed(GamepadButtonA));
-            return mouseValue * MouseRotateSensitivity * Int(ShouldRotateShape()) +
+                MouseRotateSensitivity) * ShouldRotateShape().Int();
+            var gamepadValue = WasPressed(GamepadButtonY).Int() - WasPressed(GamepadButtonA).Int();
+            return mouseValue * MouseRotateSensitivity * ShouldRotateShape().Int() +
                    gamepadValue * GamepadRotateSensitivity;
         }
 
         public static float GetRotateRoll()
         {
-            return (Int(WasPressed(GamepadButtonB)) - Int(WasPressed(GamepadButtonX))) * GamepadRotateSensitivity;
+            return (WasPressed(GamepadButtonB).Int() - WasPressed(GamepadButtonX).Int()) * GamepadRotateSensitivity;
         }
 
         public static float GetCameraRotateYaw()
@@ -139,7 +166,7 @@ namespace Sabotris.Util
         public static float GetCameraZoom()
         {
             var mouseValue = (MouseScroll?.y.ReadValue() ?? 0) * (1f / 120f);
-            var gamepadValue = (Int(IsPressed(GamepadButtonDown)) - Int(IsPressed(GamepadButtonUp))) * 0.1f;
+            var gamepadValue = (IsPressed(GamepadButtonDown).Int() - IsPressed(GamepadButtonUp).Int()) * 0.1f;
             return mouseValue + gamepadValue;
         }
     }

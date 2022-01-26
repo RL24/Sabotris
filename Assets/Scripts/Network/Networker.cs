@@ -8,16 +8,19 @@ namespace Sabotris.Network
     public static class Reasons
     {
         public const string NoReason = "";
+        public const string ShutdownServer = "Shutting down server";
+        public const string ShutdownClient = "Shutting down client";
         public const string RestartServer = "Restarting server";
         public const string RestartClient = "Restarting client";
         public const string InvalidConnectPacket = "Invalid connect payload";
         public const string IncorrectPassword = "Incorrect password";
         public const string NoPlayersLeft = "No remaining players";
+        public const string ServerNotFound = "Failed to connect to server";
     }
     
     public abstract class Networker<T> where T : NetPeer
     {
-        protected T Peer;
+        public T Peer;
         protected readonly Dictionary<long, Player> Players = new Dictionary<long, Player>();
         protected PacketHandler PacketHandler { get; }
         protected bool Running { get; set; }
@@ -39,8 +42,8 @@ namespace Sabotris.Network
 
         public virtual void Shutdown(string reason)
         {
-            Peer.FlushSendQueue();
-            Peer.Shutdown(reason);
+            Peer?.FlushSendQueue();
+            Peer?.Shutdown(reason);
             Players.Clear();
             Running = false;
         }

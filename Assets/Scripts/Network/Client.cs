@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
+using System.Threading;
 using Lidgren.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Sabotris.Network
 {
     public class Client : Networker<NetClient>
     {
+        private const float ConnectTimeoutMs = 5000;
+        
         public event EventHandler<string> OnConnected;
         public event EventHandler<string> OnDisconnected;
         
@@ -36,12 +41,30 @@ namespace Sabotris.Network
             Peer.Start();
             
             Peer.RegisterReceivedCallback(Update);
-            
-            Peer.Connect(ip, port, new PacketConnectingHail
+
+            var failed = new[] {false};
+            new Thread(() =>
             {
-                Password = password,
-                Name = UserUtil.GenerateUsername()
-            }.Serialize(Peer));
+                try
+                {
+                    Peer.Connect(ip, port, new PacketConnectingHail
+                    {
+                        Password = password,
+                        Name = UserUtil.GenerateUsername()
+                    }.Serialize(Peer));
+                }
+                catch (NetException e)
+                {
+                    failed[0] = true;
+                }
+            }).Start();
+
+            var timeout = new Stopwatch();
+            timeout.Start();
+            yield return new WaitUntil(() => IsConnected || timeout.ElapsedMilliseconds > ConnectTimeoutMs || failed[0]);
+            timeout.Reset();
+            if (!IsConnected || failed[0])
+                Shutdown(Reasons.ServerNotFound);
         }
         
         public void Update(object peer)
@@ -101,19 +124,21 @@ namespace Sabotris.Network
 
         public override void Shutdown(string reason)
         {
-            Peer.UnregisterReceivedCallback(Update);
-            Peer.Disconnect(reason);
+            Peer?.UnregisterReceivedCallback(Update);
+            Peer?.Disconnect(reason);
             base.Shutdown(reason);
             OnDisconnected?.Invoke(this, reason);
         }
 
         public void SendPacket(Packet packet, bool flush = true)
         {
-            Peer.SendMessage(packet.Serialize(Peer), NetDeliveryMethod.ReliableOrdered);
+            Peer?.SendMessage(packet.Serialize(Peer), NetDeliveryMethod.ReliableOrdered);
             if (flush)
-                Peer.FlushSendQueue();
+                Peer?.FlushSendQueue();
         }
 
         public long GetId() => Peer?.UniqueIdentifier ?? -1;
+
+        public bool IsConnected => Peer?.ConnectionStatus == NetConnectionStatus.Connected;
     }
 }

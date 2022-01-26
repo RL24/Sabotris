@@ -36,5 +36,15 @@ namespace Sabotris.Util
         {
             return (target - self) * time;
         }
+        
+        public static float Lerp(this float self, float target, float time)
+        {
+            return (target - self) * time;
+        }
+
+        public static int Int(this bool self)
+        {
+            return self ? 1 : 0;
+        }
     }
 }

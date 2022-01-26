@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using Menu;
 using Sabotris.Network;
 using Sabotris.Util;
 using UnityEngine;
@@ -12,8 +13,9 @@ namespace Sabotris
     {
         public const string AppIdentifier = "sabotris";
 
+        public MenuController menuController;
         public NetworkController networkController;
-        
+
         public Container ControllingContainer { get; set; }
 
         private void Start()
@@ -41,10 +43,20 @@ namespace Sabotris
 
         private void Update()
         {
-            if (InputUtil.WasPressed(Keyboard.current?.kKey))
-                StartCoroutine(networkController.Server?.StartServer("test", 47320));
-            if (InputUtil.WasPressed(Keyboard.current?.lKey))
-                StartCoroutine(networkController.Client?.StartClient("127.0.0.1", 47320, "test"));
+            var lockState = CursorLockMode.Locked;
+            var visible = false;
+            if (menuController.IsInMenu)
+            {
+                lockState = CursorLockMode.None;
+                visible = true;
+            }
+
+            if (Cursor.lockState != lockState)
+                Cursor.lockState = lockState;
+            
+            if (Cursor.visible != visible)
+                Cursor.visible = visible;
         }
+        
     }
 }

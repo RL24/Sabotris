@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Menu;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
@@ -15,6 +16,7 @@ namespace Sabotris
         public Block blockTemplate;
 
         public GameController gameController;
+        public MenuController menuController;
         public NetworkController networkController;
         public CameraController cameraController;
         public Container parentContainer;
@@ -43,6 +45,8 @@ namespace Sabotris
         {
             RawPosition = Vector3Int.RoundToInt(transform.position - parentContainer.transform.position);
             RawRotation = transform.rotation;
+
+            transform.localScale = Vector3.zero;
             
             foreach (var offset in Offsets)
                 CreateBlock(offset.Key, offset.Value);
@@ -72,8 +76,11 @@ namespace Sabotris
 
         private void FixedUpdate()
         {
-            if (parentContainer.controllingShape == this)
+            if (parentContainer.controllingShape == this && !parentContainer.IsDemo() && !menuController.IsInMenu)
             {
+                if (!InputUtil.ShouldRotateShape())
+                    rotateActivator = RawRotation;
+                
                 DoRotate();
 
                 var roundedRotationActivator =
@@ -81,7 +88,7 @@ namespace Sabotris
                 if (RawRotation != roundedRotationActivator)
                 {
                     var offsets = GetOffsets(RawPosition, roundedRotationActivator)
-                        .Select((offset) => offset.Value + RawPosition).ToArray();
+                        ?.Select((offset) => offset.Value + RawPosition).ToArray();
                     if (!parentContainer.DoesCollide(offsets))
                         RawRotation = rotateActivator = roundedRotationActivator;
                     else
@@ -89,8 +96,9 @@ namespace Sabotris
                 }
             }
             
-            transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.TransitionSpeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.TransitionSpeed);
+            transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.GameTransitionSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.GameTransitionSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.GameTransitionSpeed);
         }
 
         private void CreateBlock(Guid blockId, Vector3Int offset)
@@ -151,7 +159,7 @@ namespace Sabotris
             var moveVec = Vector3.zero;
 
             var isDropping = false;
-            if (_dropTimer.ElapsedMilliseconds > (InputUtil.GetMoveDown() ? parentContainer.DropSpeedFastMs : parentContainer.DropSpeedMs))
+            if (_dropTimer.ElapsedMilliseconds > (InputUtil.GetMoveDown() && !parentContainer.IsDemo() && !menuController.IsInMenu ? parentContainer.DropSpeedFastMs : parentContainer.DropSpeedMs))
             {
                 _dropTimer.Restart();
                 isDropping = true;
@@ -160,8 +168,11 @@ namespace Sabotris
             var advance = InputUtil.GetMoveAdvance();
             var strafe = InputUtil.GetMoveStrafe();
 
+            if (parentContainer.IsDemo() || menuController.IsInMenu)
+                advance = strafe = 0;
+
             if (((advance == 0 && strafe == 0) || !_prevAdvance.Same(advance, 0.5f) || !_prevStrafe.Same(strafe, 0.5f) ||
-                 _moveTimer.ElapsedMilliseconds > parentContainer.MoveSpeedMs) && _moveTimer.IsRunning && !_moveResetTimer.IsRunning)
+                    _moveTimer.ElapsedMilliseconds > parentContainer.MoveSpeedMs) && _moveTimer.IsRunning && !_moveResetTimer.IsRunning)
                 _moveResetTimer.Start();
 
             if (_moveTimer.IsRunning && _moveResetTimer.ElapsedMilliseconds > parentContainer.MoveResetSpeedMs)

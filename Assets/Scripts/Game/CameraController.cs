@@ -1,4 +1,5 @@
-﻿using Sabotris.Util;
+﻿using Menu;
+using Sabotris.Util;
 using UnityEngine;
 
 namespace Sabotris
@@ -6,6 +7,7 @@ namespace Sabotris
     public class CameraController : MonoBehaviour
     {
         public GameController gameController;
+        public MenuController menuController;
         
         public new Camera camera;
         private Vector3 _defaultPosition;
@@ -59,7 +61,7 @@ namespace Sabotris
             var distance = (containerPosition - shapePosition).magnitude;
             var cameraDistance = distance / 2.0f / _aspectRatio / _tanFov;
 
-            _rotationInput = /*MenuController.Instance.CurrentMenu || */InputUtil.ShouldRotateShape()
+            _rotationInput = menuController.IsInMenu || InputUtil.ShouldRotateShape()
                 ? Vector3.zero
                 : new Vector3(
                     InputUtil.GetCameraRotateYaw(),
@@ -84,9 +86,20 @@ namespace Sabotris
             var cameraTransformPosition = cameraTransform.position;
             var cameraTransformRotation = cameraTransform.rotation;
 
-            cameraTransform.position = Vector3.Lerp(cameraTransformPosition, _cameraPosition, Time.fixedDeltaTime * 40);
-            cameraTransform.rotation =
-                Quaternion.Lerp(cameraTransformRotation, _cameraRotation, Time.fixedDeltaTime * 40);
+            var toPosition = _cameraPosition;
+            var toRotation = _cameraRotation;
+            var animationTime = GameSettings.GameTransitionSpeed;
+
+            if (menuController.IsInMenu)
+            {
+                var targetMenu = menuController.GetTargetMenu();
+                toPosition = targetMenu.GetCameraPosition();
+                toRotation = targetMenu.GetCameraRotation();
+                animationTime = GameSettings.MenuCameraSpeed;
+            }
+            
+            cameraTransform.position = Vector3.Lerp(cameraTransformPosition, toPosition, animationTime);
+            cameraTransform.rotation = Quaternion.Lerp(cameraTransformRotation, toRotation, animationTime);
         }
 
         public void ResetCamera()

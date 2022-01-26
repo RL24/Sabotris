@@ -27,12 +27,12 @@ namespace Sabotris
         private void FixedUpdate()
         {
             if (rawPosition != ShapeUtil.NullVector3Int)
-                transform.position = Vector3.Lerp(transform.position, _parentContainer.transform.position + RawPosition, GameSettings.TransitionSpeed);
+                transform.position = Vector3.Lerp(transform.position, _parentContainer.transform.position + RawPosition, GameSettings.GameTransitionSpeed);
 
             if (!doRemove)
                 return;
             
-            transform.localScale = Vector3.Lerp(transform.localScale, doRemove ? Vector3.zero : Vector3.one, GameSettings.TransitionSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, doRemove ? Vector3.zero : Vector3.one, GameSettings.GameTransitionSpeed);
             if (transform.localScale.GetMinValue() < 0.01)
                 Destroy(gameObject);
         }

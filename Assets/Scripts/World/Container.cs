@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Menu;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -27,11 +29,13 @@ namespace Sabotris
         public Shape shapeTemplate;
         
         public GameController gameController;
+        public MenuController menuController;
         public NetworkController networkController;
         public CameraController cameraController;
+        public TMP_Text nameText;
 
         public long id;
-        public string containerName;
+        [SerializeField] private string _containerName;
 
         public Shape controllingShape;
 
@@ -48,7 +52,7 @@ namespace Sabotris
         
         public int RotateThreshold { get; set; } = 90;
 
-        private void Start()
+        protected virtual void Start()
         {
             networkController.Client.RegisterListener(this);
         }
@@ -58,16 +62,12 @@ namespace Sabotris
             networkController.Client.DeregisterListener(this);
         }
 
-        private void Update()
+        public void StartDropping(Pair<Guid, Vector3Int>[] offsets = null)
         {
-        }
-
-        public void StartDropping()
-        {
-            if (gameController.ControllingContainer != this)
+            if (gameController.ControllingContainer != this && !IsDemo())
                 return;
             
-            var offsets = ShapeUtil.Generate(4, false, GenerateBottomLeft, GenerateTopRight);
+            offsets ??= ShapeUtil.Generate(4, false, GenerateBottomLeft, GenerateTopRight);
 
             if (!DoesCollide(offsets.Select((offset) => offset.Value + DropPosition).ToArray()))
             {
@@ -75,14 +75,15 @@ namespace Sabotris
                 shape.StartDropping();
                 controllingShape = shape;
                 
-                networkController.Client.SendPacket(new PacketShapeCreate
-                {
-                    ContainerId = id,
-                    Id = shape.id,
-                    Position = DropPosition,
-                    Offsets = shape.Offsets,
-                    Color = shape.color ?? Color.white
-                });
+                if (!IsDemo())
+                    networkController.Client.SendPacket(new PacketShapeCreate
+                    {
+                        ContainerId = id,
+                        Id = shape.id,
+                        Position = DropPosition,
+                        Offsets = shape.Offsets,
+                        Color = shape.color ?? Color.white
+                    });
             }
             else
             {
@@ -95,11 +96,12 @@ namespace Sabotris
                     indices.Add(new Pair<Guid, int>(block.id, index));
                 }
 
-                networkController.Client.SendPacket(new PacketPlayerDead
-                {
-                    Id = id,
-                    BlockIndices = indices.ToArray()
-                });
+                if (!IsDemo())
+                    networkController.Client.SendPacket(new PacketPlayerDead
+                    {
+                        Id = id,
+                        BlockIndices = indices.ToArray()
+                    });
             }
         }
         
@@ -110,14 +112,15 @@ namespace Sabotris
             foreach (var block in shape.Blocks)
                 _blocks.Add(block.Key, block.Value);
 
-            if (gameController.ControllingContainer != this)
+            if (gameController.ControllingContainer != this && !IsDemo())
                 return;
-            
-            networkController.Client.SendPacket(new PacketShapeLock
-            {
-                Id = shape.id,
-                Offsets = addedBlocks
-            });
+
+            if (!IsDemo())
+                networkController.Client.SendPacket(new PacketShapeLock
+                {
+                    Id = shape.id,
+                    Offsets = addedBlocks
+                });
             
             StartCoroutine(StartClearingLayers(addedBlocks));
         }
@@ -140,17 +143,19 @@ namespace Sabotris
                         block.RawPosition += Vector3Int.down;
                         movedBlocks.Add(block);
                     }
-            
-                networkController.Client.SendPacket(new PacketBlockBulkMove
-                {
-                    ContainerId = id,
-                    Positions = movedBlocks.Select((block) => new Pair<Guid, Vector3Int>(block.id, block.RawPosition)).ToArray()
-                });
+
+                if (!IsDemo())
+                    networkController.Client.SendPacket(new PacketBlockBulkMove
+                    {
+                        ContainerId = id,
+                        Positions = movedBlocks.Select((block) => new Pair<Guid, Vector3Int>(block.id, block.RawPosition))
+                            .ToArray()
+                    });
             }
             
             yield return new WaitForSeconds(DropNewShapeSpeed);
             
-            StartDropping();
+            StartDropping(IsDemo() ? (this as DemoContainer)?.GetNextOffsets() : null);
         }
         
         public Shape CreateShape(Guid id, Vector3Int position, Pair<Guid, Vector3Int>[] offsets, Color? color = null)
@@ -163,6 +168,7 @@ namespace Sabotris
             shape.color = color;
 
             shape.gameController = gameController;
+            shape.menuController = menuController;
             shape.networkController = networkController;
             shape.cameraController = cameraController;
             shape.parentContainer = this;
@@ -229,12 +235,13 @@ namespace Sabotris
 
                 clearingLayers.Add(layer);
             }
-            
-            networkController.Client.SendPacket(new PacketBlockBulkRemove
-            {
-                ContainerId = id,
-                Ids = deletedBlocks.ToArray()
-            });
+
+            if (!IsDemo()) 
+                networkController.Client.SendPacket(new PacketBlockBulkRemove
+                {
+                    ContainerId = id,
+                    Ids = deletedBlocks.ToArray()
+                });
 
             return clearingLayers;
         }
@@ -281,6 +288,8 @@ namespace Sabotris
             foreach (var blockIndex in packet.BlockIndices)
                 RemoveBlock(blockIndex.Key, blockIndex.Value, packet.BlockIndices.Length);
         }
+
+        public bool IsDemo() => this is DemoContainer;
         
         #region Serialize Fields
 
@@ -298,5 +307,19 @@ namespace Sabotris
         }
         
         #endregion
+
+        public string ContainerName
+        {
+            get => _containerName;
+            set
+            {
+                if (value == ContainerName)
+                    return;
+                
+                _containerName = value;
+
+                nameText.text = value;
+            }
+        }
     }
 }

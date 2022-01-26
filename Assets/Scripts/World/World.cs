@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using Menu;
+using Menu.Menus;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Sabotris
 {
@@ -14,8 +15,12 @@ namespace Sabotris
         public Container containerTemplate;
         
         public GameController gameController;
+        public MenuController menuController;
         public NetworkController networkController;
         public CameraController cameraController;
+
+        public DemoContainer demoContainer;
+        public Menu.Menu menuMain, menuPause;
 
         private readonly Dictionary<long, Container> _containers = new Dictionary<long, Container>();
 
@@ -29,12 +34,13 @@ namespace Sabotris
 
         private void Update()
         {
-            if (InputUtil.WasPressed(Keyboard.current.fKey))
-                networkController.Client.SendPacket(new PacketGameStart());
+            if (InputUtil.ShouldPause() && !menuController.IsInMenu && networkController.Client is {IsConnected: true})
+                menuController.OpenMenu(menuPause);
         }
 
         private void OnConnected(object sender, string reason)
         {
+            demoContainer.gameObject.SetActive(false);
             gameController.ControllingContainer = CreateContainer(networkController.Client.GetId(), UserUtil.GenerateUsername());
         }
 
@@ -43,6 +49,10 @@ namespace Sabotris
             gameController.ControllingContainer = null;
             foreach (var id in _containers.Keys.ToArray())
                 RemoveContainer(id);
+            demoContainer.gameObject.SetActive(true);
+            
+            if (!(menuController.currentMenu is MenuLobby) && !(menuController.currentMenu is MenuJoinGame))
+                menuController.OpenMenu(menuMain);
         }
 
         public Container CreateContainer(long id, string playerName)
@@ -54,9 +64,10 @@ namespace Sabotris
             container.name = $"Container_{playerName}_{id}";
 
             container.id = id;
-            container.containerName = playerName;
+            container.ContainerName = playerName;
             
             container.gameController = gameController;
+            container.menuController = menuController;
             container.networkController = networkController;
             container.cameraController = cameraController;
             

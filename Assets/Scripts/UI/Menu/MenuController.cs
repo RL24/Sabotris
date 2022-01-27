@@ -1,4 +1,4 @@
-﻿using Menu.Menus;
+﻿using UI.Menu.Menus;
 using Sabotris;
 using Sabotris.Network;
 using Sabotris.Util;
@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-namespace Menu
+namespace UI.Menu
 {
     public class MenuController : MonoBehaviour
     {

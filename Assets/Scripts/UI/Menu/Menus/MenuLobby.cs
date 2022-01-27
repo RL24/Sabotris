@@ -6,7 +6,7 @@ using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using UnityEngine;
 
-namespace Menu.Menus
+namespace UI.Menu.Menus
 {
     public class MenuLobby : Menu
     {

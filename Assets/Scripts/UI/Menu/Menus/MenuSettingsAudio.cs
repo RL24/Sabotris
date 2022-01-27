@@ -2,7 +2,7 @@
 using Sabotris;
 using UnityEngine;
 
-namespace Menu.Menus
+namespace UI.Menu.Menus
 {
     public class MenuSettingsAudio : Menu
     {

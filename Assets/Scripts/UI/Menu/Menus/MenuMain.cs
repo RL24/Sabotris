@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Menu.Menus
+namespace UI.Menu.Menus
 {
     public class MenuMain : Menu
     {

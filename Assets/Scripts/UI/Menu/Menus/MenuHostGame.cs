@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections;
+using Lidgren.Network;
+using Sabotris.Network;
 using UnityEngine;
 
-namespace Menu.Menus
+namespace UI.Menu.Menus
 {
-    public class MenuJoinGame : Menu
+    public class MenuHostGame : Menu
     {
         private readonly Vector3 _cameraPosition = new Vector3(5, 11, -3.5f);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(55, -51, -7);
 
-        public MenuButton inputIp, inputPassword, buttonConnect, buttonBack;
+        public MenuButton inputPassword, buttonJoinLobby, buttonBack;
         
         public Menu menuMain, menuLobby;
-
-        private string _ip, _password;
 
         protected override void Start()
         {
@@ -22,9 +22,6 @@ namespace Menu.Menus
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
-            if (inputIp is MenuInput miIp)
-                miIp.OnValueChanged += OnIpValueChanged;
-            
             if (inputPassword is MenuInput miPassword)
                 miPassword.OnValueChanged += OnPasswordValueChanged;
         }
@@ -40,16 +37,9 @@ namespace Menu.Menus
                 miPassword.OnValueChanged -= OnPasswordValueChanged;
         }
 
-        private void OnIpValueChanged(object sender, string args)
-        {
-            _ip = args;
-            buttonConnect.isDisabled = _ip.Length == 0 || _password.Length == 0;
-        }
-
         private void OnPasswordValueChanged(object sender, string args)
         {
-            _password = args;
-            buttonConnect.isDisabled = _ip.Length == 0 || _password.Length == 0;
+            buttonJoinLobby.isDisabled = args.Length == 0;
         }
 
         private void OnClickButton(object sender, EventArgs args)
@@ -57,29 +47,35 @@ namespace Menu.Menus
             if (!Open)
                 return;
 
-            if (sender.Equals(buttonConnect))
-                StartCoroutine(StartClient());
+            if (sender.Equals(buttonJoinLobby))
+                StartCoroutine(StartServer());
             else if (sender.Equals(buttonBack))
                 GoBack();
         }
 
-        private IEnumerator StartClient()
+        private IEnumerator StartServer()
         {
-            SetButtonsState();
+            SetButtonsDisabled();
 
-            if (!(inputIp is MenuInput miIp))
-                yield break;
-            
             if (!(inputPassword is MenuInput miPassword))
                 yield break;
-
-            var ip = miIp.inputField.text;
+            
             var password = miPassword.inputField.text;
-            yield return networkController.Client.StartClient(ip, 47320, password);
-            if (networkController.Client.IsConnected)
-                menuController.OpenMenu(menuLobby);
-            else
-                SetButtonsState(false);
+            yield return networkController.Server.StartServer(password, 47320);
+            yield return new WaitForSeconds(0.2f);
+            if (networkController.Server.Peer.Status == NetPeerStatus.Running)
+            {
+                yield return networkController.Client.StartClient("127.0.0.1", 47320, password);
+                yield return new WaitForSeconds(0.1f);
+                if (networkController.Client.IsConnected)
+                {
+                    menuController.OpenMenu(menuLobby);
+                    yield break;
+                }
+                networkController.Client.Shutdown(Reasons.NoReason);
+            }
+            networkController.Server.Shutdown(Reasons.NoReason);
+            SetButtonsDisabled(false);
         }
 
         protected override Menu GetBackMenu()

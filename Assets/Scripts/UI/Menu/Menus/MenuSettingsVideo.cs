@@ -2,7 +2,7 @@
 using Sabotris;
 using UnityEngine;
 
-namespace Menu.Menus
+namespace UI.Menu.Menus
 {
     public class MenuSettingsVideo : Menu
     {
@@ -55,11 +55,7 @@ namespace Menu.Menus
             if (!Open)
                 return;
             
-            if (sender.Equals(buttonFullscreen) && buttonFullscreen is MenuToggle toggle)
-            {
-                toggle.isToggledOn = !toggle.isToggledOn;
-                GameSettings.SetFullscreen(toggle.isToggledOn);
-            } else if (sender.Equals(buttonBack))
+            if (sender.Equals(buttonBack))
                 GoBack();
         }
 

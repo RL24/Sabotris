@@ -17,6 +17,8 @@ namespace Sabotris.Network
         
         public event EventHandler<string> OnConnected;
         public event EventHandler<string> OnDisconnected;
+
+        public string UserName;
         
         public Client() : base(PacketDirection.Client) {}
         
@@ -50,10 +52,10 @@ namespace Sabotris.Network
                     Peer.Connect(ip, port, new PacketConnectingHail
                     {
                         Password = password,
-                        Name = UserUtil.GenerateUsername()
+                        Name = UserName = UserUtil.GenerateUsername()
                     }.Serialize(Peer));
                 }
-                catch (NetException e)
+                catch (NetException)
                 {
                     failed[0] = true;
                 }
@@ -137,7 +139,7 @@ namespace Sabotris.Network
                 Peer?.FlushSendQueue();
         }
 
-        public long GetId() => Peer?.UniqueIdentifier ?? -1;
+        public long UserId => Peer?.UniqueIdentifier ?? -1;
 
         public bool IsConnected => Peer?.ConnectionStatus == NetConnectionStatus.Connected;
     }

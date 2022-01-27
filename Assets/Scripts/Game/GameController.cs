@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using Menu;
+using UI.Menu;
 using Sabotris.Network;
 using Sabotris.Util;
 using UnityEngine;

@@ -47,11 +47,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shapeTemplate: {fileID: 6628176699013324170, guid: 40610ab6bfc61f845ae4d7effa4d5ede, type: 3}
   gameController: {fileID: 0}
+  menuController: {fileID: 0}
   networkController: {fileID: 0}
   cameraController: {fileID: 0}
   nameText: {fileID: 1408002484745133006}
   id: 0
-  containerName: 
+  _containerName: 
+  score: 0
   controllingShape: {fileID: 0}
   serializedShapes: []
   serializedBlocks: []

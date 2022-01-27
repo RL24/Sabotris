@@ -1,21 +1,20 @@
 ﻿using System;
+using Sabotris.Network;
 using UnityEngine;
 
-namespace Menu.Menus
+namespace UI.Menu.Menus
 {
-    public class MenuSettings : Menu
+    public class MenuPause : Menu
     {
         private readonly Vector3 _cameraPosition = new Vector3(-9, 2, 4);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(5, 120, 2);
 
-        public MenuButton buttonVideo,
-                          buttonAudio,
+        public MenuButton buttonDisconnect,
+                          buttonSettings,
                           buttonBack;
-        
+
         public Menu menuMain,
-                    menuSettingsVideo,
-                    menuSettingsAudio,
-                    menuPause;
+                    menuSettings;
 
         protected override void Start()
         {
@@ -37,18 +36,22 @@ namespace Menu.Menus
         {
             if (!Open)
                 return;
-            
-            if (sender.Equals(buttonVideo))
-                menuController.OpenMenu(menuSettingsVideo);
-            else if (sender.Equals(buttonAudio))
-                menuController.OpenMenu(menuSettingsAudio);
+
+            if (sender.Equals(buttonDisconnect))
+            {
+                networkController.Client.Shutdown(Reasons.ShutdownClient);
+                networkController.Server?.Shutdown(Reasons.ShutdownServer);
+                menuController.OpenMenu(menuMain);
+            } 
+            else if (sender.Equals(buttonSettings))
+                menuController.OpenMenu(menuSettings);
             else if (sender.Equals(buttonBack))
                 GoBack();
         }
         
         protected override Menu GetBackMenu()
         {
-            return networkController.Client is {IsConnected: true} ? menuPause : menuMain;
+            return null;
         }
 
         public override Vector3 GetCameraPosition()

@@ -4,7 +4,7 @@ using Sabotris.Util;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Menu
+namespace UI.Menu
 {
     public class MenuDropdown : MenuButton
     {

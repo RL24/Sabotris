@@ -1,4 +1,4 @@
-﻿using Menu;
+﻿using UI.Menu;
 using Sabotris.Util;
 using UnityEngine;
 
@@ -88,7 +88,7 @@ namespace Sabotris
 
             var toPosition = _cameraPosition;
             var toRotation = _cameraRotation;
-            var animationTime = GameSettings.GameTransitionSpeed;
+            var animationTime = GameSettings.GameCameraSpeed;
 
             if (menuController.IsInMenu)
             {

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Menu
+namespace UI.Menu
 {
     public class MenuInput : MenuButton
     {
@@ -25,15 +25,28 @@ namespace Menu
 
             if (background != null)
                 _startBackgroundColor = background.color;
+
+            if (isSelected)
+                NavigateSelect();
         }
         
         protected override void Update()
         {
             base.Update();
+
+            isSelected = inputField.isFocused;
             
             Value = inputField.text;
             background.color = Color.Lerp(background.color, inputField.isFocused ? SelectedColor : _startBackgroundColor,
                 GameSettings.UIAnimationSpeed);
+        }
+        
+        public override void NavigateSelect()
+        {
+            base.NavigateSelect();
+
+            inputField.Select();
+            inputField.ActivateInputField();
         }
 
         public string Value

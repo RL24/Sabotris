@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Menu
+namespace UI.Menu
 {
     public class MenuCarousel : MenuButton
     {
@@ -23,18 +23,21 @@ namespace Menu
             value.text = values[index];
         }
 
-        private void OnPreviousClick(object sender, EventArgs args)
+        public override void NavigateHorizontal(float val)
         {
-            index = (int) Mathf.Repeat(index - 1, values.Length);
+            index = (int) Mathf.Repeat(index + val, values.Length);
             value.text = values[index];
             OnValueChanged?.Invoke(this, index);
+        }
+
+        private void OnPreviousClick(object sender, EventArgs args)
+        {
+            NavigateHorizontal(-1);
         }
         
         private void OnNextClick(object sender, EventArgs args)
         {
-            index = (int) Mathf.Repeat(index + 1, values.Length);
-            value.text = values[index];
-            OnValueChanged?.Invoke(this, index);
+            NavigateHorizontal(1);
         }
         
     }

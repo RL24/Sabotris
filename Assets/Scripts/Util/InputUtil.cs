@@ -72,6 +72,11 @@ namespace Sabotris.Util
 
         public static ButtonControl GamepadButtonUp => Gamepad.current?.dpad?.up;
         public static ButtonControl GamepadButtonDown => Gamepad.current?.dpad?.down;
+        public static ButtonControl GamepadButtonLeft => Gamepad.current?.dpad?.left;
+        public static ButtonControl GamepadButtonRight => Gamepad.current?.dpad?.right;
+
+        public static ButtonControl GamepadButtonZoomIn => Gamepad.current?.leftStickButton;
+        public static ButtonControl GamepadButtonZoomOut => Gamepad.current?.rightStickButton;
 
         public static ButtonControl GamepadButtonA => Gamepad.current?.buttonSouth;
         public static ButtonControl GamepadButtonB => Gamepad.current?.buttonEast;
@@ -99,7 +104,7 @@ namespace Sabotris.Util
         public static float GetMoveAdvance()
         {
             var keyboardValue = IsPressed(KeyBackward).Int() - IsPressed(KeyForward).Int();
-            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadButtonUp).Int() - IsPressed(GamepadButtonDown).Int()) ?? 0;
+            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadButtonZoomIn).Int() - IsPressed(GamepadButtonZoomOut).Int()) ?? 0;
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
 
@@ -109,10 +114,17 @@ namespace Sabotris.Util
                    IsPressed(GamepadLeftTrigger);
         }
 
-        public static float GetMoveUINavigate()
+        public static float GetMoveUINavigateVertical()
         {
             var keyboardValue = IsPressed(KeyUIDown).Int() - IsPressed(KeyUIUp).Int();
             var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadButtonUp).Int() - IsPressed(GamepadButtonDown).Int()) ?? 0;
+            return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
+        }
+
+        public static float GetMoveUINavigateHorizontal()
+        {
+            var keyboardValue = IsPressed(KeyUIRight).Int() - IsPressed(KeyUILeft).Int();
+            var gamepadValue = -GamepadLeftStick?.x.ReadValue() + (IsPressed(GamepadButtonLeft).Int() - IsPressed(GamepadButtonRight).Int()) ?? 0;
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
         

@@ -22,7 +22,8 @@ namespace Sabotris.Network.Packets
         PlayerConnected = 0x90,
         PlayerDisconnected = 0x91,
         PlayerList = 0x92,
-        PlayerDead = 0x93
+        PlayerDead = 0x93,
+        PlayerScore = 0x94
     }
     
     public class PacketType
@@ -56,10 +57,11 @@ namespace Sabotris.Network.Packets
         public static readonly PacketType PlayerDisconnected = new PacketType(PacketTypeId.PlayerDisconnected, () => new PacketPlayerDisconnected());
         public static readonly PacketType PlayerList = new PacketType(PacketTypeId.PlayerList, () => new PacketPlayerList());
         public static readonly PacketType PlayerDead = new PacketType(PacketTypeId.PlayerDead, () => new PacketPlayerDead());
+        public static readonly PacketType PlayerScore = new PacketType(PacketTypeId.PlayerScore, () => new PacketPlayerScore());
 
         public static PacketType GetPacketType(PacketTypeId packetTypeId)
         {
-            return new [] {GameStart, GameEnd, ConnectingHail, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkMove, BlockBulkRemove, PlayerConnected, PlayerDisconnected, PlayerList, PlayerDead}
+            return new [] {GameStart, GameEnd, ConnectingHail, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkMove, BlockBulkRemove, PlayerConnected, PlayerDisconnected, PlayerList, PlayerDead, PlayerScore}
                 .First((packetType) => packetType.Id == packetTypeId);
         }
     }

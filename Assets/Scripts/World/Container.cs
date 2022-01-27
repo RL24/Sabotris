@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Menu;
+using UI.Menu;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
@@ -17,10 +17,10 @@ namespace Sabotris
     {
         public const int Radius = 2;
         private static readonly Vector3Int BottomLeft = new Vector3Int(-Radius, 1, -Radius);
-        private static readonly Vector3Int TopRight = new Vector3Int(Radius, 21, Radius);
+        private static readonly Vector3Int TopRight = new Vector3Int(Radius, 25, Radius);
         
         private static readonly Vector3Int GenerateBottomLeft = new Vector3Int(-Radius, 0, -Radius);
-        private static readonly Vector3Int GenerateTopRight = new Vector3Int(Radius, 20, Radius);
+        private static readonly Vector3Int GenerateTopRight = new Vector3Int(Radius, 24, Radius);
 
         private const float ClearLayerSpeed = 0.5f;
         public const float ClearedLayerDropSpeed = 0.5f;
@@ -36,13 +36,14 @@ namespace Sabotris
 
         public long id;
         [SerializeField] private string _containerName;
+        public int score;
 
         public Shape controllingShape;
 
         private readonly Dictionary<Guid, Shape> _shapes = new Dictionary<Guid, Shape>();
         private readonly Dictionary<Guid, Block> _blocks = new Dictionary<Guid, Block>();
 
-        public Vector3Int DropPosition { get; set; } = new Vector3Int(0, 10, 0);
+        public Vector3Int DropPosition { get; set; } = new Vector3Int(0, 20, 0);
 
         public int DropSpeedMs { get; set; } = 1000;
         public int DropSpeedFastMs { get; set; } = 50;
@@ -236,12 +237,22 @@ namespace Sabotris
                 clearingLayers.Add(layer);
             }
 
-            if (!IsDemo()) 
-                networkController.Client.SendPacket(new PacketBlockBulkRemove
-                {
-                    ContainerId = id,
-                    Ids = deletedBlocks.ToArray()
-                });
+            if (!IsDemo())
+            {
+                if (deletedBlocks.Any())
+                    networkController.Client.SendPacket(new PacketBlockBulkRemove
+                    {
+                        ContainerId = id,
+                        Ids = deletedBlocks.ToArray()
+                    });
+                
+                if (clearingLayers.Any())
+                    networkController.Client.SendPacket(new PacketPlayerScore
+                    {
+                        Id = id,
+                        Score = score + (deletedBlocks.Count * clearingLayers.Count)
+                    });
+            }
 
             return clearingLayers;
         }
@@ -287,6 +298,15 @@ namespace Sabotris
 
             foreach (var blockIndex in packet.BlockIndices)
                 RemoveBlock(blockIndex.Key, blockIndex.Value, packet.BlockIndices.Length);
+        }
+
+        [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Client)]
+        public void OnPlayerScore(PacketPlayerScore packet)
+        {
+            if (packet.Id != id)
+                return;
+
+            score = packet.Score;
         }
 
         public bool IsDemo() => this is DemoContainer;

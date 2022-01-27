@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Net.Sockets;
 using Lidgren.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
@@ -41,9 +42,16 @@ namespace Sabotris.Network
             };
             Logging.Log(true, "Starting server on port {0} with password '{1}'", port, password);
             Peer = new NetServer(config);
-            Peer.Start();
-            
-            OnServerStart?.Invoke(this, null);
+
+            try
+            {
+                Peer.Start();
+                OnServerStart?.Invoke(this, null);
+            }
+            catch (SocketException)
+            {
+                Logging.Error(true, "Failed to start server, port in use");
+            }
         }
 
         public void Update()
@@ -196,6 +204,12 @@ namespace Sabotris.Network
         public void OnPlayerDead(PacketPlayerDead packet)
         {
             Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
+        }
+
+        [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
+        public void OnPlayerScore(PacketPlayerScore packet)
+        {
+            Peer.SendToAll(packet.Serialize(Peer), NetDeliveryMethod.ReliableOrdered);
         }
     }
 }

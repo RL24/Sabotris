@@ -4,11 +4,9 @@ using System.Diagnostics;
 using Sabotris;
 using Sabotris.Network;
 using Sabotris.Util;
-using Steamworks;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
-namespace Menu
+namespace UI.Menu
 {
     public abstract class Menu : MonoBehaviour
     {
@@ -21,7 +19,15 @@ namespace Menu
                     _selectedButton = -1;
 
         private readonly Stopwatch _selectTimer = new Stopwatch();
-        public int SelectDelayMs { get; set; } = 250;
+        private readonly Stopwatch _sideTimer = new Stopwatch();
+
+        public int SelectDelayMsMin { get; set; } = 30;
+        public int SelectDelayMsMax { get; set; } = 250;
+        public int SideDelayMsMin { get; set; } = 30;
+        public int SideDelayMsMax { get; set; } = 250;
+
+        private int _selectDelayMs = 250;
+        private int _sideDelayMs = 250;
 
         public bool Open { get; set; }
         public bool Closing { get; set; }
@@ -54,10 +60,13 @@ namespace Menu
             if (!Open)
                 return;
             
-            var navigate = Mathf.RoundToInt(InputUtil.GetMoveUINavigate());
-            
-            if (_selectTimer.ElapsedMilliseconds > SelectDelayMs || navigate == 0)
+            var navigate = Mathf.RoundToInt(InputUtil.GetMoveUINavigateVertical());
+
+            if (_selectTimer.ElapsedMilliseconds > _selectDelayMs || navigate == 0)
+            {
                 _selectTimer.Reset();
+                _selectDelayMs = navigate != 0 ? Mathf.Clamp(_selectDelayMs - 20, SelectDelayMsMin, SelectDelayMsMax) : SelectDelayMsMax;
+            }
 
             if (navigate != 0 && !_selectTimer.IsRunning)
             {
@@ -69,13 +78,29 @@ namespace Menu
                     SelectedButton = (int) Mathf.Repeat(SelectedButton + navigate, buttons.Count);
             }
             
+            var navigateHor = Mathf.RoundToInt(InputUtil.GetMoveUINavigateHorizontal());
+
+            if (_sideTimer.ElapsedMilliseconds > _sideDelayMs || navigateHor == 0)
+            {
+                _sideTimer.Reset();
+                _sideDelayMs = navigateHor != 0 ? Mathf.Clamp(_sideDelayMs - 20, SideDelayMsMin, SideDelayMsMax) : SideDelayMsMax;
+            }
+
+            if (navigateHor != 0 && !_sideTimer.IsRunning)
+            {
+                _sideTimer.Start();
+                
+                if (SelectedButton != -1)
+                    buttons[SelectedButton].NavigateHorizontal(navigateHor);
+            }
+
             canvasGroup.alpha += canvasGroup.alpha.Lerp((!Closing).Int(), GameSettings.MenuCameraSpeed * 2);
 
             if (InputUtil.GetUISelect())
             {
                 if (_selectedButton != -1)
-                    buttons[_selectedButton].OnPointerClick(null);
-                else _selectedButton = _lastSelectedButton;
+                    buttons[SelectedButton].NavigateSelect();
+                else SelectedButton = _lastSelectedButton;
             } else if (InputUtil.GetUIBack())
                 GoBack();
         }
@@ -84,12 +109,12 @@ namespace Menu
         
         protected virtual void GoBack()
         {
-            SetButtonsState();
+            SetButtonsDisabled();
             
             menuController.OpenMenu(GetBackMenu());
         }
 
-        protected virtual void SetButtonsState(bool disabled = true)
+        protected void SetButtonsDisabled(bool disabled = true)
         {
             foreach (var menuButton in buttons)
                 menuButton.isDisabled = disabled;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Menu;
-using Menu.Menus;
+using UI.Menu;
+using UI.Menu.Menus;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
@@ -20,7 +20,7 @@ namespace Sabotris
         public CameraController cameraController;
 
         public DemoContainer demoContainer;
-        public Menu.Menu menuMain, menuPause;
+        public Menu menuMain, menuPause;
 
         private readonly Dictionary<long, Container> _containers = new Dictionary<long, Container>();
 
@@ -41,7 +41,7 @@ namespace Sabotris
         private void OnConnected(object sender, string reason)
         {
             demoContainer.gameObject.SetActive(false);
-            gameController.ControllingContainer = CreateContainer(networkController.Client.GetId(), UserUtil.GenerateUsername());
+            gameController.ControllingContainer = CreateContainer(networkController.Client.UserId, networkController.Client.UserName);
         }
 
         private void OnDisconnected(object sender, string reason)
@@ -60,7 +60,7 @@ namespace Sabotris
             if (_containers.ContainsKey(id))
                 return _containers[id];
             
-            var container = Instantiate(containerTemplate, _containers.Count * (Vector3.right * 8), Quaternion.identity);
+            var container = Instantiate(containerTemplate, _containers.Count * (Vector3.right * (Container.Radius * 2 + 4)), Quaternion.identity);
             container.name = $"Container_{playerName}_{id}";
 
             container.id = id;
@@ -95,7 +95,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.PlayerConnected, PacketDirection.Client)]
         public void OnPlayerConnected(PacketPlayerConnected packet)
         {
-            if (packet.Player.Id == networkController.Client.GetId())
+            if (packet.Player.Id == networkController.Client.UserId)
                 return;
 
             CreateContainer(packet.Player.Id, packet.Player.Name);
@@ -106,7 +106,7 @@ namespace Sabotris
         {
             foreach (var player in packet.Players)
             {
-                if (player.Id == networkController.Client.GetId())
+                if (player.Id == networkController.Client.UserId)
                     continue;
 
                 CreateContainer(player.Id, player.Name);

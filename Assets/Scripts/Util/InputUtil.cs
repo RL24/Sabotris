@@ -12,17 +12,13 @@ namespace Sabotris.Util
 
         public static IEnumerable<KeyControl> KeyEscape => new[] {Keyboard.current?.escapeKey};
 
-        public static IEnumerable<KeyControl> KeyLeft =>
-            new[] {Keyboard.current?.aKey, Keyboard.current?.leftArrowKey};
+        public static IEnumerable<KeyControl> KeyLeft => new[] {Keyboard.current?.aKey, Keyboard.current?.leftArrowKey};
 
-        public static IEnumerable<KeyControl> KeyRight =>
-            new[] {Keyboard.current?.dKey, Keyboard.current?.rightArrowKey};
+        public static IEnumerable<KeyControl> KeyRight => new[] {Keyboard.current?.dKey, Keyboard.current?.rightArrowKey};
 
-        public static IEnumerable<KeyControl> KeyForward =>
-            new[] {Keyboard.current?.wKey, Keyboard.current?.upArrowKey};
+        public static IEnumerable<KeyControl> KeyForward => new[] {Keyboard.current?.wKey, Keyboard.current?.upArrowKey};
 
-        public static IEnumerable<KeyControl> KeyBackward =>
-            new[] {Keyboard.current?.sKey, Keyboard.current?.downArrowKey};
+        public static IEnumerable<KeyControl> KeyBackward => new[] {Keyboard.current?.sKey, Keyboard.current?.downArrowKey};
 
         public static IEnumerable<KeyControl> KeySpace => new[] {Keyboard.current?.spaceKey};
 
@@ -97,14 +93,14 @@ namespace Sabotris.Util
         public static float GetMoveStrafe()
         {
             var keyboardValue = IsPressed(KeyRight).Int() - IsPressed(KeyLeft).Int();
-            var gamepadValue = GamepadLeftStick?.x.ReadValue() ?? 0;
+            var gamepadValue = GamepadLeftStick?.x.ReadValue() + (IsPressed(GamepadButtonRight).Int() - IsPressed(GamepadButtonLeft).Int()) ?? 0;
             return Mathf.Clamp(keyboardValue + gamepadValue, -1, 1);
         }
 
         public static float GetMoveAdvance()
         {
             var keyboardValue = IsPressed(KeyBackward).Int() - IsPressed(KeyForward).Int();
-            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadButtonZoomIn).Int() - IsPressed(GamepadButtonZoomOut).Int()) ?? 0;
+            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadButtonUp).Int() - IsPressed(GamepadButtonDown).Int()) ?? 0;
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
 
@@ -178,7 +174,7 @@ namespace Sabotris.Util
         public static float GetCameraZoom()
         {
             var mouseValue = (MouseScroll?.y.ReadValue() ?? 0) * (1f / 120f);
-            var gamepadValue = (IsPressed(GamepadButtonDown).Int() - IsPressed(GamepadButtonUp).Int()) * 0.1f;
+            var gamepadValue = (IsPressed(GamepadButtonZoomIn).Int() - IsPressed(GamepadButtonZoomOut).Int()) * 0.1f;
             return mouseValue + gamepadValue;
         }
     }

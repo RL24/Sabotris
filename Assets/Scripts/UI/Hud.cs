@@ -44,32 +44,42 @@ namespace UI
             canvasGroup.alpha += canvasGroup.alpha.Lerp(_playerScoreCache.Any().Int(), GameSettings.UIAnimationSpeed);
         }
 
+        private void AddEntry(Player player)
+        {
+            var playerItem = Instantiate(playerItemPrefab, Vector3.zero, Quaternion.identity, playerList.transform);
+            playerItem.name = $"Player-{player.Name}-{player.Id}";
+            playerItem.text = player.Name;
+
+            var scoreItem = Instantiate(scoreItemPrefab, Vector3.zero, Quaternion.identity, scoreList.transform);
+            scoreItem.name = $"Score-{player.Name}-{player.Id}";
+            scoreItem.text = "0";
+            
+            _playerScoreCache.Add(player.Id, new Pair<TMP_Text, TMP_Text>(playerItem, scoreItem));
+        }
+
         private void RemoveEntry(Pair<TMP_Text, TMP_Text> entry)
         {
             Destroy(entry.Key.gameObject);
             Destroy(entry.Value.gameObject);
         }
 
-        [PacketListener(PacketTypeId.PlayerConnected, PacketDirection.Client)]
-        public void OnPlayerConnected(PacketPlayerConnected packet)
-        {
-            var playerItem = Instantiate(playerItemPrefab, Vector3.zero, Quaternion.identity, playerList.transform);
-            playerItem.name = $"Player-{packet.Player.Name}-{packet.Player.Id}";
-            playerItem.text = packet.Player.Name;
-
-            var scoreItem = Instantiate(scoreItemPrefab, Vector3.zero, Quaternion.identity, scoreList.transform);
-            scoreItem.name = $"Score-{packet.Player.Name}-{packet.Player.Id}";
-            scoreItem.text = "0";
-            
-            _playerScoreCache.Add(packet.Player.Id, new Pair<TMP_Text, TMP_Text>(playerItem, scoreItem));
-        }
-
-        private void OnDisconnectedFromServer(object sender, string reason)
+        private void RemoveAllEntries()
         {
             foreach (var entry in _playerScoreCache.Values)
                 RemoveEntry(entry);
 
             _playerScoreCache.Clear();
+        }
+
+        [PacketListener(PacketTypeId.PlayerConnected, PacketDirection.Client)]
+        public void OnPlayerConnected(PacketPlayerConnected packet)
+        {
+            AddEntry(packet.Player);
+        }
+
+        private void OnDisconnectedFromServer(object sender, string reason)
+        {
+            RemoveAllEntries();
         }
 
         [PacketListener(PacketTypeId.PlayerDisconnected, PacketDirection.Client)]
@@ -81,6 +91,15 @@ namespace UI
             RemoveEntry(item);
 
             _playerScoreCache.Remove(packet.Id);
+        }
+
+        [PacketListener(PacketTypeId.PlayerList, PacketDirection.Client)]
+        public void OnPlayerList(PacketPlayerList packet)
+        {
+            RemoveAllEntries();
+            
+            foreach (var packetPlayer in packet.Players)
+                AddEntry(packetPlayer);
         }
 
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Client)]

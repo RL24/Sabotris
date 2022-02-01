@@ -20,13 +20,13 @@ namespace Sabotris
         private Quaternion _cameraRotation = Quaternion.identity;
         private Vector3 _rotationInput = Vector3.zero; // yaw pitch zoom
 
-        private Container _targetContainer;
+        private Container _targetContainer, _spectateContainer;
         private Vector3 _targetShapePosition;
 
         public float Yaw { get; set; }
         public float Pitch { get; set; }
         public float Roll { get; set; }
-        public float Zoom { get; set; }
+        public float Zoom { get; set; } = 15;
 
         private void Start()
         {
@@ -40,10 +40,10 @@ namespace Sabotris
 
         private void Update()
         {
-            if (!camera || gameController.ControllingContainer == null)
+            if (!camera || (gameController.ControllingContainer == null && _spectateContainer == null))
                 return;
 
-            var container = gameController.ControllingContainer;
+            var container = _spectateContainer == null ? gameController.ControllingContainer : _spectateContainer;
 
             if (_targetContainer != container)
             {

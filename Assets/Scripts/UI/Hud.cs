@@ -108,7 +108,7 @@ namespace UI
             if (!_playerScoreCache.TryGetValue(packet.Id, out var item))
                 return;
 
-            item.Value.text = $"{packet.Score}";
+            item.Value.text = $"{packet.Score.Score}";
         }
     }
 }

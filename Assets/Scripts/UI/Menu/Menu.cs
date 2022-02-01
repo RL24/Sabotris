@@ -12,6 +12,8 @@ namespace UI.Menu
     {
         public MenuController menuController;
         public NetworkController networkController;
+        public World world;
+        
         public CanvasGroup canvasGroup;
         public List<MenuButton> buttons;
 
@@ -21,9 +23,9 @@ namespace UI.Menu
         private readonly Stopwatch _selectTimer = new Stopwatch();
         private readonly Stopwatch _sideTimer = new Stopwatch();
 
-        public int SelectDelayMsMin { get; set; } = 30;
+        public int SelectDelayMsMin { get; set; } = 20;
         public int SelectDelayMsMax { get; set; } = 250;
-        public int SideDelayMsMin { get; set; } = 30;
+        public int SideDelayMsMin { get; set; } = 20;
         public int SideDelayMsMax { get; set; } = 250;
 
         private int _selectDelayMs = 250;
@@ -83,7 +85,7 @@ namespace UI.Menu
             if (_sideTimer.ElapsedMilliseconds > _sideDelayMs || navigateHor == 0)
             {
                 _sideTimer.Reset();
-                _sideDelayMs = navigateHor != 0 ? Mathf.Clamp(_sideDelayMs - 20, SideDelayMsMin, SideDelayMsMax) : SideDelayMsMax;
+                _sideDelayMs = navigateHor != 0 ? Mathf.Clamp(_sideDelayMs - 40, SideDelayMsMin, SideDelayMsMax) : SideDelayMsMax;
             }
 
             if (navigateHor != 0 && !_sideTimer.IsRunning)

@@ -60,7 +60,9 @@ namespace Sabotris.Network.Packets
             if (type == typeof(Quaternion)) return new Quaternion(incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat());
             if (type == typeof(Pair<Guid, Vector3Int>)) return new Pair<Guid, Vector3Int>((Guid) ReadValue(incoming, typeof(Guid)), (Vector3Int) ReadValue(incoming, typeof(Vector3Int)));
             if (type == typeof(Pair<Guid, int>)) return new Pair<Guid, int>((Guid) ReadValue(incoming, typeof(Guid)), incoming.ReadInt32());
+            if (type == typeof(Pair<long, int>)) return new Pair<long, int>(incoming.ReadInt64(), incoming.ReadInt32());
             if (type == typeof(Player)) return new Player(incoming.ReadInt64(), incoming.ReadString());
+            if (type == typeof(PlayerScore)) return new PlayerScore(incoming.ReadInt32(), incoming.ReadInt32());
             if (type == typeof(Color)) return new Color(incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat());
             
             if (type == typeof(bool[])) return ReadArray<bool>(incoming, type.GetElementType());
@@ -80,8 +82,12 @@ namespace Sabotris.Network.Packets
             if (type == typeof(Quaternion[])) return ReadArray<Quaternion>(incoming, type.GetElementType());
             if (type == typeof(Pair<Guid, Vector3Int>[])) return ReadArray<Pair<Guid, Vector3Int>>(incoming, type.GetElementType());
             if (type == typeof(Pair<Guid, int>[])) return ReadArray<Pair<Guid, int>>(incoming, type.GetElementType());
+            if (type == typeof(Pair<long, int>[])) return ReadArray<Pair<long, int>>(incoming, type.GetElementType());
             if (type == typeof(Player[])) return ReadArray<Player>(incoming, type.GetElementType());
+            if (type == typeof(PlayerScore[])) return ReadArray<PlayerScore>(incoming, type.GetElementType());
             if (type == typeof(Color[])) return ReadArray<Color>(incoming, type.GetElementType());
+            
+            if (type == typeof(Dictionary<long, PlayerScore>)) return ReadDictionary<long, PlayerScore>(incoming, type.GetGenericArguments());
             
             return null;
         }
@@ -142,10 +148,24 @@ namespace Sabotris.Network.Packets
                     break;
                 }
 
+                case Pair<long, int> parsed:
+                {
+                    WriteValue(outgoing, parsed.Key);
+                    WriteValue(outgoing, parsed.Value);
+                    break;
+                }
+
                 case Player parsed:
                 {
                     outgoing.Write(parsed.Id);
                     outgoing.Write(parsed.Name);
+                    break;
+                }
+
+                case PlayerScore parsed:
+                {
+                    outgoing.Write(parsed.Score);
+                    outgoing.Write(parsed.ClearedLayers);
                     break;
                 }
 
@@ -174,8 +194,12 @@ namespace Sabotris.Network.Packets
                 case IEnumerable<Quaternion> parsed: WriteArray(outgoing, parsed); break;
                 case IEnumerable<Pair<Guid, Vector3Int>> parsed: WriteArray(outgoing, parsed); break;
                 case IEnumerable<Pair<Guid, int>> parsed: WriteArray(outgoing, parsed); break;
+                case IEnumerable<Pair<long, int>> parsed: WriteArray(outgoing, parsed); break;
                 case IEnumerable<Player> parsed: WriteArray(outgoing, parsed); break;
+                case IEnumerable<PlayerScore> parsed: WriteArray(outgoing, parsed); break;
                 case IEnumerable<Color> parsed: WriteArray(outgoing, parsed); break;
+                
+                case Dictionary<long, PlayerScore> parsed: WriteDictionary(outgoing, parsed); break;
             }
         }
 
@@ -187,6 +211,16 @@ namespace Sabotris.Network.Packets
                 WriteValue(outgoing, value);
         }
 
+        private void WriteDictionary<TKey, TValue>(NetBuffer outgoing, Dictionary<TKey, TValue> dictionary)
+        {
+            WriteValue(outgoing, dictionary.Count);
+            foreach (var entry in dictionary)
+            {
+                WriteValue(outgoing, entry.Key);
+                WriteValue(outgoing, entry.Value);
+            }
+        }
+
         private T[] ReadArray<T>(NetBuffer incoming, Type type)
         {
             var count = incoming.ReadInt32();
@@ -194,6 +228,15 @@ namespace Sabotris.Network.Packets
             for (var i = 0; i < count; i++)
                 objects[i] = (T) ReadValue(incoming, type);
             return objects;
+        }
+        
+        private Dictionary<TKey, TValue> ReadDictionary<TKey, TValue>(NetBuffer incoming, Type[] types)
+        {
+            var count = incoming.ReadInt32();
+            var dict = new Dictionary<TKey, TValue>();
+            for (var i = 0; i < count; i++)
+                dict.Add((TKey) ReadValue(incoming, types[0]), (TValue) ReadValue(incoming, types[1]));
+            return dict;
         }
     }
 }

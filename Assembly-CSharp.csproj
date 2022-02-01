@@ -115,10 +115,12 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
      <Compile Include="Assets\Scripts\Game\GameController.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
+     <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsControls.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeMove.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuSlider.cs" />
      <Compile Include="Assets\Scripts\Network\Server.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Game\PacketConnectingHail.cs" />
+     <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsGameplay.cs" />
      <Compile Include="Assets\Scripts\Network\Handler\PacketHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
      <Compile Include="Assets\Scripts\World\Container.cs" />
@@ -131,6 +133,8 @@
      <Compile Include="Assets\Scripts\Network\Packets\Block\PacketBlockBulkMove.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
      <Compile Include="Assets\Scripts\Steamworks.NET\SteamManager.cs" />
+     <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuGameOver.cs" />
+     <Compile Include="Assets\Scripts\UI\Menu\Components\MenuFadeText.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeCreate.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsAudio.cs" />

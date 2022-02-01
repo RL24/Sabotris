@@ -26,22 +26,28 @@ namespace Sabotris.Network.Packets
 
         public void Register<T>(T instance)
         {
-            foreach (var pair in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pair) => pair.Key.PacketDirection == _packetDirection))
+            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Key.PacketDirection == _packetDirection)))
             {
-                var packetTypeId = pair.Key.PacketType;
-                if (!_cache.ContainsKey(packetTypeId))
-                    _cache.Add(packetTypeId, new ConcurrentDictionary<object, MethodInfo>());
-                _cache[packetTypeId].TryAdd(instance, pair.Value);
+                foreach (var pair in pairs)
+                {
+                    var packetTypeId = pair.Key.PacketType;
+                    if (!_cache.ContainsKey(packetTypeId))
+                        _cache.Add(packetTypeId, new ConcurrentDictionary<object, MethodInfo>());
+                    _cache[packetTypeId].TryAdd(instance, pair.Value);
+                }
             }
         }
 
         public void Deregister<T>(T instance)
         {
-            foreach (var pair in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pair) => pair.Key.PacketDirection == _packetDirection))
+            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Key.PacketDirection == _packetDirection)))
             {
-                var packetTypeId = pair.Key.PacketType;
-                if (_cache.ContainsKey(packetTypeId))
-                    _cache[packetTypeId].TryRemove(instance, out _);
+                foreach (var pair in pairs)
+                {
+                    var packetTypeId = pair.Key.PacketType;
+                    if (_cache.ContainsKey(packetTypeId))
+                        _cache[packetTypeId].TryRemove(instance, out _);
+                }
             }
         }
 

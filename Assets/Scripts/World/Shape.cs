@@ -95,7 +95,7 @@ namespace Sabotris
                         rotateActivator = RawRotation;
                 }
             }
-            
+
             transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.GameTransitionSpeed);
             transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.GameTransitionSpeed);
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.GameTransitionSpeed);

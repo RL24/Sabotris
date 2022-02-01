@@ -11,35 +11,40 @@ namespace Sabotris
         private Container _parentContainer;
 
         public Guid id;
+        public Color? color;
 
+        public bool shifted;
         public bool doRemove;
         [SerializeField] private Vector3Int rawPosition = ShapeUtil.NullVector3Int;
 
         private void Start()
         {
             _parentContainer = GetComponentInParent<Container>();
-        }
 
-        private void Update()
-        {
+            if (color != null)
+            {
+                foreach (var ren in GetComponentsInChildren<Renderer>())
+                    ren.material.color = color ?? Color.white;
+            }
+
+            if (rawPosition != ShapeUtil.NullVector3Int)
+                transform.localScale = Vector3.zero;
         }
         
         private void FixedUpdate()
         {
-            if (rawPosition != ShapeUtil.NullVector3Int)
-                transform.position = Vector3.Lerp(transform.position, _parentContainer.transform.position + RawPosition, GameSettings.GameTransitionSpeed);
+            if (rawPosition != ShapeUtil.NullVector3Int && shifted)
+                transform.position = Vector3.Lerp(transform.position, _parentContainer.transform.position + rawPosition, GameSettings.GameTransitionSpeed);
 
-            if (!doRemove)
-                return;
-            
             transform.localScale = Vector3.Lerp(transform.localScale, doRemove ? Vector3.zero : Vector3.one, GameSettings.GameTransitionSpeed);
-            if (transform.localScale.GetMinValue() < 0.01)
+            
+            if (doRemove && transform.localScale.GetMinValue() < 0.01)
                 Destroy(gameObject);
         }
 
         public IEnumerator Remove(int index = -1, int max = -1)
         {
-            var delay = index == -1 ? Random.Range(0, 0.5f) : index * (5f / max);
+            var delay = index == -1 ? Random.Range(0, 0.4f) : index * (3f / max);
             yield return new WaitForSeconds(delay);
             doRemove = true;
         }

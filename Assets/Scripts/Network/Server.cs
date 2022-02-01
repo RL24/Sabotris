@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using Lidgren.Network;
@@ -14,11 +15,13 @@ namespace Sabotris.Network
     {
         public event EventHandler OnServerStart;
         public event EventHandler<string> OnServerStop;
-        
+
+        private World _world;
         private string _password;
 
-        public Server() : base(PacketDirection.Server)
+        public Server(World world) : base(PacketDirection.Server)
         {
+            _world = world;
             PacketHandler.Register(this);
         }
 
@@ -159,43 +162,19 @@ namespace Sabotris.Network
         }
 
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
         public void OnGameStart(PacketGameStart packet)
         {
             Peer.SendToAll(packet.Serialize(Peer), NetDeliveryMethod.ReliableOrdered);
         }
 
         [PacketListener(PacketTypeId.ShapeCreate, PacketDirection.Server)]
-        public void OnShapeCreate(PacketShapeCreate packet)
-        {
-            Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
-        }
-
         [PacketListener(PacketTypeId.ShapeMove, PacketDirection.Server)]
-        public void OnShapeMove(PacketShapeMove packet)
-        {
-            Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
-        }
-
         [PacketListener(PacketTypeId.ShapeRotate, PacketDirection.Server)]
-        public void OnShapeRotate(PacketShapeRotate packet)
-        {
-            Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
-        }
-
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Server)]
-        public void OnShapeLock(PacketShapeLock packet)
-        {
-            Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
-        }
-
         [PacketListener(PacketTypeId.BlockBulkMove, PacketDirection.Server)]
-        public void OnBlockBulkMove(PacketBlockBulkMove packet)
-        {
-            Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
-        }
-
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Server)]
-        public void OnBlockBulkRemove(PacketBlockBulkRemove packet)
+        public void OnPacket(Packet packet)
         {
             Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
         }
@@ -204,12 +183,33 @@ namespace Sabotris.Network
         public void OnPlayerDead(PacketPlayerDead packet)
         {
             Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
-        }
+            
+            if (Players.Any((entry) => _world.Containers.TryGetValue(entry.Key, out var deadContainer) && !deadContainer.dead))
+                return;
 
-        [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
-        public void OnPlayerScore(PacketPlayerScore packet)
-        {
-            Peer.SendToAll(packet.Serialize(Peer), NetDeliveryMethod.ReliableOrdered);
+            var winner = -1L;
+            var score = -1;
+            var scores = new Dictionary<long, PlayerScore>();
+
+            foreach (var entry in Players)
+            {
+                if (!_world.Containers.TryGetValue(entry.Key, out var container))
+                    continue;
+                
+                scores.Add(container.id, container.Score);
+
+                if (container.Score.Score <= score)
+                    continue;
+                
+                score = container.Score.Score;
+                winner = container.id;
+            }
+            
+            Peer.SendToAll(new PacketGameEnd
+            {
+                Winner = winner,
+                Scores = scores
+            }.Serialize(Peer), NetDeliveryMethod.ReliableOrdered);
         }
     }
 }

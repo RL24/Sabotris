@@ -5,6 +5,7 @@
         public override PacketType GetPacketType() => PacketTypes.PlayerScore;
         
         public long Id { get; set; }
-        public int Score { get; set; }
+        public PlayerScore Score { get; set; }
+        
     }
 }

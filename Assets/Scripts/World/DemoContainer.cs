@@ -263,11 +263,17 @@ namespace Sabotris
 
         protected override void Start()
         {
-            DropPosition = new Vector3Int(0, 7, 0);
-
             base.Start();
 
-            StartDropping(GetNextOffsets());
+            OnEnable();
+        }
+
+        protected void OnEnable()
+        {
+            DropPosition = new Vector3Int(0, 7, 0);
+            
+            if (controllingShape == null)
+                StartDropping(GetNextOffsets());
         }
 
         public Pair<Guid, Vector3Int>[] GetNextOffsets()

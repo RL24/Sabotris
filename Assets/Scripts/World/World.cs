@@ -20,9 +20,9 @@ namespace Sabotris
         public CameraController cameraController;
 
         public DemoContainer demoContainer;
-        public Menu menuMain, menuPause;
+        public Menu menuMain, menuPause, menuGameOver;
 
-        private readonly Dictionary<long, Container> _containers = new Dictionary<long, Container>();
+        public readonly Dictionary<long, Container> Containers = new Dictionary<long, Container>();
 
         private void Start()
         {
@@ -47,7 +47,7 @@ namespace Sabotris
         private void OnDisconnected(object sender, string reason)
         {
             gameController.ControllingContainer = null;
-            foreach (var id in _containers.Keys.ToArray())
+            foreach (var id in Containers.Keys.ToArray())
                 RemoveContainer(id);
             demoContainer.gameObject.SetActive(true);
             
@@ -57,10 +57,10 @@ namespace Sabotris
 
         public Container CreateContainer(long id, string playerName)
         {
-            if (_containers.ContainsKey(id))
-                return _containers[id];
+            if (Containers.ContainsKey(id))
+                return Containers[id];
             
-            var container = Instantiate(containerTemplate, _containers.Count * (Vector3.right * (Container.Radius * 2 + 4)), Quaternion.identity);
+            var container = Instantiate(containerTemplate, Containers.Count * (Vector3.right * (Container.Radius * 2 + 4)), Quaternion.identity);
             container.name = $"Container_{playerName}_{id}";
 
             container.id = id;
@@ -73,16 +73,16 @@ namespace Sabotris
             
             container.transform.SetParent(transform, false);
             
-            _containers.Add(id, container);
+            Containers.Add(id, container);
             
             return container;
         }
 
         public void RemoveContainer(long id)
         {
-            if (_containers.TryGetValue(id, out var container))
+            if (Containers.TryGetValue(id, out var container))
                 Destroy(container.gameObject);
-            _containers.Remove(id);
+            Containers.Remove(id);
         }
 
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]
@@ -90,6 +90,12 @@ namespace Sabotris
         {
             if (gameController.ControllingContainer != null)
                 gameController.ControllingContainer.StartDropping();
+        }
+
+        [PacketListener(PacketTypeId.GameEnd, PacketDirection.Client)]
+        public void OnGameEnd(PacketGameEnd packet)
+        {
+            menuController.OpenMenu(menuGameOver);
         }
 
         [PacketListener(PacketTypeId.PlayerConnected, PacketDirection.Client)]
@@ -125,7 +131,7 @@ namespace Sabotris
         
         public void OnBeforeSerialize()
         {
-            serializedContainers = _containers.Values.ToArray();
+            serializedContainers = Containers.Values.ToArray();
         }
 
         public void OnAfterDeserialize()

@@ -729,6 +729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b75d99b122f74b919f2e719c52735f3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  world: {fileID: 2032613557}
 --- !u!114 &858393424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1025,6 +1026,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkController: {fileID: 858393423}
+  world: {fileID: 2032613557}
   volume: {fileID: 653260036}
   background: {fileID: 78413785}
   currentMenu: {fileID: 0}
@@ -1376,14 +1378,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shapeTemplate: {fileID: 6628176699013324170, guid: 40610ab6bfc61f845ae4d7effa4d5ede, type: 3}
+  blockTemplate: {fileID: 771673464604701970, guid: 6649352b212ec1640bae16559d3fb9c0, type: 3}
   gameController: {fileID: 858393424}
   menuController: {fileID: 0}
   networkController: {fileID: 858393423}
   cameraController: {fileID: 1687258583}
   nameText: {fileID: 1867771294}
   id: -1
-  _containerName: 
-  score: 0
+  containerName: 
+  dead: 0
   controllingShape: {fileID: 0}
   serializedShapes: []
   serializedBlocks: []
@@ -1570,6 +1573,7 @@ MonoBehaviour:
   demoContainer: {fileID: 1813493984}
   menuMain: {fileID: 5792942197404027228, guid: d0d66c19eec593246b5a59618348f833, type: 3}
   menuPause: {fileID: 1478632573244512379, guid: e78c5f73faa14e240b8457f15dd1e736, type: 3}
+  menuGameOver: {fileID: 8846274034861430407, guid: 8f4980fd573687244bbb0f78c909185f, type: 3}
   serializedContainers: []
 --- !u!4 &2032613558
 Transform:

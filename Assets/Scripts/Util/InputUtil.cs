@@ -40,8 +40,8 @@ namespace Sabotris.Util
 
         #region Mouse
 
-        public const float MouseCameraSensitivity = 1;
-        public const float MouseRotateSensitivity = 5;
+        public static float MouseCameraSensitivity = 1; // * 50
+        public static float MouseRotateSensitivity = 5; // * 10
 
         public static Vector2Control MouseDelta => Mouse.current?.delta;
         public static Vector2Control MouseScroll => Mouse.current?.scroll;
@@ -52,8 +52,8 @@ namespace Sabotris.Util
 
         #region Gamepad
 
-        public const float GamepadCameraSensitivity = 1;
-        public const float GamepadRotateSensitivity = 90;
+        public static float GamepadCameraSensitivity = 1; // * 50
+        public static float GamepadRotateSensitivity = 90; // / 3.6
 
         public static ButtonControl GamepadPause => Gamepad.current?.startButton;
 

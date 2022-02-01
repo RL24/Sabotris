@@ -8,8 +8,8 @@
 
         public Pair(TKey key, TValue value)
         {
-            this.Key = key;
-            this.Value = value;
+            Key = key;
+            Value = value;
         }
     }
 }

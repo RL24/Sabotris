@@ -10,11 +10,15 @@ namespace UI.Menu.Menus
 
         public MenuButton buttonVideo,
                           buttonAudio,
+                          buttonControls,
+                          buttonGameplay,
                           buttonBack;
         
         public Menu menuMain,
                     menuSettingsVideo,
                     menuSettingsAudio,
+                    menuSettingsControls,
+                    menuSettingsGameplay,
                     menuPause;
 
         protected override void Start()
@@ -42,6 +46,10 @@ namespace UI.Menu.Menus
                 menuController.OpenMenu(menuSettingsVideo);
             else if (sender.Equals(buttonAudio))
                 menuController.OpenMenu(menuSettingsAudio);
+            else if (sender.Equals(buttonControls))
+                menuController.OpenMenu(menuSettingsControls);
+            else if (sender.Equals(buttonGameplay))
+                menuController.OpenMenu(menuSettingsGameplay);
             else if (sender.Equals(buttonBack))
                 GoBack();
         }

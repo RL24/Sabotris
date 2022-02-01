@@ -22,11 +22,12 @@ namespace Sabotris
         private static readonly Vector3Int GenerateBottomLeft = new Vector3Int(-Radius, 0, -Radius);
         private static readonly Vector3Int GenerateTopRight = new Vector3Int(Radius, 24, Radius);
 
-        private const float ClearLayerSpeed = 0.5f;
-        public const float ClearedLayerDropSpeed = 0.5f;
-        private const float DropNewShapeSpeed = 0.5f;
+        private const float ClearLayerSpeed = 0.1f;
+        public const float ClearedLayerDropSpeed = 0.25f;
+        private const float DropNewShapeSpeed = 0.4f;
         
         public Shape shapeTemplate;
+        public Block blockTemplate;
         
         public GameController gameController;
         public MenuController menuController;
@@ -35,8 +36,9 @@ namespace Sabotris
         public TMP_Text nameText;
 
         public long id;
-        [SerializeField] private string _containerName;
-        public int score;
+        [SerializeField] private string containerName;
+        public PlayerScore Score = new PlayerScore(0, 0);
+        public bool dead;
 
         public Shape controllingShape;
 
@@ -46,7 +48,7 @@ namespace Sabotris
         public Vector3Int DropPosition { get; set; } = new Vector3Int(0, 20, 0);
 
         public int DropSpeedMs { get; set; } = 1000;
-        public int DropSpeedFastMs { get; set; } = 50;
+        public int DropSpeedFastMs { get; set; } = 10;
         
         public int MoveSpeedMs { get; set; } = 200;
         public int MoveResetSpeedMs { get; set; } = 50;
@@ -57,7 +59,7 @@ namespace Sabotris
         {
             networkController.Client.RegisterListener(this);
         }
-
+        
         private void OnDestroy()
         {
             networkController.Client.DeregisterListener(this);
@@ -65,7 +67,7 @@ namespace Sabotris
 
         public void StartDropping(Pair<Guid, Vector3Int>[] offsets = null)
         {
-            if (gameController.ControllingContainer != this && !IsDemo())
+            if ((gameController.ControllingContainer != this && !IsDemo()) || dead)
                 return;
             
             offsets ??= ShapeUtil.Generate(4, false, GenerateBottomLeft, GenerateTopRight);
@@ -97,6 +99,8 @@ namespace Sabotris
                     indices.Add(new Pair<Guid, int>(block.id, index));
                 }
 
+                dead = true;
+
                 if (!IsDemo())
                     networkController.Client.SendPacket(new PacketPlayerDead
                     {
@@ -109,9 +113,13 @@ namespace Sabotris
         public void LockShape(Shape shape, Vector3Int[] addedBlocks)
         {
             controllingShape = null;
-            
+
             foreach (var block in shape.Blocks)
+            {
                 _blocks.Add(block.Key, block.Value);
+                block.Value.RawPosition =
+                    shape.RawPosition + (shape.Offsets.FirstOrDefault((pair) => pair.Key == block.Key)?.Value ?? Vector3Int.zero);
+            }
 
             if (gameController.ControllingContainer != this && !IsDemo())
                 return;
@@ -142,6 +150,7 @@ namespace Sabotris
                     foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
                     {
                         block.RawPosition += Vector3Int.down;
+                        block.shifted = true;
                         movedBlocks.Add(block);
                     }
 
@@ -188,6 +197,21 @@ namespace Sabotris
             
             Destroy(shape.gameObject);
             _shapes.Remove(shapeId);
+        }
+
+        private void CreateBlock(Vector3Int position, Color color)
+        {
+            var blockId = Guid.NewGuid();
+            var block = Instantiate(blockTemplate, position, Quaternion.identity);
+            block.name = $"Block_{blockId}";
+            block.RawPosition = position;
+            block.color = color;
+
+            block.id = blockId;
+            
+            block.transform.SetParent(transform, false);
+            
+            _blocks.Add(blockId, block);
         }
 
         private void RemoveBlock(Guid blockId, int index = -1, int max = -1)
@@ -246,15 +270,43 @@ namespace Sabotris
                         Ids = deletedBlocks.ToArray()
                     });
                 
-                if (clearingLayers.Any())
+                if (clearingLayers.Any()) 
                     networkController.Client.SendPacket(new PacketPlayerScore
                     {
                         Id = id,
-                        Score = score + (deletedBlocks.Count * clearingLayers.Count)
+                        Score = new PlayerScore(Score.Score + (deletedBlocks.Count * clearingLayers.Count), Score.ClearedLayers)
                     });
             }
 
             return clearingLayers;
+        }
+
+        private IEnumerator CreateEndBlocksForScore()
+        {
+            var score = Score.Score;
+
+            var min = new Vector3Int(-Radius, 1, -Radius);
+            var max = new Vector3Int(Radius, Mathf.CeilToInt(Score.Score / (float) Math.Pow(Radius * 2f + 1, 2)), Radius);
+
+            for (var z = max.z; z >= min.z && score > 0; z--)
+                for (var y = min.y; y <= max.y && score > 0; y++)
+                    for (var x = min.x; x <= max.x && score > 0; x++)
+                    {
+                        var pos = new Vector3Int(x * (Mathf.Repeat(y, 2) == 0 ? -1 : 1) * (Mathf.Repeat(z, 2) == 0 ? 1 : -1), y, z);
+                        var color = Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1);
+                        
+                        CreateBlock(pos, color);
+                        score--;
+                        
+                        yield return new WaitForSeconds(0.075f);
+                    }
+        }
+
+        [PacketListener(PacketTypeId.GameEnd, PacketDirection.Client)]
+        public void OnGameEnd(PacketGameEnd packet)
+        {
+            if (!IsDemo())
+                StartCoroutine(CreateEndBlocksForScore());
         }
 
         [PacketListener(PacketTypeId.ShapeCreate, PacketDirection.Client)]
@@ -296,6 +348,8 @@ namespace Sabotris
             if (packet.Id != id)
                 return;
 
+            dead = true;
+
             foreach (var blockIndex in packet.BlockIndices)
                 RemoveBlock(blockIndex.Key, blockIndex.Value, packet.BlockIndices.Length);
         }
@@ -303,10 +357,12 @@ namespace Sabotris
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Client)]
         public void OnPlayerScore(PacketPlayerScore packet)
         {
+            DropSpeedMs = Mathf.Clamp(DropSpeedMs - 50, 100, 1000);
+            
             if (packet.Id != id)
                 return;
 
-            score = packet.Score;
+            Score = packet.Score;
         }
 
         public bool IsDemo() => this is DemoContainer;
@@ -330,13 +386,13 @@ namespace Sabotris
 
         public string ContainerName
         {
-            get => _containerName;
+            get => containerName;
             set
             {
                 if (value == ContainerName)
                     return;
                 
-                _containerName = value;
+                containerName = value;
 
                 nameText.text = value;
             }

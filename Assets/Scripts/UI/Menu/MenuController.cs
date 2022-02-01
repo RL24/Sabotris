@@ -12,6 +12,8 @@ namespace UI.Menu
     public class MenuController : MonoBehaviour
     {
         public NetworkController networkController;
+        public World world;
+        
         public Volume volume;
         public RawImage background;
         
@@ -52,13 +54,14 @@ namespace UI.Menu
                 return;
             }
             
-            if (getDof)
+            if (getDof && !(prefab is MenuGameOver))
                 dof.active = true;
             background.enabled = true;
             
             nextMenu = Instantiate(prefab, Vector3.zero, Quaternion.identity, transform);
             nextMenu.menuController = this;
             nextMenu.networkController = networkController;
+            nextMenu.world = world;
         }
 
         public bool IsInMenu => currentMenu != null;

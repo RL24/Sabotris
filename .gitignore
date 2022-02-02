@@ -1,5 +1,6 @@
 ﻿.idea/
-Build/
+Build/Linux/
+Build/Windows/
 Library/
 Logs/
 obj/

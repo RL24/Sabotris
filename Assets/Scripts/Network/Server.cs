@@ -163,7 +163,7 @@ namespace Sabotris.Network
 
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Server)]
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
-        public void OnGameStart(PacketGameStart packet)
+        public void OnPacketForward(Packet packet)
         {
             Peer.SendToAll(packet.Serialize(Peer), NetDeliveryMethod.ReliableOrdered);
         }
@@ -174,7 +174,7 @@ namespace Sabotris.Network
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkMove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Server)]
-        public void OnPacket(Packet packet)
+        public void OnPacketForwardExclude(Packet packet)
         {
             Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
         }

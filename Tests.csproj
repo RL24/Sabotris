@@ -13,7 +13,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{a831e496-f74f-3b02-9c08-7fdd571b03c1}</ProjectGuid>
+    <ProjectGuid>{320a2039-5ffd-5d2c-8ad9-f2f43b480efa}</ProjectGuid>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -292,7 +292,7 @@
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.25f1/Editor/Data/PlaybackEngines/LinuxStandaloneSupport/UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
  </Reference>
  <Reference Include="nunit.framework">
- <HintPath>Z:/Development/Games/Unity/Sabotris/Sabotris Final Version/Sabotris/Library/PackageCache/com.unity.ext.nunit@1.0.6/net35/unity-custom/nunit.framework.dll</HintPath>
+ <HintPath>Z:/game-dev/cs-sabotris/Library/PackageCache/com.unity.ext.nunit@1.0.6/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.25f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -643,16 +643,16 @@
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.25f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XPath.XDocument.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.TestRunner">
- <HintPath>Z:/Development/Games/Unity/Sabotris/Sabotris Final Version/Sabotris/Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
+ <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/UnityEngine.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.TestRunner">
- <HintPath>Z:/Development/Games/Unity/Sabotris/Sabotris Final Version/Sabotris/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
+ <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.UI">
- <HintPath>Z:/Development/Games/Unity/Sabotris/Sabotris Final Version/Sabotris/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
- <HintPath>Z:/Development/Games/Unity/Sabotris/Sabotris Final Version/Sabotris/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+ <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -1,59 +1,64 @@
-﻿using System.Collections.Generic;
-using JetBrains.Annotations;
-using Lidgren.Network;
+﻿using System.Runtime.InteropServices;
+using Sabotris.Network;
 using Sabotris.Network.Packets;
+using Steamworks;
 
-namespace Sabotris.Network
+namespace Network
 {
-    public static class Reasons
+    public enum DisconnectReason
     {
-        public const string NoReason = "";
-        public const string ShutdownServer = "Shutting down server";
-        public const string ShutdownClient = "Shutting down client";
-        public const string RestartServer = "Restarting server";
-        public const string RestartClient = "Restarting client";
-        public const string InvalidConnectPacket = "Invalid connect payload";
-        public const string IncorrectPassword = "Incorrect password";
-        public const string NoPlayersLeft = "No remaining players";
-        public const string ServerNotFound = "Failed to connect to server";
+        None,
+        ConnectionClosed,
+        LobbyHostIdNotFound,
+        ServerClosed,
+        ConnectionIssue,
+        ClientDisconnected,
+        ClientLeftLobby
     }
     
-    public abstract class Networker<T> where T : NetPeer
+    public class Networker
     {
-        public T Peer;
-        protected readonly Dictionary<long, Player> Players = new Dictionary<long, Player>();
-        protected PacketHandler PacketHandler { get; }
-        protected bool Running { get; set; }
-
-        protected Networker(PacketDirection packetDirection)
+        public const string HostIdKey = "HostId";
+        public const string LobbyNameKey = "LobbyName";
+        
+        protected readonly NetworkController NetworkController;
+        public readonly PacketHandler PacketHandler;
+        
+        protected Networker(NetworkController networkController, PacketDirection packetDirection)
         {
+            NetworkController = networkController;
             PacketHandler = new PacketHandler(packetDirection);
         }
 
-        public void RegisterListener<TU>(TU instance)
+        public void RegisterListener<T>(T instance)
         {
             PacketHandler.Register(instance);
         }
 
-        public void DeregisterListener<TU>(TU instance)
+        public void DeregisterListener<T>(T instance)
         {
             PacketHandler.Deregister(instance);
         }
-
-        public virtual void Shutdown(string reason)
-        {
-            Peer?.FlushSendQueue();
-            Peer?.Shutdown(reason);
-            Players.Clear();
-            Running = false;
-        }
         
-        protected Packet GetPacket(NetIncomingMessage incoming)
+        protected static Packet GetPacket(SteamNetworkingMessage_t message)
         {
+            var data = ParseMessageData(message);
+            var incoming = new ByteBuffer(data);
+            
+            var senderId = incoming.ReadUInt64();
             var packetType = PacketTypes.GetPacketType((PacketTypeId) incoming.ReadByte());
             var packet = packetType.NewPacket();
+            packet.Connection = message.m_conn;
+            packet.SenderId = senderId;
             packet.Deserialize(incoming);
             return packet;
+        }
+
+        private static byte[] ParseMessageData(SteamNetworkingMessage_t message)
+        {
+            var bytes = new byte[message.m_cbSize];
+            Marshal.Copy(message.m_pData, bytes, 0, message.m_cbSize);
+            return bytes;
         }
     }
 }

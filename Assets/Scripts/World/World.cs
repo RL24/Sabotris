@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using UI.Menu;
-using UI.Menu.Menus;
+using Network;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
+using UI.Menu;
+using UI.Menu.Menus;
 using UnityEngine;
 
 namespace Sabotris
@@ -22,12 +23,12 @@ namespace Sabotris
         public DemoContainer demoContainer;
         public Menu menuMain, menuPause, menuGameOver;
 
-        public readonly Dictionary<long, Container> Containers = new Dictionary<long, Container>();
+        public readonly Dictionary<ulong, Container> Containers = new Dictionary<ulong, Container>();
 
         private void Start()
         {
-            networkController.Client.OnConnected += OnConnected;
-            networkController.Client.OnDisconnected += OnDisconnected;
+            networkController.Client.OnConnectedToServerEvent += ConnectedToServerEvent;
+            networkController.Client.OnDisconnectedFromServerEvent += DisconnectedFromServerEvent;
             
             networkController.Client.RegisterListener(this);
         }
@@ -38,24 +39,27 @@ namespace Sabotris
                 menuController.OpenMenu(menuPause);
         }
 
-        private void OnConnected(object sender, string reason)
+        private void ConnectedToServerEvent(object sender, bool success)
         {
+            if (!success)
+                return;
+            
             demoContainer.gameObject.SetActive(false);
-            gameController.ControllingContainer = CreateContainer(networkController.Client.UserId, networkController.Client.UserName);
+            gameController.ControllingContainer =
+                CreateContainer(Client.UserId, Client.Username);
         }
 
-        private void OnDisconnected(object sender, string reason)
+        private void DisconnectedFromServerEvent(object sender, DisconnectReason disconnectReason)
         {
             gameController.ControllingContainer = null;
             foreach (var id in Containers.Keys.ToArray())
                 RemoveContainer(id);
             demoContainer.gameObject.SetActive(true);
             
-            if (!(menuController.currentMenu is MenuLobby) && !(menuController.currentMenu is MenuJoinGame))
-                menuController.OpenMenu(menuMain);
+            menuController.OpenMenu(menuMain);
         }
 
-        public Container CreateContainer(long id, string playerName)
+        public Container CreateContainer(ulong id, string playerName)
         {
             if (Containers.ContainsKey(id))
                 return Containers[id];
@@ -78,7 +82,7 @@ namespace Sabotris
             return container;
         }
 
-        public void RemoveContainer(long id)
+        public void RemoveContainer(ulong id)
         {
             if (Containers.TryGetValue(id, out var container))
                 Destroy(container.gameObject);
@@ -101,7 +105,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.PlayerConnected, PacketDirection.Client)]
         public void OnPlayerConnected(PacketPlayerConnected packet)
         {
-            if (packet.Player.Id == networkController.Client.UserId)
+            if (packet.Player.Id == Client.UserId)
                 return;
 
             CreateContainer(packet.Player.Id, packet.Player.Name);
@@ -112,7 +116,7 @@ namespace Sabotris
         {
             foreach (var player in packet.Players)
             {
-                if (player.Id == networkController.Client.UserId)
+                if (player.Id == Client.UserId)
                     continue;
 
                 CreateContainer(player.Id, player.Name);

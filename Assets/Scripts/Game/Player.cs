@@ -15,10 +15,10 @@ namespace Sabotris
     
     public class Player
     {
-        public long Id { get; set; }
+        public ulong Id { get; set; }
         public string Name { get; private set; }
 
-        public Player(long id, string name)
+        public Player(ulong id, string name)
         {
             Id = id;
             Name = name;

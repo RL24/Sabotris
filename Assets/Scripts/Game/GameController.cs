@@ -1,11 +1,8 @@
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using UI.Menu;
 using Sabotris.Network;
 using Sabotris.Util;
+using Steamworks;
+using UI.Menu;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Sabotris
 {
@@ -20,6 +17,8 @@ namespace Sabotris
 
         private void Start()
         {
+            SteamNetworkingUtils.InitRelayNetworkAccess();
+            
             networkController.Server.OnServerStart += (_, __) =>
             {
                 Logging.Log(true, "Server started, now listening for for connections");
@@ -30,12 +29,12 @@ namespace Sabotris
                 Logging.Log(true, "Server stopped: {0}", reason);
             };
             
-            networkController.Client.OnConnected += (_, reason) =>
+            networkController.Client.OnConnectedToServerEvent += (_, reason) =>
             {
                 Logging.Log(false, "Connected to server");
             };
 
-            networkController.Client.OnDisconnected += (_, reason) =>
+            networkController.Client.OnDisconnectedFromServerEvent += (_, reason) =>
             {
                 Logging.Log(false, "Disconnected from server: {0}", reason);
             };

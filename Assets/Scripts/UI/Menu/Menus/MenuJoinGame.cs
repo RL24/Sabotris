@@ -1,5 +1,8 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
+using Network;
+using Sabotris.Util;
+using Steamworks;
 using UnityEngine;
 
 namespace UI.Menu.Menus
@@ -9,24 +12,25 @@ namespace UI.Menu.Menus
         private readonly Vector3 _cameraPosition = new Vector3(5, 11, -3.5f);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(55, -51, -7);
 
-        public MenuButton inputIp, inputPassword, buttonConnect, buttonBack;
+        public MenuLobbyListItem lobbyListItemTemplate;
+        
+        public RectTransform lobbyList;
+        public MenuButton buttonBack;
         
         public Menu menuMain, menuLobby;
 
-        private string _ip, _password;
+        private readonly Dictionary<ulong, MenuLobbyListItem> _lobbies = new Dictionary<ulong, MenuLobbyListItem>();
 
         protected override void Start()
         {
             base.Start();
+
+            networkController.Client.OnLobbiesFetchedEvent += OnLobbiesFetched;
+            
+            networkController.Client.RequestLobbyList();
             
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
-
-            if (inputIp is MenuInput miIp)
-                miIp.OnValueChanged += OnIpValueChanged;
-            
-            if (inputPassword is MenuInput miPassword)
-                miPassword.OnValueChanged += OnPasswordValueChanged;
         }
 
         protected override void OnDestroy()
@@ -35,21 +39,30 @@ namespace UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
+            
+            _lobbies.Clear();
 
-            if (inputPassword is MenuInput miPassword)
-                miPassword.OnValueChanged -= OnPasswordValueChanged;
+            networkController.Client.OnLobbiesFetchedEvent -= OnLobbiesFetched;
         }
 
-        private void OnIpValueChanged(object sender, string args)
+        private void OnLobbiesFetched(object sender, uint lobbyCount)
         {
-            _ip = args;
-            buttonConnect.isDisabled = _ip.Length == 0 || _password.Length == 0;
-        }
+            foreach (var lobby in _lobbies.Values)
+                Destroy(lobby.gameObject);
+            _lobbies.Clear();
 
-        private void OnPasswordValueChanged(object sender, string args)
-        {
-            _password = args;
-            buttonConnect.isDisabled = _ip.Length == 0 || _password.Length == 0;
+            if (lobbyCount == 0)
+            {
+                AddServerEntry(0, "No lobbies found");
+                return;
+            }
+            
+            for (var i = 0; i < lobbyCount; i++)
+            {
+                var lobbyId = SteamMatchmaking.GetLobbyByIndex(i);
+                var lobbyName = SteamMatchmaking.GetLobbyData(lobbyId, Networker.LobbyNameKey);
+                AddServerEntry(lobbyId.m_SteamID, lobbyName);
+            }
         }
 
         private void OnClickButton(object sender, EventArgs args)
@@ -57,29 +70,60 @@ namespace UI.Menu.Menus
             if (!Open)
                 return;
 
-            if (sender.Equals(buttonConnect))
-                StartCoroutine(StartClient());
-            else if (sender.Equals(buttonBack))
+            if (sender.Equals(buttonBack))
                 GoBack();
         }
 
-        private IEnumerator StartClient()
+        private void OnClickLobbyItem(object sender, EventArgs args)
+        {
+            Logging.Log(false, "Clicked button: {0}", sender.GetType());
+            if (sender is MenuLobbyListItem lobbyListItem)
+                JoinLobby(lobbyListItem.lobbyId);
+        }
+
+        private void AddServerEntry(ulong lobbyId, string lobbyName)
+        {
+            var lobbyListItem = Instantiate(lobbyListItemTemplate, Vector3.zero, Quaternion.identity,
+                lobbyList.transform);
+            lobbyListItem.lobbyId = lobbyId;
+            lobbyListItem.LobbyName = lobbyName;
+
+            if (lobbyId != 0)
+            {
+                buttons.Add(lobbyListItem);
+                lobbyListItem.OnClick += OnClickLobbyItem;
+            }
+
+            _lobbies.Add(lobbyId, lobbyListItem);
+
+            lobbyList.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, lobbyList.childCount * 60);
+        }
+
+        private void RemoveServerEntry(ulong lobbyId)
+        {
+            if (!_lobbies.TryGetValue(lobbyId, out var lobbyListItem))
+                return;
+            
+            Destroy(lobbyListItem.gameObject);
+            _lobbies.Remove(lobbyId);
+            
+            lobbyList.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, lobbyList.childCount * 60);
+        }
+
+        private void JoinLobby(ulong lobbyId)
         {
             SetButtonsDisabled();
 
-            if (!(inputIp is MenuInput miIp))
-                yield break;
-            
-            if (!(inputPassword is MenuInput miPassword))
-                yield break;
+            void ConnectedToServer(object sender, bool success)
+            {
+                if (success)
+                    menuController.OpenMenu(menuLobby);
+                else
+                    SetButtonsDisabled(false);
+            }
 
-            var ip = miIp.inputField.text;
-            var password = miPassword.inputField.text;
-            yield return networkController.Client.StartClient(ip, 47320, password);
-            if (networkController.Client.IsConnected)
-                menuController.OpenMenu(menuLobby);
-            else
-                SetButtonsDisabled(false);
+            networkController.Client.OnConnectedToServerEvent += ConnectedToServer; 
+            networkController.Client.JoinLobby(lobbyId.ToSteamID());
         }
 
         protected override Menu GetBackMenu()

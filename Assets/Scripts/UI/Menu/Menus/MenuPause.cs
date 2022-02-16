@@ -1,5 +1,5 @@
 ﻿using System;
-using Sabotris.Network;
+using Network;
 using UnityEngine;
 
 namespace UI.Menu.Menus
@@ -39,8 +39,8 @@ namespace UI.Menu.Menus
 
             if (sender.Equals(buttonDisconnect))
             {
-                networkController.Client.Shutdown(Reasons.ShutdownClient);
-                networkController.Server?.Shutdown(Reasons.ShutdownServer);
+                networkController.Client.DisconnectSocket(DisconnectReason.ClientDisconnected);
+                networkController.Server.DisconnectSockets(DisconnectReason.ServerClosed);
                 menuController.OpenMenu(menuMain);
             } 
             else if (sender.Equals(buttonSettings))

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Sabotris.Util;
 
 namespace Sabotris.Network.Packets.Game
 {
@@ -7,8 +6,8 @@ namespace Sabotris.Network.Packets.Game
     {
         public override PacketType GetPacketType() => PacketTypes.GameEnd;
         
-        public long Winner { get; set; }
-        public Dictionary<long, PlayerScore> Scores { get; set; }
+        public ulong Winner { get; set; }
+        public Dictionary<ulong, PlayerScore> Scores { get; set; }
 
     }
 }

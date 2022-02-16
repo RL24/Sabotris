@@ -1,6 +1,4 @@
-﻿using System;
-using Steamworks;
-using UnityEngine;
+﻿using Steamworks;
 
 namespace Sabotris.Util
 {

@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using UI.Menu.Menus;
+using UnityEngine;
 
 namespace Sabotris.Network
 {
     public class NetworkController : MonoBehaviour
     {
+        public const string HostIdKey = "HostId";
+        
         public World world;
         
         public Client Client { get; private set; }
@@ -11,13 +14,14 @@ namespace Sabotris.Network
 
         private void Start()
         {
-            Client = new Client();
-            Server = new Server(world);
+            Client = new Client(this);
+            Server = new Server(this, world);
         }
         
         private void Update()
         {
-            Server?.Update();
+            Client?.PollMessages();
+            Server?.PollMessages();
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
-using Lidgren.Network;
-using Sabotris.Network;
+using Sabotris.Util;
 using UnityEngine;
 
 namespace UI.Menu.Menus
@@ -11,7 +9,7 @@ namespace UI.Menu.Menus
         private readonly Vector3 _cameraPosition = new Vector3(5, 11, -3.5f);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(55, -51, -7);
 
-        public MenuButton inputPassword, buttonJoinLobby, buttonBack;
+        public MenuButton inputLobbyName, buttonJoinLobby, buttonBack;
         
         public Menu menuMain, menuLobby;
 
@@ -22,8 +20,8 @@ namespace UI.Menu.Menus
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
-            if (inputPassword is MenuInput miPassword)
-                miPassword.OnValueChanged += OnPasswordValueChanged;
+            if (inputLobbyName is MenuInput miLobbyName)
+                miLobbyName.OnValueChanged += OnLobbyNameValueChanged;
         }
 
         protected override void OnDestroy()
@@ -33,11 +31,11 @@ namespace UI.Menu.Menus
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
 
-            if (inputPassword is MenuInput miPassword)
-                miPassword.OnValueChanged -= OnPasswordValueChanged;
+            if (inputLobbyName is MenuInput miLobbyName)
+                miLobbyName.OnValueChanged -= OnLobbyNameValueChanged;
         }
 
-        private void OnPasswordValueChanged(object sender, string args)
+        private void OnLobbyNameValueChanged(object sender, string args)
         {
             buttonJoinLobby.isDisabled = args.Length == 0;
         }
@@ -48,34 +46,35 @@ namespace UI.Menu.Menus
                 return;
 
             if (sender.Equals(buttonJoinLobby))
-                StartCoroutine(StartServer());
+                StartServer();
             else if (sender.Equals(buttonBack))
                 GoBack();
         }
 
-        private IEnumerator StartServer()
+        private void StartServer()
         {
+            if (!(inputLobbyName is MenuInput miLobbyName))
+                return;
+            
             SetButtonsDisabled();
 
-            if (!(inputPassword is MenuInput miPassword))
-                yield break;
-            
-            var password = miPassword.inputField.text;
-            yield return networkController.Server.StartServer(password, 47320);
-            yield return new WaitForSeconds(0.2f);
-            if (networkController.Server.Peer.Status == NetPeerStatus.Running)
+            void ServerStarted(object sender, EventArgs args)
             {
-                yield return networkController.Client.StartClient("127.0.0.1", 47320, password);
-                yield return new WaitForSeconds(0.1f);
-                if (networkController.Client.IsConnected)
+                networkController.Server.OnServerStart -= ServerStarted;
+
+                if (networkController.Server.LobbyId == null)
                 {
-                    menuController.OpenMenu(menuLobby);
-                    yield break;
+                    Logging.Error(true, "Started server but no lobby ID");
+                    SetButtonsDisabled(false);
+                    return;
                 }
-                networkController.Client.Shutdown(Reasons.NoReason);
+
+                networkController.Client.IsHosting = true;
+                menuController.OpenMenu(menuLobby);
             }
-            networkController.Server.Shutdown(Reasons.NoReason);
-            SetButtonsDisabled(false);
+
+            networkController.Server.OnServerStart += ServerStarted;
+            networkController.Server.CreateLobby(miLobbyName.inputField.text);
         }
 
         protected override Menu GetBackMenu()

@@ -337,12 +337,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuController: {fileID: 0}
   networkController: {fileID: 0}
+  world: {fileID: 0}
   canvasGroup: {fileID: -8426725243307142463}
   buttons:
   - {fileID: 4734414653095104301}
   - {fileID: 1724725824885549069}
   - {fileID: 8134573086075478394}
-  inputPassword: {fileID: 4734414653095104301}
+  inputLobbyName: {fileID: 4734414653095104301}
   buttonJoinLobby: {fileID: 1724725824885549069}
   buttonBack: {fileID: 8134573086075478394}
   menuMain: {fileID: 5792942197404027228, guid: d0d66c19eec593246b5a59618348f833, type: 3}
@@ -436,7 +437,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 631161816517275409, guid: 513d8774acdc50e40a92895f9e8e17c2, type: 3}
       propertyPath: m_Name
-      value: Password
+      value: LobbyName
       objectReference: {fileID: 0}
     - target: {fileID: 631161816517275439, guid: 513d8774acdc50e40a92895f9e8e17c2, type: 3}
       propertyPath: rectTransform
@@ -456,7 +457,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8172802370403450866, guid: 513d8774acdc50e40a92895f9e8e17c2, type: 3}
       propertyPath: m_text
-      value: Enter Password...
+      value: Enter Lobby Name
       objectReference: {fileID: 0}
     - target: {fileID: 8172802370403450866, guid: 513d8774acdc50e40a92895f9e8e17c2, type: 3}
       propertyPath: m_VerticalAlignment

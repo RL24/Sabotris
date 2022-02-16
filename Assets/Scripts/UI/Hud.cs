@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Network;
 using Sabotris;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
@@ -19,7 +19,7 @@ namespace UI
         public GameObject playerList, scoreList;
         public TMP_Text playerItemPrefab, scoreItemPrefab;
 
-        private readonly Dictionary<long, Pair<TMP_Text, TMP_Text>> _playerScoreCache = new Dictionary<long, Pair<TMP_Text, TMP_Text>>();
+        private readonly Dictionary<ulong, Pair<TMP_Text, TMP_Text>> _playerScoreCache = new Dictionary<ulong, Pair<TMP_Text, TMP_Text>>();
 
         private void Start()
         {
@@ -29,7 +29,7 @@ namespace UI
                 Destroy(scoreList.transform.GetChild(i));
 
             networkController.Client.RegisterListener(this);
-            networkController.Client.OnDisconnected += OnDisconnectedFromServer;
+            networkController.Client.OnDisconnectedFromServerEvent += DisconnectedFromServerEvent;
 
             canvasGroup.alpha = 0;
         }
@@ -71,15 +71,15 @@ namespace UI
             _playerScoreCache.Clear();
         }
 
+        private void DisconnectedFromServerEvent(object sender, DisconnectReason disconnectReason)
+        {
+            RemoveAllEntries();
+        }
+
         [PacketListener(PacketTypeId.PlayerConnected, PacketDirection.Client)]
         public void OnPlayerConnected(PacketPlayerConnected packet)
         {
             AddEntry(packet.Player);
-        }
-
-        private void OnDisconnectedFromServer(object sender, string reason)
-        {
-            RemoveAllEntries();
         }
 
         [PacketListener(PacketTypeId.PlayerDisconnected, PacketDirection.Client)]

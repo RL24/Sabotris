@@ -2,12 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UI.Menu;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using TMPro;
+using UI.Menu;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -35,7 +35,7 @@ namespace Sabotris
         public CameraController cameraController;
         public TMP_Text nameText;
 
-        public long id;
+        public ulong id;
         [SerializeField] private string containerName;
         public PlayerScore Score = new PlayerScore(0, 0);
         public bool dead;

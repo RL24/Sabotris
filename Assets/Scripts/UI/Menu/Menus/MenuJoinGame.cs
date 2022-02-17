@@ -27,7 +27,7 @@ namespace UI.Menu.Menus
 
             networkController.Client.OnLobbiesFetchedEvent += OnLobbiesFetched;
             
-            networkController.Client.RequestLobbyList();
+            Client.RequestLobbyList();
             
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
@@ -114,9 +114,9 @@ namespace UI.Menu.Menus
         {
             SetButtonsDisabled();
 
-            void ConnectedToServer(object sender, bool success)
+            void ConnectedToServer(object sender, HSteamNetConnection? connection)
             {
-                if (success)
+                if (connection != null)
                     menuController.OpenMenu(menuLobby);
                 else
                     SetButtonsDisabled(false);

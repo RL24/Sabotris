@@ -15,17 +15,17 @@ namespace Sabotris.Network.Packets
     
     public class PacketHandler
     {
-        private readonly PacketDirection _packetDirection;
+        public readonly PacketDirection PacketDirection;
         private readonly Dictionary<PacketTypeId, ConcurrentDictionary<object, MethodInfo>> _cache = new Dictionary<PacketTypeId, ConcurrentDictionary<object, MethodInfo>>();
 
         public PacketHandler(PacketDirection packetDirection)
         {
-            _packetDirection = packetDirection;
+            PacketDirection = packetDirection;
         }
 
         public void Register<T>(T instance)
         {
-            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Key.PacketDirection == _packetDirection)))
+            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Key.PacketDirection == PacketDirection)))
             {
                 foreach (var pair in pairs)
                 {
@@ -39,7 +39,7 @@ namespace Sabotris.Network.Packets
 
         public void Deregister<T>(T instance)
         {
-            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Key.PacketDirection == _packetDirection)))
+            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Key.PacketDirection == PacketDirection)))
             {
                 foreach (var pair in pairs)
                 {
@@ -54,7 +54,7 @@ namespace Sabotris.Network.Packets
         {
             if (!_cache.TryGetValue(packet.GetPacketType().Id, out var listeners))
             {
-                Logging.Log(_packetDirection == PacketDirection.Server, "No listeners for packet type {0}",
+                Logging.Log(PacketDirection == PacketDirection.Server, "No listeners for packet type {0}",
                     packet.GetPacketType().Id);
                 return;
             }

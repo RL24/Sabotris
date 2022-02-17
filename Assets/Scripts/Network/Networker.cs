@@ -1,6 +1,8 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
+using Sabotris.Util;
 using Steamworks;
 
 namespace Network
@@ -14,6 +16,14 @@ namespace Network
         ConnectionIssue,
         ClientDisconnected,
         ClientLeftLobby
+    }
+
+    public enum SteamNetworkingSocketsSendType
+    {
+        Unreliable = 0,
+        NoNagle = 1,
+        NoDelay = 4,
+        Reliable = 8
     }
     
     public class Networker
@@ -59,6 +69,39 @@ namespace Network
             var bytes = new byte[message.m_cbSize];
             Marshal.Copy(message.m_pData, bytes, 0, message.m_cbSize);
             return bytes;
+        }
+
+        protected void ProcessIncomingMessages(IntPtr[] receivedMessages, int incomingMessages)
+        {
+            if (incomingMessages == -1)
+            {
+                Logging.Log(true, "Polling messages failed, failed connection");
+                return;
+            }
+            if (incomingMessages <= 0)
+                return;
+
+            if (incomingMessages > 20)
+                Logging.Warn(false, "Received more than 20 messages, potentially lag");
+            
+            for (var i = 0; i < incomingMessages; i++)
+            {
+                var receivedMessage = receivedMessages[i];
+                var parsedMessage = Marshal.PtrToStructure<SteamNetworkingMessage_t>(receivedMessage);
+                
+                var packet = GetPacket(parsedMessage);
+                
+                SteamNetworkingMessage_t.Release(receivedMessage);
+                
+                PacketHandler.Process(packet);
+            }
+        }
+
+        protected void SendNetworkMessage(HSteamNetConnection connection, IntPtr buffer, uint length)
+        {
+            var res = SteamNetworkingSockets.SendMessageToConnection(connection, buffer, length, (int) SteamNetworkingSocketsSendType.Reliable, out _);
+            if (res != EResult.k_EResultOK)
+                Logging.Log(true, "Failed to send packet to {0}: {1}", PacketHandler.PacketDirection == PacketDirection.Client ? "server" : "client", res);
         }
     }
 }

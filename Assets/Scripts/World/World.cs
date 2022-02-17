@@ -5,6 +5,7 @@ using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
+using Steamworks;
 using UI.Menu;
 using UI.Menu.Menus;
 using UnityEngine;
@@ -39,14 +40,14 @@ namespace Sabotris
                 menuController.OpenMenu(menuPause);
         }
 
-        private void ConnectedToServerEvent(object sender, bool success)
+        private void ConnectedToServerEvent(object sender, HSteamNetConnection? connection)
         {
-            if (!success)
+            if (connection == null)
                 return;
             
             demoContainer.gameObject.SetActive(false);
             gameController.ControllingContainer =
-                CreateContainer(Client.UserId, Client.Username);
+                CreateContainer(Client.UserId.m_SteamID, Client.Username);
         }
 
         private void DisconnectedFromServerEvent(object sender, DisconnectReason disconnectReason)
@@ -64,7 +65,7 @@ namespace Sabotris
             if (Containers.ContainsKey(id))
                 return Containers[id];
             
-            var container = Instantiate(containerTemplate, Containers.Count * (Vector3.right * (Container.Radius * 2 + 4)), Quaternion.identity);
+            var container = Instantiate(containerTemplate, Vector3.right * (Containers.Count * (Container.Radius * 2 + 4)), Quaternion.identity);
             container.name = $"Container_{playerName}_{id}";
 
             container.id = id;
@@ -105,7 +106,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.PlayerConnected, PacketDirection.Client)]
         public void OnPlayerConnected(PacketPlayerConnected packet)
         {
-            if (packet.Player.Id == Client.UserId)
+            if (packet.Player.Id == Client.UserId.m_SteamID)
                 return;
 
             CreateContainer(packet.Player.Id, packet.Player.Name);
@@ -116,7 +117,7 @@ namespace Sabotris
         {
             foreach (var player in packet.Players)
             {
-                if (player.Id == Client.UserId)
+                if (player.Id == Client.UserId.m_SteamID)
                     continue;
 
                 CreateContainer(player.Id, player.Name);

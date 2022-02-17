@@ -105,7 +105,7 @@ namespace Sabotris
                     networkController.Client.SendPacket(new PacketPlayerDead
                     {
                         Id = id,
-                        BlockIndices = indices.ToArray()
+                        BlockIndices = new Pair<Guid, int>[0]
                     });
             }
         }

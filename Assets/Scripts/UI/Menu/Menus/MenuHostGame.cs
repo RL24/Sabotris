@@ -60,7 +60,7 @@ namespace UI.Menu.Menus
 
             void ServerStarted(object sender, EventArgs args)
             {
-                networkController.Server.OnServerStart -= ServerStarted;
+                networkController.Server.OnServerStartEvent -= ServerStarted;
 
                 if (networkController.Server.LobbyId == null)
                 {
@@ -69,11 +69,11 @@ namespace UI.Menu.Menus
                     return;
                 }
 
-                networkController.Client.IsHosting = true;
+                networkController.Client.JoinLobby(networkController.Server.LobbyId.Value);
                 menuController.OpenMenu(menuLobby);
             }
 
-            networkController.Server.OnServerStart += ServerStarted;
+            networkController.Server.OnServerStartEvent += ServerStarted;
             networkController.Server.CreateLobby(miLobbyName.inputField.text);
         }
 

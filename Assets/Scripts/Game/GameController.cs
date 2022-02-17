@@ -19,12 +19,12 @@ namespace Sabotris
         {
             SteamNetworkingUtils.InitRelayNetworkAccess();
             
-            networkController.Server.OnServerStart += (_, __) =>
+            networkController.Server.OnServerStartEvent += (_, __) =>
             {
                 Logging.Log(true, "Server started, now listening for for connections");
             };
 
-            networkController.Server.OnServerStop += (_, reason) =>
+            networkController.Server.OnServerStopEvent += (_, reason) =>
             {
                 Logging.Log(true, "Server stopped: {0}", reason);
             };

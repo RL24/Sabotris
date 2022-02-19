@@ -21,7 +21,12 @@ namespace UI.Menu.Menus
             
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
-            
+
+            if (!networkController.Server.Running)
+            {
+                Destroy(buttonStartGame.gameObject);
+            }
+
             networkController.Client.RegisterListener(this);
         }
 

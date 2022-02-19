@@ -97,6 +97,7 @@
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketRetrievePlayerList.cs" />
      <Compile Include="Assets\Scripts\Network\Handler\PacketListener.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Layer\PacketLayerMove.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerDisconnected.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
@@ -150,7 +151,6 @@
      <Compile Include="Assets\Scripts\UI\Menu\Menu.cs" />
      <Compile Include="Assets\Scripts\Game\GameSettings.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
-     <Compile Include="Assets\Scripts\Network\Packets\Layer\PacketLayerMove.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
@@ -778,6 +778,9 @@
  <Reference Include="Unity.RenderPipelines.Core.Runtime">
  <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
  </Reference>
+ <Reference Include="com.rlabrecque.steamworks.net.editor">
+ <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/com.rlabrecque.steamworks.net.editor.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEditor.UI">
  <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
@@ -795,6 +798,9 @@
  </Reference>
  <Reference Include="Unity.PlasticSCM.Editor">
  <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/Unity.PlasticSCM.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="com.rlabrecque.steamworks.net">
+ <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/com.rlabrecque.steamworks.net.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Mathematics">
  <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
@@ -825,12 +831,6 @@
  </Reference>
  <Reference Include="Unity.SysrootPackage.Editor">
  <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/Unity.SysrootPackage.Editor.dll</HintPath>
- </Reference>
- <Reference Include="com.rlabrecque.steamworks.net.editor">
- <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/com.rlabrecque.steamworks.net.editor.dll</HintPath>
- </Reference>
- <Reference Include="com.rlabrecque.steamworks.net">
- <HintPath>Z:/game-dev/cs-sabotris/Library/ScriptAssemblies/com.rlabrecque.steamworks.net.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

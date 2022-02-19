@@ -61,6 +61,8 @@ namespace UI.Menu
             
             if (getDof && !(prefab is MenuGameOver))
                 dof.active = true;
+            else if (prefab is MenuGameOver)
+                dof.active = false;
             background.enabled = true;
             
             nextMenu = Instantiate(prefab, Vector3.zero, Quaternion.identity, transform);

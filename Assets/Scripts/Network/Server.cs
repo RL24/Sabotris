@@ -195,7 +195,6 @@ namespace UI.Menu.Menus
         {
             var data = packet.Serialize().Bytes;
             var buffer = Marshal.PtrToStructure<SteamNetworkingMessage_t>(SteamNetworkingUtils.AllocateMessage(data.Length));
-            Logging.Log(true, "Marshalling data length: {0} for packet {1}", data.Length, packet.GetPacketType().Id);
             Marshal.Copy(data, 0, buffer.m_pData, data.Length);
             foreach (var entry in _playerConnections.Where((entry) => entry.Key != exclude))
                 SendPacket(packet, buffer, (uint) data.Length, entry.Value);
@@ -241,6 +240,7 @@ namespace UI.Menu.Menus
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkMove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.LayerMove, PacketDirection.Server)]
         public void OnPacketForwardExclude(Packet packet)
         {
             SendPacketToAll(packet, packet.SenderId);

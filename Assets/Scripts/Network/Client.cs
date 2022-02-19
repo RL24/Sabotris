@@ -219,8 +219,6 @@ namespace UI.Menu.Menus
             var data = packet.Serialize().Bytes;
             var message = Marshal.PtrToStructure<SteamNetworkingMessage_t>(SteamNetworkingUtils.AllocateMessage(data.Length));
             Marshal.Copy(data, 0, message.m_pData, data.Length);
-
-            Logging.Log(false, "Sending packet: {0} ({1} bytes)", packet.GetPacketType().Id, data.Length);
             SendNetworkMessage(_connection.Value, message, (uint) data.Length);
         }
 

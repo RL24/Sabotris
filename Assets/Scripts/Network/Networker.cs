@@ -49,29 +49,6 @@ namespace Network
         {
             PacketHandler.Deregister(instance);
         }
-        
-        protected static Packet GetPacket(SteamNetworkingMessage_t message)
-        {
-            var data = ParseMessageData(message);
-            var incoming = new ByteBuffer(data);
-            
-            var senderId = incoming.ReadUInt64();
-            var packetType = PacketTypes.GetPacketType((PacketTypeId) incoming.ReadByte());
-            incoming.PacketType = packetType;
-            
-            var packet = packetType.NewPacket();
-            packet.Connection = message.m_conn;
-            packet.SenderId = senderId;
-            packet.Deserialize(incoming);
-            return packet;
-        }
-
-        private static byte[] ParseMessageData(SteamNetworkingMessage_t message)
-        {
-            var bytes = new byte[message.m_cbSize];
-            Marshal.Copy(message.m_pData, bytes, 0, message.m_cbSize);
-            return bytes;
-        }
 
         protected void ProcessIncomingMessages(IntPtr[] receivedMessages, int incomingMessages)
         {
@@ -97,6 +74,29 @@ namespace Network
                 
                 PacketHandler.Process(packet);
             }
+        }
+
+        private static Packet GetPacket(SteamNetworkingMessage_t message)
+        {
+            var data = ParseMessageData(message);
+            var incoming = new ByteBuffer(data);
+            
+            var senderId = incoming.ReadUInt64();
+            var packetType = PacketTypes.GetPacketType((PacketTypeId) incoming.ReadByte());
+            incoming.PacketType = packetType;
+            
+            var packet = packetType.NewPacket();
+            packet.Connection = message.m_conn;
+            packet.SenderId = senderId;
+            packet.Deserialize(incoming);
+            return packet;
+        }
+
+        private static byte[] ParseMessageData(SteamNetworkingMessage_t message)
+        {
+            var bytes = new byte[message.m_cbSize];
+            Marshal.Copy(message.m_pData, bytes, 0, message.m_cbSize);
+            return bytes;
         }
 
         protected void SendNetworkMessage(HSteamNetConnection connection, SteamNetworkingMessage_t buffer, uint length)

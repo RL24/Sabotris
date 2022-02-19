@@ -76,7 +76,6 @@ namespace UI.Menu.Menus
 
         private void OnClickLobbyItem(object sender, EventArgs args)
         {
-            Logging.Log(false, "Clicked button: {0}", sender.GetType());
             if (sender is MenuLobbyListItem lobbyListItem)
                 JoinLobby(lobbyListItem.lobbyId);
         }

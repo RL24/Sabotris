@@ -45,7 +45,6 @@ namespace UI.Menu.Menus
                 m_hConn = LocalConnection
             };
 
-            Logging.Log(false, "Registering callbacks");
             Callback<LobbyMatchList_t>.Create(LobbiesFetchedCallback);
             Callback<LobbyEnter_t>.Create(LobbyEnteredCallback);
             Callback<SteamNetConnectionStatusChangedCallback_t>.Create(ConnectionStatusChangedCallback);
@@ -87,8 +86,6 @@ namespace UI.Menu.Menus
         {
             if (IsHosting)
             {
-                Logging.Log(false, "Server running, creating local connection");
-
                 _connection = LocalConnection;
                 NetworkController.Server.OnConnectionStatusChanged(_localConnectionStatus);
                 OnConnectedToServerEvent?.Invoke(this, _connection);
@@ -153,10 +150,6 @@ namespace UI.Menu.Menus
 
                 case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
                     DisconnectSocket(DisconnectReason.ConnectionIssue);
-                    break;
-
-                default:
-                    Logging.Log(false, "Unhandled connection state changed: {0}", param.m_info.m_eState);
                     break;
             }
         }

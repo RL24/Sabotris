@@ -54,8 +54,7 @@ namespace Sabotris.Network.Packets
         {
             if (!_cache.TryGetValue(packet.GetPacketType().Id, out var listeners))
             {
-                Logging.Log(PacketDirection == PacketDirection.Server, "No listeners for packet type {0}",
-                    packet.GetPacketType().Id);
+                Logging.Log(PacketDirection == PacketDirection.Server, "No listeners for packet type {0}", packet.GetPacketType().Id);
                 return;
             }
 

@@ -13,10 +13,10 @@ namespace UI.Menu
     {
         public NetworkController networkController;
         public World world;
-        
+
         public Volume volume;
         public RawImage background;
-        
+
         public Menu currentMenu,
             nextMenu;
 
@@ -24,11 +24,10 @@ namespace UI.Menu
         {
             if (currentMenu != null && currentMenu.Closing && currentMenu.canvasGroup.alpha.Same(0))
             {
-                Logging.Log(false, "Destroying closed menu: {0}", currentMenu);
                 Destroy(currentMenu.gameObject);
                 currentMenu = null;
             }
-            
+
             if (currentMenu == null && nextMenu != null)
             {
                 currentMenu = nextMenu;
@@ -40,15 +39,8 @@ namespace UI.Menu
 
         public void OpenMenu(Menu prefab)
         {
-            Logging.Log(false, "Opening new menu: {0}", prefab);
-            if (currentMenu != null)
-            {
-                if (!currentMenu.Closing)
-                {
-                    Logging.Log(false, "Closing existing menu first: {0}", currentMenu);
-                    currentMenu.Closing = true;
-                }
-            }
+            if (currentMenu != null && !currentMenu.Closing)
+                currentMenu.Closing = true;
 
             var getDof = volume.profile.TryGet(out DepthOfField dof);
             if (prefab == null)
@@ -58,19 +50,18 @@ namespace UI.Menu
                 background.enabled = false;
                 return;
             }
-            
+
             if (getDof && !(prefab is MenuGameOver))
                 dof.active = true;
             else if (prefab is MenuGameOver)
                 dof.active = false;
             background.enabled = true;
-            
+
             nextMenu = Instantiate(prefab, Vector3.zero, Quaternion.identity, transform);
+            nextMenu.name = $"Menu-{prefab.name}";
             nextMenu.menuController = this;
             nextMenu.networkController = networkController;
             nextMenu.world = world;
-
-            Logging.Log(false, "Set next menu: {0}", nextMenu);
         }
 
         public bool IsInMenu => currentMenu != null;

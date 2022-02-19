@@ -9,20 +9,20 @@ namespace UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
         public MenuButton buttonFullscreen,
-                          buttonBack;
-        
+            buttonBack;
+
         public Menu menuSettings;
 
         protected override void Start()
         {
             base.Start();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
             if (!(buttonFullscreen is MenuCarousel carouselFullscreen))
                 return;
-            
+
             switch (Screen.fullScreenMode)
             {
                 case FullScreenMode.FullScreenWindow:
@@ -31,8 +31,6 @@ namespace UI.Menu.Menus
                 case FullScreenMode.ExclusiveFullScreen:
                     carouselFullscreen.index = 1;
                     break;
-                case FullScreenMode.Windowed:
-                case FullScreenMode.MaximizedWindow:
                 default:
                     carouselFullscreen.index = 2;
                     break;
@@ -53,7 +51,7 @@ namespace UI.Menu.Menus
         {
             if (!Open)
                 return;
-            
+
             if (sender.Equals(buttonBack))
                 GoBack();
         }
@@ -73,7 +71,7 @@ namespace UI.Menu.Menus
                     break;
             }
         }
-        
+
         protected override Menu GetBackMenu()
         {
             return menuSettings;
@@ -83,7 +81,7 @@ namespace UI.Menu.Menus
         {
             return _cameraPosition;
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

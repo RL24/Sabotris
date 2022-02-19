@@ -20,13 +20,12 @@
             {
                 if (value == _lobbyName)
                     return;
-                
+
                 _lobbyName = value;
 
                 if (text != null)
                     text.text = LobbyName;
             }
         }
-        
     }
 }

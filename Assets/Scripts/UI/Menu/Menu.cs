@@ -13,31 +13,31 @@ namespace UI.Menu
         public MenuController menuController;
         public NetworkController networkController;
         public World world;
-        
+
         public CanvasGroup canvasGroup;
         public List<MenuButton> buttons;
 
         private int _lastSelectedButton,
-                    _selectedButton = -1;
+            _selectedButton = -1;
 
         private readonly Stopwatch _selectTimer = new Stopwatch();
         private readonly Stopwatch _sideTimer = new Stopwatch();
 
-        public int SelectDelayMsMin { get; set; } = 20;
-        public int SelectDelayMsMax { get; set; } = 250;
-        public int SideDelayMsMin { get; set; } = 20;
-        public int SideDelayMsMax { get; set; } = 250;
+        private const int SelectDelayMsMin = 20;
+        private const int SelectDelayMsMax = 250;
+        private const int SideDelayMsMin = 20;
+        private const int SideDelayMsMax = 250;
 
         private int _selectDelayMs = 250;
         private int _sideDelayMs = 250;
 
         public bool Open { get; set; }
         public bool Closing { get; set; }
-        
+
         protected virtual void Start()
         {
             canvasGroup.alpha = 0;
-            
+
             foreach (var menuButton in buttons)
             {
                 menuButton.OnMouseEnter += OnMouseEnterButton;
@@ -61,7 +61,7 @@ namespace UI.Menu
         {
             if (!Open)
                 return;
-            
+
             var navigate = Mathf.RoundToInt(InputUtil.GetMoveUINavigateVertical());
 
             if (_selectTimer.ElapsedMilliseconds > _selectDelayMs || navigate == 0)
@@ -79,7 +79,7 @@ namespace UI.Menu
                 else
                     SelectedButton = (int) Mathf.Repeat(SelectedButton + navigate, buttons.Count);
             }
-            
+
             var navigateHor = Mathf.RoundToInt(InputUtil.GetMoveUINavigateHorizontal());
 
             if (_sideTimer.ElapsedMilliseconds > _sideDelayMs || navigateHor == 0)
@@ -91,7 +91,7 @@ namespace UI.Menu
             if (navigateHor != 0 && !_sideTimer.IsRunning)
             {
                 _sideTimer.Start();
-                
+
                 if (SelectedButton != -1)
                     buttons[SelectedButton].NavigateHorizontal(navigateHor);
             }
@@ -103,16 +103,17 @@ namespace UI.Menu
                 if (_selectedButton != -1)
                     buttons[SelectedButton].NavigateSelect();
                 else SelectedButton = _lastSelectedButton;
-            } else if (InputUtil.GetUIBack())
+            }
+            else if (InputUtil.GetUIBack())
                 GoBack();
         }
 
         protected virtual Menu GetBackMenu() => null;
-        
+
         protected virtual void GoBack()
         {
             SetButtonsDisabled();
-            
+
             menuController.OpenMenu(GetBackMenu());
         }
 
@@ -126,7 +127,7 @@ namespace UI.Menu
         {
             if (!Open)
                 return;
-            
+
             SelectedButton = _lastSelectedButton = buttons.IndexOf(sender as MenuButton);
         }
 
@@ -134,14 +135,14 @@ namespace UI.Menu
         {
             if (!Open)
                 return;
-            
+
             if (SelectedButton < 0 || SelectedButton >= buttons.Count)
                 return;
             var selectedButton = buttons[SelectedButton];
             selectedButton.isSelected = false;
             SelectedButton = -1;
         }
-        
+
         public abstract Vector3 GetCameraPosition();
         public abstract Quaternion GetCameraRotation();
 
@@ -155,7 +156,7 @@ namespace UI.Menu
 
                 if (SelectedButton != -1)
                     buttons[SelectedButton].isSelected = false;
-                
+
                 _selectedButton = value;
 
                 if (SelectedButton != -1)

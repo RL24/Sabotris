@@ -13,22 +13,22 @@ using Random = UnityEngine.Random;
 
 namespace Sabotris
 {
-    public class Container : MonoBehaviour, ISerializationCallbackReceiver
+    public class Container : MonoBehaviour
     {
         public const int Radius = 2;
         private static readonly Vector3Int BottomLeft = new Vector3Int(-Radius, 1, -Radius);
         private static readonly Vector3Int TopRight = new Vector3Int(Radius, 25, Radius);
-        
+
         private static readonly Vector3Int GenerateBottomLeft = new Vector3Int(-Radius, 0, -Radius);
         private static readonly Vector3Int GenerateTopRight = new Vector3Int(Radius, 24, Radius);
 
         private const float ClearLayerSpeed = 0.1f;
-        public const float ClearedLayerDropSpeed = 0.25f;
+        private const float ClearedLayerDropSpeed = 0.25f;
         private const float DropNewShapeSpeed = 0.4f;
-        
+
         public Shape shapeTemplate;
         public Block blockTemplate;
-        
+
         public GameController gameController;
         public MenuController menuController;
         public NetworkController networkController;
@@ -37,7 +37,7 @@ namespace Sabotris
 
         public ulong id;
         [SerializeField] private string containerName;
-        public PlayerScore Score = new PlayerScore(0, 0);
+        private PlayerScore _score = new PlayerScore(0, 0);
         public bool dead;
 
         public Shape controllingShape;
@@ -45,21 +45,21 @@ namespace Sabotris
         private readonly Dictionary<Guid, Shape> _shapes = new Dictionary<Guid, Shape>();
         private readonly Dictionary<Guid, Block> _blocks = new Dictionary<Guid, Block>();
 
-        public Vector3Int DropPosition { get; set; } = new Vector3Int(0, 20, 0);
+        public Vector3Int DropPosition { get; protected set; } = new Vector3Int(0, 20, 0);
 
-        public int DropSpeedMs { get; set; } = 1000;
-        public int DropSpeedFastMs { get; set; } = 10;
-        
-        public int MoveSpeedMs { get; set; } = 200;
-        public int MoveResetSpeedMs { get; set; } = 50;
-        
-        public int RotateThreshold { get; set; } = 90;
+        public int DropSpeedMs { get; private set; } = 1000;
+        public const int DropSpeedFastMs = 10;
+
+        public int MoveSpeedMs { get; } = 200;
+        public int MoveResetSpeedMs { get; } = 50;
+
+        public int RotateThreshold { get; } = 90;
 
         protected virtual void Start()
         {
             networkController.Client.RegisterListener(this);
         }
-        
+
         private void OnDestroy()
         {
             networkController.Client.DeregisterListener(this);
@@ -69,7 +69,7 @@ namespace Sabotris
         {
             if ((gameController.ControllingContainer != this && !IsDemo()) || dead)
                 return;
-            
+
             offsets ??= ShapeUtil.Generate(4, false, GenerateBottomLeft, GenerateTopRight);
 
             if (!DoesCollide(offsets.Select((offset) => offset.Item2 + DropPosition).ToArray()))
@@ -77,7 +77,7 @@ namespace Sabotris
                 var shape = CreateShape(Guid.NewGuid(), DropPosition, offsets, Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1));
                 shape.StartDropping();
                 controllingShape = shape;
-                
+
                 if (!IsDemo())
                     networkController.Client.SendPacket(new PacketShapeCreate
                     {
@@ -104,7 +104,7 @@ namespace Sabotris
                     });
             }
         }
-        
+
         public void LockShape(Shape shape, Vector3Int[] addedBlocks)
         {
             controllingShape = null;
@@ -124,7 +124,7 @@ namespace Sabotris
                     Id = shape.id,
                     Offsets = addedBlocks
                 });
-            
+
             StartCoroutine(StartClearingLayers(addedBlocks));
         }
 
@@ -140,35 +140,29 @@ namespace Sabotris
 
                 clearedLayers.Sort((a, b) => b.CompareTo(a));
                 foreach (var layer in clearedLayers)
-                    foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
-                    {
-                        block.RawPosition += Vector3Int.down;
-                        block.shifted = true;
-                    }
-                
+                foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
+                {
+                    block.RawPosition += Vector3Int.down;
+                    block.shifted = true;
+                }
+
                 if (!IsDemo())
                     networkController.Client.SendPacket(new PacketLayerMove
                     {
                         ContainerId = id,
                         Layers = clearedLayers.ToArray()
                     });
-                    // networkController.Client.SendPacket(new PacketBlockBulkMove
-                    // {
-                    //     ContainerId = id,
-                    //     Positions = movedBlocks.Select((block) => (block.id, block.RawPosition))
-                    //         .ToArray()
-                    // });
             }
-            
+
             yield return new WaitForSeconds(DropNewShapeSpeed);
-            
+
             StartDropping(IsDemo() ? (this as DemoContainer)?.GetNextOffsets() : null);
         }
-        
+
         private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null)
         {
             var shape = Instantiate(shapeTemplate, position, Quaternion.identity);
-            shape.name = $"Shape_{shapeId}";
+            shape.name = $"Shape-{shapeId}";
 
             shape.id = shapeId;
             shape.Offsets = offsets;
@@ -179,11 +173,11 @@ namespace Sabotris
             shape.networkController = networkController;
             shape.cameraController = cameraController;
             shape.parentContainer = this;
-            
+
             shape.transform.SetParent(transform, false);
-            
+
             _shapes.Add(shapeId, shape);
-            
+
             return shape;
         }
 
@@ -191,7 +185,7 @@ namespace Sabotris
         {
             if (!_shapes.TryGetValue(shapeId, out var shape))
                 return;
-            
+
             Destroy(shape.gameObject);
             _shapes.Remove(shapeId);
         }
@@ -200,14 +194,14 @@ namespace Sabotris
         {
             var blockId = Guid.NewGuid();
             var block = Instantiate(blockTemplate, position, Quaternion.identity);
-            block.name = $"Block_{blockId}";
+            block.name = $"Block-{blockId}";
             block.RawPosition = position;
             block.color = color;
 
             block.id = blockId;
-            
+
             block.transform.SetParent(transform, false);
-            
+
             _blocks.Add(blockId, block);
         }
 
@@ -215,7 +209,7 @@ namespace Sabotris
         {
             if (!_blocks.TryGetValue(blockId, out var block))
                 return;
-            
+
             RemoveBlock(block, index, max);
         }
 
@@ -236,7 +230,7 @@ namespace Sabotris
             return false;
         }
 
-        private List<int> ClearLayers(Vector3Int[] addedBlocks)
+        private List<int> ClearLayers(IEnumerable<Vector3Int> addedBlocks)
         {
             var distinctLayers = addedBlocks.Select((vec) => vec.y).Distinct().ToArray();
             var clearingLayers = new List<int>();
@@ -247,7 +241,7 @@ namespace Sabotris
                 var minBlockCountToClear = Math.Pow(Radius * 2 + 1, 2);
                 if (blocksInLayer < minBlockCountToClear)
                     continue;
-                
+
                 var blocksToRemove = _blocks.Where((block) => block.Value.RawPosition.y == layer).Select((block) => block.Value).ToArray();
                 foreach (var block in blocksToRemove)
                 {
@@ -266,12 +260,12 @@ namespace Sabotris
                         ContainerId = id,
                         Ids = deletedBlocks.ToArray()
                     });
-                
-                if (clearingLayers.Any()) 
+
+                if (clearingLayers.Any())
                     networkController.Client.SendPacket(new PacketPlayerScore
                     {
                         Id = id,
-                        Score = new PlayerScore(Score.Score + (deletedBlocks.Count * clearingLayers.Count), Score.ClearedLayers)
+                        Score = new PlayerScore(_score.Score + (deletedBlocks.Count * clearingLayers.Count), _score.ClearedLayers)
                     });
             }
 
@@ -280,23 +274,23 @@ namespace Sabotris
 
         private IEnumerator CreateEndBlocksForScore()
         {
-            var score = Score.Score;
+            var score = _score.Score;
 
             var min = new Vector3Int(-Radius, 1, -Radius);
-            var max = new Vector3Int(Radius, Mathf.CeilToInt(Score.Score / (float) Math.Pow(Radius * 2f + 1, 2)), Radius);
+            var max = new Vector3Int(Radius, Mathf.CeilToInt(_score.Score / (float) Math.Pow(Radius * 2f + 1, 2)), Radius);
 
             for (var z = max.z; z >= min.z && score > 0; z--)
-                for (var y = min.y; y <= max.y && score > 0; y++)
-                    for (var x = min.x; x <= max.x && score > 0; x++)
-                    {
-                        var pos = new Vector3Int(x * (Mathf.Repeat(y, 2) == 0 ? -1 : 1) * (Mathf.Repeat(z, 2) == 0 ? 1 : -1), y, z);
-                        var color = Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1);
-                        
-                        CreateBlock(pos, color);
-                        score--;
-                        
-                        yield return new WaitForSeconds(0.075f);
-                    }
+            for (var y = min.y; y <= max.y && score > 0; y++)
+            for (var x = min.x; x <= max.x && score > 0; x++)
+            {
+                var pos = new Vector3Int(x * (Mathf.Repeat(y, 2) == 0 ? -1 : 1) * (Mathf.Repeat(z, 2) == 0 ? 1 : -1), y, z);
+                var color = Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1);
+
+                CreateBlock(pos, color);
+                score--;
+
+                yield return new WaitForSeconds(0.075f);
+            }
         }
 
         [PacketListener(PacketTypeId.GameEnd, PacketDirection.Client)]
@@ -311,29 +305,16 @@ namespace Sabotris
         {
             if (packet.ContainerId != id)
                 return;
-            
+
             CreateShape(packet.Id, packet.Position, packet.Offsets, packet.Color);
         }
 
-        // [PacketListener(PacketTypeId.BlockBulkMove, PacketDirection.Client)]
-        // public void OnBlockBulkMove(PacketBlockBulkMove packet)
-        // {
-        //     if (packet.ContainerId != id)
-        //         return;
-        //     
-        //     foreach (var (blockId, blockPos) in packet.Positions)
-        //     {
-        //         if (!_blocks.TryGetValue(blockId, out var block))
-        //             continue;
-        //         block.RawPosition = blockPos;
-        //     }
-        // }
         [PacketListener(PacketTypeId.LayerMove, PacketDirection.Client)]
         public void OnLayerMove(PacketLayerMove packet)
         {
             if (packet.ContainerId != id)
                 return;
-            
+
             foreach (var layer in packet.Layers)
                 foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
                 {
@@ -347,7 +328,7 @@ namespace Sabotris
         {
             if (packet.ContainerId != id)
                 return;
-            
+
             foreach (var blockId in packet.Ids)
                 RemoveBlock(blockId);
         }
@@ -362,7 +343,7 @@ namespace Sabotris
             var blocks = _blocks.Values.OrderBy((block) => block.RawPosition.magnitude).ToArray();
             foreach (var block in blocks)
                 RemoveBlock(block, index++, blocks.Length);
-            
+
             dead = true;
         }
 
@@ -370,31 +351,14 @@ namespace Sabotris
         public void OnPlayerScore(PacketPlayerScore packet)
         {
             DropSpeedMs = Mathf.Clamp(DropSpeedMs - 50, 100, 1000);
-            
+
             if (packet.Id != id)
                 return;
 
-            Score = packet.Score;
+            _score = packet.Score;
         }
 
         public bool IsDemo() => this is DemoContainer;
-        
-        #region Serialize Fields
-
-        public Shape[] serializedShapes;
-        public Block[] serializedBlocks;
-        
-        public void OnBeforeSerialize()
-        {
-            serializedShapes = _shapes.Values.ToArray();
-            serializedBlocks = _blocks.Values.ToArray();
-        }
-
-        public void OnAfterDeserialize()
-        {
-        }
-        
-        #endregion
 
         public string ContainerName
         {
@@ -403,7 +367,7 @@ namespace Sabotris
             {
                 if (value == ContainerName)
                     return;
-                
+
                 containerName = value;
 
                 nameText.text = value;

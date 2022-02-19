@@ -10,13 +10,13 @@ namespace UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
         public MenuButton buttonMasterVolume, buttonBack;
-        
+
         public Menu menuSettings;
 
         protected override void Start()
         {
             base.Start();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
@@ -33,7 +33,7 @@ namespace UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
-            
+
             if (buttonMasterVolume is MenuSlider sliderMasterVolume)
                 sliderMasterVolume.OnValueChanged -= OnMasterVolumeChanged;
         }
@@ -61,7 +61,7 @@ namespace UI.Menu.Menus
         {
             return _cameraPosition;
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

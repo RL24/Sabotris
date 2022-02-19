@@ -6,36 +6,36 @@ using UnityEngine.InputSystem.Controls;
 
 namespace Sabotris.Util
 {
-    public class InputUtil
+    public static class InputUtil
     {
         #region Keyboard
 
-        public static IEnumerable<KeyControl> KeyEscape => new[] {Keyboard.current?.escapeKey};
+        private static IEnumerable<KeyControl> KeyEscape => new[] {Keyboard.current?.escapeKey};
 
-        public static IEnumerable<KeyControl> KeyLeft => new[] {Keyboard.current?.aKey, Keyboard.current?.leftArrowKey};
+        private static IEnumerable<KeyControl> KeyLeft => new[] {Keyboard.current?.aKey, Keyboard.current?.leftArrowKey};
 
-        public static IEnumerable<KeyControl> KeyRight => new[] {Keyboard.current?.dKey, Keyboard.current?.rightArrowKey};
+        private static IEnumerable<KeyControl> KeyRight => new[] {Keyboard.current?.dKey, Keyboard.current?.rightArrowKey};
 
-        public static IEnumerable<KeyControl> KeyForward => new[] {Keyboard.current?.wKey, Keyboard.current?.upArrowKey};
+        private static IEnumerable<KeyControl> KeyForward => new[] {Keyboard.current?.wKey, Keyboard.current?.upArrowKey};
 
-        public static IEnumerable<KeyControl> KeyBackward => new[] {Keyboard.current?.sKey, Keyboard.current?.downArrowKey};
+        private static IEnumerable<KeyControl> KeyBackward => new[] {Keyboard.current?.sKey, Keyboard.current?.downArrowKey};
 
-        public static IEnumerable<KeyControl> KeySpace => new[] {Keyboard.current?.spaceKey};
+        private static IEnumerable<KeyControl> KeySpace => new[] {Keyboard.current?.spaceKey};
 
         #region UI
-        
-        public static IEnumerable<KeyControl> KeyUILeft => new[] {Keyboard.current?.leftArrowKey};
 
-        public static IEnumerable<KeyControl> KeyUIRight => new[] {Keyboard.current?.rightArrowKey};
+        private static IEnumerable<KeyControl> KeyUILeft => new[] {Keyboard.current?.leftArrowKey};
 
-        public static IEnumerable<KeyControl> KeyUIUp => new[] {Keyboard.current?.upArrowKey};
+        private static IEnumerable<KeyControl> KeyUIRight => new[] {Keyboard.current?.rightArrowKey};
 
-        public static IEnumerable<KeyControl> KeyUIDown => new[] {Keyboard.current?.downArrowKey};
-        
-        public static IEnumerable<KeyControl> KeyUISelect => new[] {Keyboard.current?.spaceKey, Keyboard.current?.enterKey};
-        
+        private static IEnumerable<KeyControl> KeyUIUp => new[] {Keyboard.current?.upArrowKey};
+
+        private static IEnumerable<KeyControl> KeyUIDown => new[] {Keyboard.current?.downArrowKey};
+
+        private static IEnumerable<KeyControl> KeyUISelect => new[] {Keyboard.current?.spaceKey, Keyboard.current?.enterKey};
+
         #endregion
-        
+
         #endregion
 
         #region Mouse
@@ -43,10 +43,10 @@ namespace Sabotris.Util
         public static float MouseCameraSensitivity = 1; // * 50
         public static float MouseRotateSensitivity = 5; // * 10
 
-        public static Vector2Control MouseDelta => Mouse.current?.delta;
-        public static Vector2Control MouseScroll => Mouse.current?.scroll;
-        public static ButtonControl MouseLeftButton => Mouse.current?.leftButton;
-        public static ButtonControl MouseRightButton => Mouse.current?.rightButton;
+        private static Vector2Control MouseDelta => Mouse.current?.delta;
+        private static Vector2Control MouseScroll => Mouse.current?.scroll;
+        private static ButtonControl MouseLeftButton => Mouse.current?.leftButton;
+        private static ButtonControl MouseRightButton => Mouse.current?.rightButton;
 
         #endregion
 
@@ -55,37 +55,37 @@ namespace Sabotris.Util
         public static float GamepadCameraSensitivity = 1; // * 50
         public static float GamepadRotateSensitivity = 90; // / 3.6
 
-        public static ButtonControl GamepadPause => Gamepad.current?.startButton;
+        private static ButtonControl GamepadPause => Gamepad.current?.startButton;
 
-        public static StickControl GamepadLeftStick => Gamepad.current?.leftStick;
-        public static StickControl GamepadRightStick => Gamepad.current?.rightStick;
+        private static StickControl GamepadLeftStick => Gamepad.current?.leftStick;
+        private static StickControl GamepadRightStick => Gamepad.current?.rightStick;
 
-        public static ButtonControl GamepadLeftShoulder => Gamepad.current?.leftShoulder;
-        public static ButtonControl GamepadRightShoulder => Gamepad.current?.rightShoulder;
+        private static ButtonControl GamepadLeftShoulder => Gamepad.current?.leftShoulder;
+        private static ButtonControl GamepadRightShoulder => Gamepad.current?.rightShoulder;
 
-        public static IEnumerable<ButtonControl> GamepadLeftTrigger => new[] {Gamepad.current?.leftTrigger};
-        public static IEnumerable<ButtonControl> GamepadRightTrigger => new[] {Gamepad.current?.rightTrigger};
+        private static IEnumerable<ButtonControl> GamepadLeftTrigger => new[] {Gamepad.current?.leftTrigger};
+        private static IEnumerable<ButtonControl> GamepadRightTrigger => new[] {Gamepad.current?.rightTrigger};
 
-        public static ButtonControl GamepadButtonUp => Gamepad.current?.dpad?.up;
-        public static ButtonControl GamepadButtonDown => Gamepad.current?.dpad?.down;
-        public static ButtonControl GamepadButtonLeft => Gamepad.current?.dpad?.left;
-        public static ButtonControl GamepadButtonRight => Gamepad.current?.dpad?.right;
+        private static ButtonControl GamepadButtonUp => Gamepad.current?.dpad?.up;
+        private static ButtonControl GamepadButtonDown => Gamepad.current?.dpad?.down;
+        private static ButtonControl GamepadButtonLeft => Gamepad.current?.dpad?.left;
+        private static ButtonControl GamepadButtonRight => Gamepad.current?.dpad?.right;
 
-        public static ButtonControl GamepadButtonZoomIn => Gamepad.current?.leftStickButton;
-        public static ButtonControl GamepadButtonZoomOut => Gamepad.current?.rightStickButton;
+        private static ButtonControl GamepadButtonZoomIn => Gamepad.current?.leftStickButton;
+        private static ButtonControl GamepadButtonZoomOut => Gamepad.current?.rightStickButton;
 
-        public static ButtonControl GamepadButtonA => Gamepad.current?.buttonSouth;
-        public static ButtonControl GamepadButtonB => Gamepad.current?.buttonEast;
-        public static ButtonControl GamepadButtonX => Gamepad.current?.buttonWest;
-        public static ButtonControl GamepadButtonY => Gamepad.current?.buttonNorth;
+        private static ButtonControl GamepadButtonA => Gamepad.current?.buttonSouth;
+        private static ButtonControl GamepadButtonB => Gamepad.current?.buttonEast;
+        private static ButtonControl GamepadButtonX => Gamepad.current?.buttonWest;
+        private static ButtonControl GamepadButtonY => Gamepad.current?.buttonNorth;
 
         #endregion
 
-        public static bool WasPressed(ButtonControl key) => key?.wasPressedThisFrame ?? false;
-        public static bool WasPressed(IEnumerable<ButtonControl> keys) => keys.Any(WasPressed);
+        private static bool WasPressed(ButtonControl key) => key?.wasPressedThisFrame ?? false;
+        private static bool WasPressed(IEnumerable<ButtonControl> keys) => keys.Any(WasPressed);
 
-        public static bool IsPressed(ButtonControl key) => key?.IsPressed() ?? false;
-        public static bool IsPressed(IEnumerable<ButtonControl> keys) => keys.Any(IsPressed);
+        private static bool IsPressed(ButtonControl key) => key?.IsPressed() ?? false;
+        private static bool IsPressed(IEnumerable<ButtonControl> keys) => keys.Any(IsPressed);
 
         public static bool ShouldPause() => WasPressed(KeyEscape) || WasPressed(GamepadPause);
         public static bool ShouldRotateShape() => IsPressed(MouseRightButton);
@@ -123,7 +123,7 @@ namespace Sabotris.Util
             var gamepadValue = -GamepadLeftStick?.x.ReadValue() + (IsPressed(GamepadButtonLeft).Int() - IsPressed(GamepadButtonRight).Int()) ?? 0;
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
-        
+
         public static bool GetUISelect()
         {
             return WasPressed(KeyUISelect) || WasPressed(GamepadButtonA);

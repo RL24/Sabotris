@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace Sabotris.Util
 {
-    public class ShapeUtil
+    public static class ShapeUtil
     {
         public static readonly Vector3Int NullVector3Int = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
         private static readonly Vector3Int[] HorizontalDirections = {Vector3Int.left, Vector3Int.forward, Vector3Int.right, Vector3Int.back};
@@ -16,7 +16,7 @@ namespace Sabotris.Util
         {
             return Generate(offsetCount, vertical, NullVector3Int, NullVector3Int);
         }
-        
+
         public static (Guid, Vector3Int)[] Generate(int offsetCount, bool vertical, Vector3Int bottomLeft, Vector3Int topRight)
         {
             var offsets = new List<Vector3Int> {Vector3Int.zero};
@@ -36,7 +36,7 @@ namespace Sabotris.Util
 
                 if (!free.Any())
                     break;
-                
+
                 var pick = Random.Range(0, free.Count);
                 offsets.Add(free[pick]);
             }

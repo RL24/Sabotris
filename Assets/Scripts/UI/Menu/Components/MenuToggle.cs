@@ -9,7 +9,7 @@ namespace UI.Menu
     public class MenuToggle : MenuButton
     {
         public event EventHandler<bool> OnValueChanged;
-        
+
         public RawImage checkbox;
 
         private bool _isToggledOn;
@@ -37,6 +37,5 @@ namespace UI.Menu
         {
             NavigateSelect();
         }
-
     }
 }

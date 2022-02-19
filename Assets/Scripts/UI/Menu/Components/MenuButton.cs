@@ -11,15 +11,15 @@ namespace UI.Menu
         private static readonly Vector3 HoverPosition = new Vector3(40, 0, 0);
         private static readonly Color ColorDisabled = new Color(1, 1, 1, 0.3f);
         private static readonly Color ColorActive = new Color(0.6f, 0.9f, 1, 1f);
-        
+
         public event EventHandler OnMouseEnter, OnMouseExit, OnClick;
 
         public RectTransform rectTransform;
         public TMP_Text text;
 
         public bool isHovered,
-                    isSelected,
-                    isDisabled;
+            isSelected,
+            isDisabled;
 
         private Vector3 _startPosition;
         private Color _startColor = Color.white;
@@ -37,7 +37,7 @@ namespace UI.Menu
         {
             if (text == null)
                 return;
-            
+
             var color = isDisabled
                 ? ColorDisabled
                 : isHovered || isSelected
@@ -45,7 +45,7 @@ namespace UI.Menu
                     : _startColor;
             text.color = Color.Lerp(text.color, color, GameSettings.UIAnimationSpeed);
         }
-        
+
         private void FixedUpdate()
         {
             if (rectTransform != null)
@@ -59,8 +59,10 @@ namespace UI.Menu
             OnClick?.Invoke(this, null);
         }
 
-        public virtual void NavigateHorizontal(float val) {}
-        
+        public virtual void NavigateHorizontal(float val)
+        {
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             NavigateSelect();

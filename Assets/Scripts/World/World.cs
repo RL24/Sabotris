@@ -12,10 +12,10 @@ using UnityEngine;
 
 namespace Sabotris
 {
-    public class World : MonoBehaviour, ISerializationCallbackReceiver
+    public class World : MonoBehaviour
     {
         public Container containerTemplate;
-        
+
         public GameController gameController;
         public MenuController menuController;
         public NetworkController networkController;
@@ -30,7 +30,7 @@ namespace Sabotris
         {
             networkController.Client.OnConnectedToServerEvent += ConnectedToServerEvent;
             networkController.Client.OnDisconnectedFromServerEvent += DisconnectedFromServerEvent;
-            
+
             networkController.Client.RegisterListener(this);
         }
 
@@ -44,7 +44,7 @@ namespace Sabotris
         {
             if (connection == null)
                 return;
-            
+
             demoContainer.gameObject.SetActive(false);
             gameController.ControllingContainer =
                 CreateContainer(Client.UserId.m_SteamID, Client.Username);
@@ -56,34 +56,34 @@ namespace Sabotris
             foreach (var id in Containers.Keys.ToArray())
                 RemoveContainer(id);
             demoContainer.gameObject.SetActive(true);
-            
+
             menuController.OpenMenu(menuMain);
         }
 
-        public Container CreateContainer(ulong id, string playerName)
+        private Container CreateContainer(ulong id, string playerName)
         {
             if (Containers.ContainsKey(id))
                 return Containers[id];
-            
+
             var container = Instantiate(containerTemplate, Vector3.right * (Containers.Count * (Container.Radius * 2 + 4)), Quaternion.identity);
-            container.name = $"Container_{playerName}_{id}";
+            container.name = $"Container-{playerName}-{id}";
 
             container.id = id;
             container.ContainerName = playerName;
-            
+
             container.gameController = gameController;
             container.menuController = menuController;
             container.networkController = networkController;
             container.cameraController = cameraController;
-            
+
             container.transform.SetParent(transform, false);
-            
+
             Containers.Add(id, container);
-            
+
             return container;
         }
 
-        public void RemoveContainer(ulong id)
+        private void RemoveContainer(ulong id)
         {
             if (Containers.TryGetValue(id, out var container))
                 Destroy(container.gameObject);
@@ -129,20 +129,5 @@ namespace Sabotris
         {
             RemoveContainer(packet.Id);
         }
-        
-        #region Serialize Fields
-        
-        public Container[] serializedContainers;
-        
-        public void OnBeforeSerialize()
-        {
-            serializedContainers = Containers.Values.ToArray();
-        }
-
-        public void OnAfterDeserialize()
-        {
-        }
-        
-        #endregion
     }
 }

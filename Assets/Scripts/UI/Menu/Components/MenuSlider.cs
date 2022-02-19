@@ -18,22 +18,21 @@ namespace UI.Menu
 
             sliderValueText.text = $"{Mathf.RoundToInt(slider.value)}";
         }
-        
+
         public override void NavigateHorizontal(float val)
         {
             SetValue(slider.value + val);
             OnSliderValueChanged();
         }
-        
+
         public void SetValue(float value)
         {
             slider.SetValueWithoutNotify(value);
         }
-        
+
         public void OnSliderValueChanged()
         {
             OnValueChanged?.Invoke(this, slider.value);
         }
-        
     }
 }

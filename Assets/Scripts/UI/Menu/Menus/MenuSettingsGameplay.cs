@@ -10,17 +10,17 @@ namespace UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
         public MenuButton buttonGameTransitionSpeed,
-                          buttonUIAnimationSpeed,
-                          buttonGameCameraSpeed,
-                          buttonMenuCameraSpeed,
-                          buttonBack;
-        
+            buttonUIAnimationSpeed,
+            buttonGameCameraSpeed,
+            buttonMenuCameraSpeed,
+            buttonBack;
+
         public Menu menuSettings;
 
         protected override void Start()
         {
             base.Start();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
@@ -35,7 +35,7 @@ namespace UI.Menu.Menus
                 suas.OnValueChanged += OnUIAnimationSpeed;
                 suas.SetValue(GameSettings.UIAnimationSpeed * 100);
             }
-            
+
             if (buttonGameCameraSpeed is MenuSlider sgcs)
             {
                 sgcs.OnValueChanged += OnGameCameraSpeedChanged;
@@ -55,7 +55,7 @@ namespace UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
-            
+
             if (buttonGameTransitionSpeed is MenuSlider sgcs)
                 sgcs.OnValueChanged -= OnGameTransitionSpeedChanged;
         }
@@ -98,7 +98,7 @@ namespace UI.Menu.Menus
         {
             return _cameraPosition;
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

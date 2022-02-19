@@ -12,20 +12,18 @@ namespace UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(34, 34, 5);
 
         public MenuButton buttonStartGame, buttonBack;
-        
+
         public Menu menuHost, menuJoin;
 
         protected override void Start()
         {
             base.Start();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
             if (!networkController.Server.Running)
-            {
                 Destroy(buttonStartGame.gameObject);
-            }
 
             networkController.Client.RegisterListener(this);
         }
@@ -36,7 +34,7 @@ namespace UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
-            
+
             networkController.Client.DeregisterListener(this);
         }
 
@@ -67,7 +65,7 @@ namespace UI.Menu.Menus
         {
             return _cameraPosition;
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

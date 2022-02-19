@@ -24,15 +24,15 @@ namespace Sabotris
         public Guid id;
         public (Guid, Vector3Int)[] Offsets { get; set; }
         public Color? color = Color.white;
-        
+
         [SerializeField] private Vector3Int rawPosition;
         [SerializeField] private Quaternion rawRotation;
         [SerializeField] private Quaternion rotateActivator;
-        
+
         private readonly Stopwatch _dropTimer = new Stopwatch(),
-                                   _moveTimer = new Stopwatch(),
-                                   _moveResetTimer = new Stopwatch();
-        
+            _moveTimer = new Stopwatch(),
+            _moveResetTimer = new Stopwatch();
+
         private float _prevAdvance, _prevStrafe;
 
         [SerializeField] private float inputRotateYaw;
@@ -47,13 +47,13 @@ namespace Sabotris
             RawRotation = transform.rotation;
 
             transform.localScale = Vector3.zero;
-            
+
             foreach (var (blockId, blockPos) in Offsets)
                 CreateBlock(blockId, blockPos);
 
             foreach (var ren in GetComponentsInChildren<Renderer>())
                 ren.material.color = color ?? Color.white;
-            
+
             networkController.Client.RegisterListener(this);
         }
 
@@ -80,7 +80,7 @@ namespace Sabotris
             {
                 if (!InputUtil.ShouldRotateShape())
                     rotateActivator = RawRotation;
-                
+
                 DoRotate();
 
                 var roundedRotationActivator =
@@ -104,12 +104,12 @@ namespace Sabotris
         private void CreateBlock(Guid blockId, Vector3Int offset)
         {
             var block = Instantiate(blockTemplate, offset, Quaternion.identity);
-            block.name = $"Block_{blockId}";
+            block.name = $"Block-{blockId}";
 
             block.id = blockId;
-            
+
             block.transform.SetParent(transform, false);
-            
+
             Blocks.Add(blockId, block);
         }
 
@@ -132,12 +132,12 @@ namespace Sabotris
             _dropTimer.Reset();
             parentContainer.LockShape(this, Offsets.Select((offset) => RawPosition + offset.Item2).ToArray());
         }
-        
+
         private (Guid, Vector3Int)[] GetOffsets(Vector3Int position, Quaternion rotation)
         {
             if (Offsets == null || Blocks.Count == 0)
                 return null;
-            
+
             var prevPosition = transform.position;
             var prevRotation = transform.rotation;
 
@@ -159,12 +159,12 @@ namespace Sabotris
             var moveVec = Vector3.zero;
 
             var isDropping = false;
-            if (_dropTimer.ElapsedMilliseconds > (InputUtil.GetMoveDown() && !parentContainer.IsDemo() && !menuController.IsInMenu ? parentContainer.DropSpeedFastMs : parentContainer.DropSpeedMs))
+            if (_dropTimer.ElapsedMilliseconds > (InputUtil.GetMoveDown() && !parentContainer.IsDemo() && !menuController.IsInMenu ? Container.DropSpeedFastMs : parentContainer.DropSpeedMs))
             {
                 _dropTimer.Restart();
                 isDropping = true;
             }
-            
+
             var advance = InputUtil.GetMoveAdvance();
             var strafe = InputUtil.GetMoveStrafe();
 
@@ -172,7 +172,7 @@ namespace Sabotris
                 advance = strafe = 0;
 
             if (((advance == 0 && strafe == 0) || !_prevAdvance.Same(advance, 0.5f) || !_prevStrafe.Same(strafe, 0.5f) ||
-                    _moveTimer.ElapsedMilliseconds > parentContainer.MoveSpeedMs) && _moveTimer.IsRunning && !_moveResetTimer.IsRunning)
+                 _moveTimer.ElapsedMilliseconds > parentContainer.MoveSpeedMs) && _moveTimer.IsRunning && !_moveResetTimer.IsRunning)
                 _moveResetTimer.Start();
 
             if (_moveTimer.IsRunning && _moveResetTimer.ElapsedMilliseconds > parentContainer.MoveResetSpeedMs)
@@ -208,7 +208,7 @@ namespace Sabotris
 
                 if (isDropping)
                     vecs.Add(Vector3.down);
-                
+
                 moveVec = (
                     from vec in vecs
                     let rounded = Vector3Int.RoundToInt(vec)
@@ -290,7 +290,7 @@ namespace Sabotris
         public Vector3Int RawPosition
         {
             get => rawPosition;
-            set
+            private set
             {
                 if (RawPosition == value) return;
 
@@ -308,20 +308,20 @@ namespace Sabotris
                 }
             }
         }
-        
-        public Quaternion RawRotation
+
+        private Quaternion RawRotation
         {
             get => rawRotation;
             set
             {
                 if (RawRotation == value) return;
-                
+
                 rawRotation = value;
-                
+
                 var offsets = GetOffsets(RawPosition, rawRotation);
                 if (offsets != null)
                     Offsets = offsets;
-                
+
                 if (parentContainer.controllingShape == this)
                     networkController.Client.SendPacket(new PacketShapeRotate
                     {

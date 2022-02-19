@@ -16,9 +16,9 @@ namespace UI.Menu.Menus
     {
         public event EventHandler OnServerStartEvent;
         public event EventHandler<DisconnectReason> OnServerStopEvent;
-        
+
         private readonly World _world;
-        
+
         private readonly Dictionary<ulong, HSteamNetConnection> _playerConnections = new Dictionary<ulong, HSteamNetConnection>();
         private HSteamNetPollGroup _connectionPollGroup;
 
@@ -34,7 +34,7 @@ namespace UI.Menu.Menus
         public Server(NetworkController networkController, World world) : base(networkController, PacketDirection.Server)
         {
             _world = world;
-            
+
             PacketHandler.Register(this);
 
             Callback<LobbyCreated_t>.Create(OnLobbyCreated);
@@ -72,21 +72,21 @@ namespace UI.Menu.Menus
             }
 
             LobbyId = param.m_ulSteamIDLobby.ToSteamID();
-            
+
             SteamMatchmaking.SetLobbyData(LobbyId.Value, HostIdKey, Client.UserId.m_SteamID.ToString());
             SteamMatchmaking.SetLobbyData(LobbyId.Value, LobbyNameKey, _lobbyName);
             // todo: set user count in lobby data
 
             CreateListenerSocket();
         }
-        
-        public void CreateListenerSocket()
+
+        private void CreateListenerSocket()
         {
             _connectionPollGroup = SteamNetworkingSockets.CreatePollGroup();
             _listenSocket = SteamNetworkingSockets.CreateListenSocketP2P(0, 0, new SteamNetworkingConfigValue_t[0]);
             OnServerStartEvent?.Invoke(this, null);
         }
-        
+
         public void OnConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t param)
         {
             if (!Running)
@@ -106,11 +106,11 @@ namespace UI.Menu.Menus
                         Player = player
                     }, player.Id);
                     break;
-                
+
                 case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_Connecting:
                     SteamNetworkingSockets.AcceptConnection(param.m_hConn);
                     break;
-                
+
                 case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
                 case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ClosedByPeer:
                     SteamNetworkingSockets.CloseConnection(param.m_hConn, 0, "", false);
@@ -120,7 +120,7 @@ namespace UI.Menu.Menus
                         Id = player.Id
                     }, player.Id);
                     break;
-                
+
                 default:
                     Logging.Log(true, "Unhandled connection state changed: {0} for player: {1} ({2})", param.m_info.m_eState, player.Name, player.Id);
                     break;
@@ -139,7 +139,7 @@ namespace UI.Menu.Menus
         public void DisconnectSockets(DisconnectReason? reason = null)
         {
             SteamNetworkingSockets.DestroyPollGroup(_connectionPollGroup);
-            
+
             foreach (var connection in _playerConnections.Values)
                 SteamNetworkingSockets.CloseConnection(connection, 0, "", false);
             _playerConnections.Clear();
@@ -147,7 +147,7 @@ namespace UI.Menu.Menus
             if (_listenSocket != null)
                 SteamNetworkingSockets.CloseListenSocket(_listenSocket.Value);
             _listenSocket = null;
-            
+
             OnServerStopEvent?.Invoke(this, reason ?? DisconnectReason.ServerClosed);
         }
 
@@ -155,7 +155,7 @@ namespace UI.Menu.Menus
         {
             if (!Running)
                 return;
-            
+
             var receivedMessages = new IntPtr[100];
             var incomingMessages = SteamNetworkingSockets.ReceiveMessagesOnPollGroup(_connectionPollGroup, receivedMessages, 100);
             ProcessIncomingMessages(receivedMessages, incomingMessages);
@@ -167,10 +167,10 @@ namespace UI.Menu.Menus
         //     var connectedSteamUserName = SteamFriends.GetFriendPersonaName(connectedSteamUser);
         //     Logging.Log(true, "Lobby chat updated: {0} ({1})", connectedSteamUserName, (EChatMemberStateChange) param.m_rgfChatMemberStateChange);
         // }
-        
+
         #region Sending Packets
 
-        public void SendPacket(Packet packet, HSteamNetConnection connection)
+        private void SendPacket(Packet packet, HSteamNetConnection connection)
         {
             var data = packet.Serialize().Bytes;
             var message = Marshal.PtrToStructure<SteamNetworkingMessage_t>(SteamNetworkingUtils.AllocateMessage(data.Length));
@@ -178,16 +178,16 @@ namespace UI.Menu.Menus
             SendPacket(packet, message, (uint) data.Length, connection);
         }
 
-        public void SendPacket(Packet packet, SteamNetworkingMessage_t message, uint length, HSteamNetConnection connection)
+        private void SendPacket(Packet packet, SteamNetworkingMessage_t message, uint length, HSteamNetConnection connection)
         {
             Logging.Log(true, "Sending packet: {0} ({1} bytes)", packet.GetPacketType().Id, length);
-            
+
             if (connection.IsLocalClient())
             {
                 NetworkController.Client.PacketHandler.Process(packet);
                 return;
             }
-            
+
             SendNetworkMessage(connection, message, length);
         }
 
@@ -199,9 +199,9 @@ namespace UI.Menu.Menus
             foreach (var entry in _playerConnections.Where((entry) => entry.Key != exclude))
                 SendPacket(packet, buffer, (uint) data.Length, entry.Value);
         }
-        
+
         #endregion
-        
+
         #region Packet Listeners
 
         [PacketListener(PacketTypeId.RetrievePlayerList, PacketDirection.Server)]
@@ -212,7 +212,7 @@ namespace UI.Menu.Menus
                 Logging.Error(true, "Failed to get connection from packet {0}, this malfunctioned packet shouldn't exist", packet.GetPacketType().Id);
                 return;
             }
-            
+
             var playerList = _playerConnections.Keys.Select((id) => new Player(id, SteamFriends.GetFriendPersonaName(id.ToSteamID()))).ToArray();
             Logging.Log(true, "Got packet: RetrievePlayerList, sending player list ({0}) to client", playerList.Length);
             SendPacket(new PacketPlayerList
@@ -227,7 +227,7 @@ namespace UI.Menu.Menus
             LeaveLobby();
             SendPacketToAll(packet);
         }
-        
+
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
         public void OnPacketPlayerScore(PacketPlayerScore packet)
         {
@@ -238,7 +238,6 @@ namespace UI.Menu.Menus
         [PacketListener(PacketTypeId.ShapeMove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.ShapeRotate, PacketDirection.Server)]
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Server)]
-        [PacketListener(PacketTypeId.BlockBulkMove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.LayerMove, PacketDirection.Server)]
         public void OnPacketForwardExclude(Packet packet)
@@ -250,35 +249,13 @@ namespace UI.Menu.Menus
         public void OnPlayerDead(PacketPlayerDead packet)
         {
             SendPacketToAll(packet, packet.SenderId);
-            
+
             if (_playerConnections.Any((entry) => _world.Containers.TryGetValue(entry.Key, out var deadContainer) && !deadContainer.dead))
                 return;
 
-            ulong? winner = null;
-            var score = -1;
-            var scores = new Dictionary<ulong, PlayerScore>();
-
-            foreach (var entry in _playerConnections)
-            {
-                if (!_world.Containers.TryGetValue(entry.Key, out var container))
-                    continue;
-                
-                scores.Add(container.id, container.Score);
-
-                if (container.Score.Score <= score)
-                    continue;
-                
-                score = container.Score.Score;
-                winner = container.id;
-            }
-            
-            SendPacketToAll(new PacketGameEnd
-            {
-                Winner = winner ?? 0,
-                Scores = scores
-            });
+            SendPacketToAll(new PacketGameEnd());
         }
-        
+
         #endregion
     }
 }

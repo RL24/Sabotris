@@ -69,7 +69,6 @@
      <Compile Include="Assets\Scripts\World\World.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\PacketTypes.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
-     <Compile Include="Assets\Scripts\UI\Menu\Components\MenuDropdown.cs" />
      <Compile Include="Assets\Scripts\Network\Networker.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuJoinGame.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
@@ -123,18 +122,15 @@
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeMove.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuSlider.cs" />
      <Compile Include="Assets\Scripts\Network\Server.cs" />
-     <Compile Include="Assets\Scripts\Network\Packets\Game\PacketConnectingHail.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsGameplay.cs" />
      <Compile Include="Assets\Scripts\Network\Handler\PacketHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
      <Compile Include="Assets\Scripts\World\Container.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerScore.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
-     <Compile Include="Assets\Scripts\Util\UserUtil.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
      <Compile Include="Assets\Scripts\Game\Player.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuCarousel.cs" />
-     <Compile Include="Assets\Scripts\Network\Packets\Block\PacketBlockBulkMove.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
      <Compile Include="Assets\Scripts\Steamworks.NET\SteamManager.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuGameOver.cs" />
@@ -393,9 +389,6 @@
  </Reference>
  <Reference Include="UnityEditor.UnityConnectModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.25f1/Editor/Data/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll</HintPath>
- </Reference>
- <Reference Include="Lidgren.Network">
- <HintPath>Z:/game-dev/cs-sabotris/Assets/Lidgren.Network.dll</HintPath>
  </Reference>
  <Reference Include="Newtonsoft.Json">
  <HintPath>Z:/game-dev/cs-sabotris/Library/PackageCache/com.unity.nuget.newtonsoft-json@2.0.0/Runtime/Newtonsoft.Json.dll</HintPath>

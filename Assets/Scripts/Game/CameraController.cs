@@ -8,7 +8,7 @@ namespace Sabotris
     {
         public GameController gameController;
         public MenuController menuController;
-        
+
         public new Camera camera;
         private Vector3 _defaultPosition;
         private Quaternion _defaultRotation;
@@ -20,13 +20,12 @@ namespace Sabotris
         private Quaternion _cameraRotation = Quaternion.identity;
         private Vector3 _rotationInput = Vector3.zero; // yaw pitch zoom
 
-        private Container _targetContainer, _spectateContainer;
+        private Container _targetContainer;
         private Vector3 _targetShapePosition;
 
-        public float Yaw { get; set; }
-        public float Pitch { get; set; }
-        public float Roll { get; set; }
-        public float Zoom { get; set; } = 15;
+        public float Yaw { get; private set; }
+        private float Pitch { get; set; }
+        private float Zoom { get; set; } = 15;
 
         private void Start()
         {
@@ -40,10 +39,10 @@ namespace Sabotris
 
         private void Update()
         {
-            if (!camera || (gameController.ControllingContainer == null && _spectateContainer == null))
+            if (!camera || gameController.ControllingContainer == null)
                 return;
 
-            var container = _spectateContainer == null ? gameController.ControllingContainer : _spectateContainer;
+            var container = gameController.ControllingContainer;
 
             if (_targetContainer != container)
             {
@@ -76,7 +75,7 @@ namespace Sabotris
             Pitch = Mathf.Clamp(Pitch, -80, 80);
             Zoom = Mathf.Clamp(Zoom, 10, 20);
 
-            _cameraRotation = Quaternion.Euler(Pitch, Yaw, Roll);
+            _cameraRotation = Quaternion.Euler(Pitch, Yaw, 0);
             _cameraPosition = _cameraRotation * new Vector3(0f, 0f, -cameraDistance - Zoom) + targetPosition;
         }
 
@@ -97,7 +96,7 @@ namespace Sabotris
                 toRotation = targetMenu.GetCameraRotation();
                 animationTime = GameSettings.MenuCameraSpeed;
             }
-            
+
             cameraTransform.position = Vector3.Lerp(cameraTransformPosition, toPosition, animationTime);
             cameraTransform.rotation = Quaternion.Lerp(cameraTransformRotation, toRotation, animationTime);
         }

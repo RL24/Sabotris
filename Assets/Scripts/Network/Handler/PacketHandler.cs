@@ -12,7 +12,7 @@ namespace Sabotris.Network.Packets
         Client,
         Server
     }
-    
+
     public class PacketHandler
     {
         public readonly PacketDirection PacketDirection;

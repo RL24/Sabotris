@@ -8,29 +8,26 @@ namespace Sabotris.Network.Packets
     {
         GameStart = 0x00,
         GameEnd = 0x01,
-        
-        ConnectingHail = 0x10,
-        
+
         ShapeCreate = 0x20,
         ShapeMove = 0x21,
         ShapeRotate = 0x22,
         ShapeLock = 0x23,
-        
-        BlockBulkMove = 0x30,
+
         BlockBulkRemove = 0x31,
-        
+
         LayerMove = 0x40,
-        
+
         PlayerConnected = 0x90,
         PlayerDisconnected = 0x91,
         PlayerList = 0x92,
         RetrievePlayerList = 0x93,
         PlayerDead = 0x94,
         PlayerScore = 0x95,
-        
+
         ServerShutdown = 0x1000
     }
-    
+
     public class PacketType
     {
         public PacketTypeId Id { get; }
@@ -43,21 +40,18 @@ namespace Sabotris.Network.Packets
         }
     }
 
-    public class PacketTypes
+    public static class PacketTypes
     {
         public static readonly PacketType GameStart = new PacketType(PacketTypeId.GameStart, () => new PacketGameStart());
         public static readonly PacketType GameEnd = new PacketType(PacketTypeId.GameEnd, () => new PacketGameEnd());
-        
-        public static readonly PacketType ConnectingHail = new PacketType(PacketTypeId.ConnectingHail, () => new PacketConnectingHail());
 
         public static readonly PacketType ShapeCreate = new PacketType(PacketTypeId.ShapeCreate, () => new PacketShapeCreate());
         public static readonly PacketType ShapeMove = new PacketType(PacketTypeId.ShapeMove, () => new PacketShapeMove());
         public static readonly PacketType ShapeRotate = new PacketType(PacketTypeId.ShapeRotate, () => new PacketShapeRotate());
         public static readonly PacketType ShapeLock = new PacketType(PacketTypeId.ShapeLock, () => new PacketShapeLock());
-        
-        public static readonly PacketType BlockBulkMove = new PacketType(PacketTypeId.BlockBulkMove, () => new PacketBlockBulkMove());
+
         public static readonly PacketType BlockBulkRemove = new PacketType(PacketTypeId.BlockBulkRemove, () => new PacketBlockBulkRemove());
-        
+
         public static readonly PacketType LayerMove = new PacketType(PacketTypeId.LayerMove, () => new PacketLayerMove());
 
         public static readonly PacketType PlayerConnected = new PacketType(PacketTypeId.PlayerConnected, () => new PacketPlayerConnected());
@@ -66,12 +60,12 @@ namespace Sabotris.Network.Packets
         public static readonly PacketType RetrievePlayerList = new PacketType(PacketTypeId.RetrievePlayerList, () => new PacketRetrievePlayerList());
         public static readonly PacketType PlayerDead = new PacketType(PacketTypeId.PlayerDead, () => new PacketPlayerDead());
         public static readonly PacketType PlayerScore = new PacketType(PacketTypeId.PlayerScore, () => new PacketPlayerScore());
-        
+
         public static readonly PacketType ServerShutdown = new PacketType(PacketTypeId.ServerShutdown, () => new PacketServerShutdown());
 
         public static PacketType GetPacketType(PacketTypeId packetTypeId)
         {
-            return new [] {GameStart, GameEnd, ConnectingHail, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkMove, BlockBulkRemove, LayerMove, PlayerConnected, PlayerDisconnected, PlayerList, RetrievePlayerList, PlayerDead, PlayerScore, ServerShutdown}
+            return new[] {GameStart, GameEnd, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkRemove, LayerMove, PlayerConnected, PlayerDisconnected, PlayerList, RetrievePlayerList, PlayerDead, PlayerScore, ServerShutdown}
                 .First((packetType) => packetType.Id == packetTypeId);
         }
     }

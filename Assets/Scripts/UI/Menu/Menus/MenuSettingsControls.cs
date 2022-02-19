@@ -10,17 +10,17 @@ namespace UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
         public MenuButton buttonGamepadCameraSensitivity,
-                          buttonGamepadRotateSensitivity,
-                          buttonMouseCameraSensitivity,
-                          buttonMouseRotateSensitivity,
-                          buttonBack;
-        
+            buttonGamepadRotateSensitivity,
+            buttonMouseCameraSensitivity,
+            buttonMouseRotateSensitivity,
+            buttonBack;
+
         public Menu menuSettings;
 
         protected override void Start()
         {
             base.Start();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
@@ -35,7 +35,7 @@ namespace UI.Menu.Menus
                 sgrs.OnValueChanged += OnGamepadRotateSensitivityChanged;
                 sgrs.SetValue(InputUtil.GamepadRotateSensitivity / 3.6f);
             }
-            
+
             if (buttonMouseCameraSensitivity is MenuSlider smcs)
             {
                 smcs.OnValueChanged += OnMouseCameraSensitivityChanged;
@@ -55,7 +55,7 @@ namespace UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
-            
+
             if (buttonGamepadCameraSensitivity is MenuSlider sgcs)
                 sgcs.OnValueChanged -= OnGamepadCameraSensitivityChanged;
         }
@@ -98,7 +98,7 @@ namespace UI.Menu.Menus
         {
             return _cameraPosition;
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

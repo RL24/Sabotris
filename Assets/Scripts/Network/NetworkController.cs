@@ -5,10 +5,8 @@ namespace Sabotris.Network
 {
     public class NetworkController : MonoBehaviour
     {
-        public const string HostIdKey = "HostId";
-        
         public World world;
-        
+
         public Client Client { get; private set; }
         public Server Server { get; private set; }
 
@@ -17,7 +15,7 @@ namespace Sabotris.Network
             Client = new Client(this);
             Server = new Server(this, world);
         }
-        
+
         private void Update()
         {
             Client?.PollMessages();

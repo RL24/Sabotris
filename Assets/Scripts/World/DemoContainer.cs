@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Sabotris.Util;
 using UnityEngine;
 
 namespace Sabotris
@@ -271,7 +270,7 @@ namespace Sabotris
         protected void OnEnable()
         {
             DropPosition = new Vector3Int(0, 7, 0);
-            
+
             if (controllingShape == null)
                 StartDropping(GetNextOffsets());
         }

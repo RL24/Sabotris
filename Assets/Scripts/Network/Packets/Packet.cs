@@ -17,27 +17,27 @@ namespace Sabotris.Network.Packets
         public ByteBuffer Serialize()
         {
             SenderId ??= SteamUser.GetSteamID().m_SteamID;
-            
-            var outgoing = new ByteBuffer { PacketType = GetPacketType() };
-            outgoing.Write(SenderId.Value);
+
+            var outgoing = new ByteBuffer {PacketType = GetPacketType()};
+            outgoing.Write(SenderId ?? 0);
             outgoing.Write((byte) GetPacketType().Id);
 
             foreach (var property in GetType().GetProperties()
-                         .Where((property) => property.CanRead && property.CanWrite)
-                         .OrderBy((property) => property.Name))
+                .Where((property) => property.CanRead && property.CanWrite)
+                .OrderBy((property) => property.Name))
             {
                 var value = property.GetValue(this);
                 WriteValue(outgoing, value);
             }
-            
+
             return outgoing;
         }
 
         public void Deserialize(ByteBuffer incoming)
         {
             foreach (var property in GetType().GetProperties()
-                         .Where((property) => property.CanRead && property.CanWrite)
-                         .OrderBy((property) => property.Name))
+                .Where((property) => property.CanRead && property.CanWrite)
+                .OrderBy((property) => property.Name))
             {
                 try
                 {
@@ -49,7 +49,7 @@ namespace Sabotris.Network.Packets
                 }
             }
         }
-        
+
         private object ReadValue(ByteBuffer incoming, Type type)
         {
             if (type == typeof(bool)) return incoming.ReadBoolean();
@@ -74,7 +74,7 @@ namespace Sabotris.Network.Packets
             if (type == typeof(Player)) return new Player(incoming.ReadUInt64(), incoming.ReadString());
             if (type == typeof(PlayerScore)) return new PlayerScore(incoming.ReadInt32(), incoming.ReadInt32());
             if (type == typeof(Color)) return new Color(incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat());
-            
+
             if (type == typeof(bool[])) return ReadArray<bool>(incoming, type.GetElementType());
             if (type == typeof(byte[])) return ReadArray<byte>(incoming, type.GetElementType());
             if (type == typeof(char[])) return ReadArray<char>(incoming, type.GetElementType());
@@ -97,9 +97,9 @@ namespace Sabotris.Network.Packets
             if (type == typeof(Player[])) return ReadArray<Player>(incoming, type.GetElementType());
             if (type == typeof(PlayerScore[])) return ReadArray<PlayerScore>(incoming, type.GetElementType());
             if (type == typeof(Color[])) return ReadArray<Color>(incoming, type.GetElementType());
-            
+
             if (type == typeof(Dictionary<long, PlayerScore>)) return ReadDictionary<long, PlayerScore>(incoming, type.GetGenericArguments());
-            
+
             return null;
         }
 
@@ -107,20 +107,46 @@ namespace Sabotris.Network.Packets
         {
             switch (value)
             {
-                case bool parsed: outgoing.Write(parsed); break;
-                case byte parsed: outgoing.Write(parsed); break;
-                case char parsed: outgoing.Write(parsed); break;
-                case short parsed: outgoing.Write(parsed); break;
-                case ushort parsed: outgoing.Write(parsed); break;
-                case int parsed: outgoing.Write(parsed); break;
-                case uint parsed: outgoing.Write(parsed); break;
-                case long parsed: outgoing.Write(parsed); break;
-                case ulong parsed: outgoing.Write(parsed); break;
-                case double parsed: outgoing.Write(parsed); break;
-                case float parsed: outgoing.Write(parsed); break;
-                case string parsed: outgoing.Write(parsed); break;
-                case Guid parsed: WriteArray(outgoing, parsed.ToByteArray()); break;
-                
+                case bool parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case byte parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case char parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case short parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case ushort parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case int parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case uint parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case long parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case ulong parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case double parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case float parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case string parsed:
+                    outgoing.Write(parsed);
+                    break;
+                case Guid parsed:
+                    WriteArray(outgoing, parsed.ToByteArray());
+                    break;
+
                 case Vector3 parsed:
                 {
                     outgoing.Write(parsed.x);
@@ -128,7 +154,7 @@ namespace Sabotris.Network.Packets
                     outgoing.Write(parsed.z);
                     break;
                 }
-                
+
                 case Vector3Int parsed:
                 {
                     outgoing.Write((sbyte) parsed.x);
@@ -190,29 +216,73 @@ namespace Sabotris.Network.Packets
                     break;
                 }
 
-                case IEnumerable<bool> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<char> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<short> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<ushort> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<int> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<uint> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<long> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<ulong> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<double> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<float> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<string> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<Guid> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<Vector3> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<Vector3Int> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<Quaternion> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<(Guid, Vector3Int)> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<(Guid, int)> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<(long, int)> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<Player> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<PlayerScore> parsed: WriteArray(outgoing, parsed); break;
-                case IEnumerable<Color> parsed: WriteArray(outgoing, parsed); break;
-                
-                case Dictionary<long, PlayerScore> parsed: WriteDictionary(outgoing, parsed); break;
+                case IEnumerable<bool> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<char> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<short> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<ushort> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<int> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<uint> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<long> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<ulong> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<double> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<float> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<string> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<Guid> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<Vector3> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<Vector3Int> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<Quaternion> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<(Guid, Vector3Int)> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<(Guid, int)> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<(long, int)> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<Player> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<PlayerScore> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<Color> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+
+                case Dictionary<long, PlayerScore> parsed:
+                    WriteDictionary(outgoing, parsed);
+                    break;
             }
         }
 
@@ -242,7 +312,7 @@ namespace Sabotris.Network.Packets
                 objects[i] = (T) ReadValue(incoming, type);
             return objects;
         }
-        
+
         private Dictionary<TKey, TValue> ReadDictionary<TKey, TValue>(ByteBuffer incoming, Type[] types)
         {
             var count = incoming.ReadInt32();

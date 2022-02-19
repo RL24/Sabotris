@@ -9,7 +9,7 @@ namespace UI.Menu
         {
             if (!IsActive())
                 return;
- 
+
             velocity = -data.scrollDelta * scrollSensitivity;
         }
     }

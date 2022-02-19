@@ -6,7 +6,7 @@ namespace Sabotris.Util
 {
     public static class Logging
     {
-        public static class Colors
+        private static class Colors
         {
             public const string Argument = "magenta";
             public const string Client = "aqua";

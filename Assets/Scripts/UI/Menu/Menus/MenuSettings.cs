@@ -9,22 +9,22 @@ namespace UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(5, 120, 2);
 
         public MenuButton buttonVideo,
-                          buttonAudio,
-                          buttonControls,
-                          buttonGameplay,
-                          buttonBack;
-        
+            buttonAudio,
+            buttonControls,
+            buttonGameplay,
+            buttonBack;
+
         public Menu menuMain,
-                    menuSettingsVideo,
-                    menuSettingsAudio,
-                    menuSettingsControls,
-                    menuSettingsGameplay,
-                    menuPause;
+            menuSettingsVideo,
+            menuSettingsAudio,
+            menuSettingsControls,
+            menuSettingsGameplay,
+            menuPause;
 
         protected override void Start()
         {
             base.Start();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
         }
@@ -41,7 +41,7 @@ namespace UI.Menu.Menus
         {
             if (!Open)
                 return;
-            
+
             if (sender.Equals(buttonVideo))
                 menuController.OpenMenu(menuSettingsVideo);
             else if (sender.Equals(buttonAudio))
@@ -53,7 +53,7 @@ namespace UI.Menu.Menus
             else if (sender.Equals(buttonBack))
                 GoBack();
         }
-        
+
         protected override Menu GetBackMenu()
         {
             return networkController.Client is {IsConnected: true} ? menuPause : menuMain;
@@ -63,7 +63,7 @@ namespace UI.Menu.Menus
         {
             return _cameraPosition;
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

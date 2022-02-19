@@ -10,13 +10,13 @@ namespace UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(55, -51, -7);
 
         public MenuButton inputLobbyName, buttonJoinLobby, buttonBack;
-        
+
         public Menu menuMain, menuLobby;
 
         protected override void Start()
         {
             base.Start();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
@@ -55,7 +55,7 @@ namespace UI.Menu.Menus
         {
             if (!(inputLobbyName is MenuInput miLobbyName))
                 return;
-            
+
             SetButtonsDisabled();
 
             void ServerStarted(object sender, EventArgs args)
@@ -86,7 +86,7 @@ namespace UI.Menu.Menus
         {
             return _cameraPosition;
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

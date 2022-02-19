@@ -10,16 +10,16 @@ namespace UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(5, 120, 2);
 
         public MenuButton buttonDisconnect,
-                          buttonSettings,
-                          buttonBack;
+            buttonSettings,
+            buttonBack;
 
         public Menu menuMain,
-                    menuSettings;
+            menuSettings;
 
         protected override void Start()
         {
             base.Start();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
         }
@@ -42,13 +42,13 @@ namespace UI.Menu.Menus
                 networkController.Client.DisconnectSocket(DisconnectReason.ClientDisconnected);
                 networkController.Server.DisconnectSockets(DisconnectReason.ServerClosed);
                 menuController.OpenMenu(menuMain);
-            } 
+            }
             else if (sender.Equals(buttonSettings))
                 menuController.OpenMenu(menuSettings);
             else if (sender.Equals(buttonBack))
                 GoBack();
         }
-        
+
         protected override Menu GetBackMenu()
         {
             return null;
@@ -58,7 +58,7 @@ namespace UI.Menu.Menus
         {
             return _cameraPosition;
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

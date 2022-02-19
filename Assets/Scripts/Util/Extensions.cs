@@ -1,6 +1,5 @@
 ﻿using System;
 using Steamworks;
-using UI.Menu.Menus;
 using UnityEngine;
 
 namespace Sabotris.Util
@@ -8,7 +7,7 @@ namespace Sabotris.Util
     public static class Extensions
     {
         private const float Tolerance = 0.001f;
-        
+
         private static bool IsLessThan(this Vector3Int self, Vector3Int pos) => self.x < pos.x || self.y < pos.y || self.z < pos.z;
 
         private static bool IsGreaterThan(this Vector3Int self, Vector3Int pos) => self.x > pos.x || self.y > pos.y || self.z > pos.z;
@@ -18,11 +17,6 @@ namespace Sabotris.Util
         public static Vector3Int Round(this Vector3 self, int round)
         {
             var num = 1.0 / round;
-            // return new Vector3Int(
-            //     (int) (Math.Round(Math.Abs(self.x) * num) * round * Math.Sign(self.x)),
-            //     (int) (Math.Round(Math.Abs(self.y) * num) * round * Math.Sign(self.y)),
-            //     (int) (Math.Round(Math.Abs(self.z) * num) * round * Math.Sign(self.z))
-            // );
             return new Vector3Int(
                 (int) (Math.Round(self.x * num) * round),
                 (int) (Math.Round(self.y * num) * round),
@@ -38,7 +32,7 @@ namespace Sabotris.Util
         {
             return (target - self) * time;
         }
-        
+
         public static float Lerp(this float self, float target, float time)
         {
             return (target - self) * time;

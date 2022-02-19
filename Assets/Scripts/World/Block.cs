@@ -30,14 +30,14 @@ namespace Sabotris
             if (rawPosition != ShapeUtil.NullVector3Int)
                 transform.localScale = Vector3.zero;
         }
-        
+
         private void FixedUpdate()
         {
             if (rawPosition != ShapeUtil.NullVector3Int && shifted)
                 transform.position = Vector3.Lerp(transform.position, _parentContainer.transform.position + rawPosition, GameSettings.GameTransitionSpeed);
 
             transform.localScale = Vector3.Lerp(transform.localScale, doRemove ? Vector3.zero : Vector3.one, GameSettings.GameTransitionSpeed);
-            
+
             if (doRemove && transform.localScale.GetMinValue() < 0.01)
                 Destroy(gameObject);
         }
@@ -51,7 +51,7 @@ namespace Sabotris
 
         public Vector3Int RawPosition
         {
-            get => rawPosition == ShapeUtil.NullVector3Int 
+            get => rawPosition == ShapeUtil.NullVector3Int
                 ? Vector3Int.RoundToInt(transform.position - _parentContainer.transform.position)
                 : rawPosition;
             set
@@ -62,6 +62,5 @@ namespace Sabotris
                 rawPosition = value;
             }
         }
-        
     }
 }

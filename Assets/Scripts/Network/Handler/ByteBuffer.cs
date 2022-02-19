@@ -5,9 +5,11 @@ namespace Sabotris.Network.Packets
 {
     public class ByteBufferException : Exception
     {
-        public ByteBufferException(string message) : base(message) {}
+        public ByteBufferException(string message) : base(message)
+        {
+        }
     }
-    
+
     public class ByteBuffer
     {
         public PacketType PacketType;
@@ -30,7 +32,7 @@ namespace Sabotris.Network.Packets
             if (_offset + readSize > _bytes.Count)
                 throw new ByteBufferException($"Error reading packet {PacketType.Id}: Read end index {_offset + readSize} exceeding written bytes {_bytes.Count}");
         }
-        
+
         public byte ReadByte()
         {
             const int size = 1;
@@ -39,7 +41,7 @@ namespace Sabotris.Network.Packets
             _offset += size;
             return value;
         }
-        
+
         public sbyte ReadSByte()
         {
             const int size = 1;
@@ -148,7 +150,7 @@ namespace Sabotris.Network.Packets
             var value = new string(chars);
             return value;
         }
-        
+
         public void Write(byte value)
         {
             _bytes.Add(value);
@@ -218,6 +220,5 @@ namespace Sabotris.Network.Packets
         }
 
         public byte[] Bytes => _bytes.ToArray();
-
     }
 }

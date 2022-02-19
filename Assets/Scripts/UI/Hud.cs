@@ -14,7 +14,7 @@ namespace UI
     public class Hud : MonoBehaviour
     {
         public NetworkController networkController;
-        
+
         public CanvasGroup canvasGroup;
         public GameObject playerList, scoreList;
         public TMP_Text playerItemPrefab, scoreItemPrefab;
@@ -53,7 +53,7 @@ namespace UI
             var scoreItem = Instantiate(scoreItemPrefab, Vector3.zero, Quaternion.identity, scoreList.transform);
             scoreItem.name = $"Score-{player.Name}-{player.Id}";
             scoreItem.text = "0";
-            
+
             _playerScoreCache.Add(player.Id, (playerItem, scoreItem));
         }
 
@@ -87,7 +87,7 @@ namespace UI
         {
             if (!_playerScoreCache.TryGetValue(packet.Id, out var item))
                 return;
-            
+
             RemoveEntry(item);
 
             _playerScoreCache.Remove(packet.Id);
@@ -97,7 +97,7 @@ namespace UI
         public void OnPlayerList(PacketPlayerList packet)
         {
             RemoveAllEntries();
-            
+
             foreach (var packetPlayer in packet.Players)
                 AddEntry(packetPlayer);
         }

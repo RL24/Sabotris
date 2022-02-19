@@ -7,7 +7,7 @@ namespace UI.Menu
     public class MenuCarousel : MenuButton
     {
         public event EventHandler<int> OnValueChanged;
-        
+
         public MenuButton previous, next;
         public TMP_Text value;
         public string[] values;
@@ -32,11 +32,10 @@ namespace UI.Menu
         {
             NavigateHorizontal(-1);
         }
-        
+
         private void OnNextClick(object sender, EventArgs args)
         {
             NavigateHorizontal(1);
         }
-        
     }
 }

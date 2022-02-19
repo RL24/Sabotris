@@ -25,15 +25,15 @@ namespace Network
         NoDelay = 4,
         Reliable = 8
     }
-    
+
     public class Networker
     {
         public const string HostIdKey = "HostId";
         public const string LobbyNameKey = "LobbyName";
-        
+
         protected readonly NetworkController NetworkController;
         public readonly PacketHandler PacketHandler;
-        
+
         protected Networker(NetworkController networkController, PacketDirection packetDirection)
         {
             NetworkController = networkController;
@@ -57,21 +57,22 @@ namespace Network
                 Logging.Log(true, "Polling messages failed, failed connection");
                 return;
             }
+
             if (incomingMessages <= 0)
                 return;
 
             if (incomingMessages > 20)
                 Logging.Warn(false, "Received more than 20 messages, potentially lag");
-            
+
             for (var i = 0; i < incomingMessages; i++)
             {
                 var receivedMessage = receivedMessages[i];
                 var parsedMessage = Marshal.PtrToStructure<SteamNetworkingMessage_t>(receivedMessage);
-                
+
                 var packet = GetPacket(parsedMessage);
-                
+
                 SteamNetworkingMessage_t.Release(receivedMessage);
-                
+
                 PacketHandler.Process(packet);
             }
         }
@@ -80,11 +81,11 @@ namespace Network
         {
             var data = ParseMessageData(message);
             var incoming = new ByteBuffer(data);
-            
+
             var senderId = incoming.ReadUInt64();
             var packetType = PacketTypes.GetPacketType((PacketTypeId) incoming.ReadByte());
             incoming.PacketType = packetType;
-            
+
             var packet = packetType.NewPacket();
             packet.Connection = message.m_conn;
             packet.SenderId = senderId;

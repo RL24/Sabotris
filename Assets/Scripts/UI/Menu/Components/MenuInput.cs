@@ -9,7 +9,7 @@ namespace UI.Menu
     public class MenuInput : MenuButton
     {
         private static readonly Color SelectedColor = new Color(1, 1, 1, 0.2f);
-        
+
         public event EventHandler<string> OnValueChanged;
 
         public RawImage background;
@@ -28,18 +28,18 @@ namespace UI.Menu
             if (isSelected)
                 NavigateSelect();
         }
-        
+
         protected override void Update()
         {
             base.Update();
 
             isSelected = inputField.isFocused;
-            
+
             Value = inputField.text;
             background.color = Color.Lerp(background.color, inputField.isFocused ? SelectedColor : _startBackgroundColor,
                 GameSettings.UIAnimationSpeed);
         }
-        
+
         public override void NavigateSelect()
         {
             base.NavigateSelect();
@@ -48,19 +48,18 @@ namespace UI.Menu
             inputField.ActivateInputField();
         }
 
-        public string Value
+        private string Value
         {
             get => _value;
             set
             {
                 if (value == _value)
                     return;
-                
+
                 _value = value;
-                
+
                 OnValueChanged?.Invoke(this, Value);
             }
         }
-
     }
 }

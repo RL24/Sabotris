@@ -9,16 +9,16 @@ namespace UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(30, 30, 4);
 
         public MenuButton buttonHost,
-                          buttonJoin,
-                          buttonSettings,
-                          buttonExit;
-        
+            buttonJoin,
+            buttonSettings,
+            buttonExit;
+
         public Menu menuHostGame, menuJoinGame, menuSettings;
 
         protected override void Start()
         {
             base.Start();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
         }
@@ -45,7 +45,7 @@ namespace UI.Menu.Menus
             else if (sender.Equals(buttonExit))
                 Application.Quit();
         }
-        
+
         protected override void GoBack()
         {
         }
@@ -54,7 +54,7 @@ namespace UI.Menu.Menus
         {
             return _cameraPosition;
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

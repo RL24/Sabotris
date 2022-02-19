@@ -17,7 +17,7 @@ namespace UI.Menu.Menus
         protected override void Start()
         {
             base.Start();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
         }
@@ -53,7 +53,7 @@ namespace UI.Menu.Menus
             var center = containers.Average((container) => container.transform.position.x);
             return new Vector3(center, _cameraPosition.y, _cameraPosition.z);
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

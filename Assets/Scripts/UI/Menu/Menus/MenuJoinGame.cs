@@ -13,10 +13,10 @@ namespace UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(55, -51, -7);
 
         public MenuLobbyListItem lobbyListItemTemplate;
-        
+
         public RectTransform lobbyList;
         public MenuButton buttonBack;
-        
+
         public Menu menuMain, menuLobby;
 
         private readonly Dictionary<ulong, MenuLobbyListItem> _lobbies = new Dictionary<ulong, MenuLobbyListItem>();
@@ -26,9 +26,9 @@ namespace UI.Menu.Menus
             base.Start();
 
             networkController.Client.OnLobbiesFetchedEvent += OnLobbiesFetched;
-            
+
             Client.RequestLobbyList();
-            
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
         }
@@ -39,7 +39,7 @@ namespace UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
-            
+
             _lobbies.Clear();
 
             networkController.Client.OnLobbiesFetchedEvent -= OnLobbiesFetched;
@@ -56,7 +56,7 @@ namespace UI.Menu.Menus
                 AddServerEntry(0, "No lobbies found");
                 return;
             }
-            
+
             for (var i = 0; i < lobbyCount; i++)
             {
                 var lobbyId = SteamMatchmaking.GetLobbyByIndex(i);
@@ -83,8 +83,8 @@ namespace UI.Menu.Menus
 
         private void AddServerEntry(ulong lobbyId, string lobbyName)
         {
-            var lobbyListItem = Instantiate(lobbyListItemTemplate, Vector3.zero, Quaternion.identity,
-                lobbyList.transform);
+            var lobbyListItem = Instantiate(lobbyListItemTemplate, Vector3.zero, Quaternion.identity, lobbyList.transform);
+            lobbyListItem.name = $"Server-{lobbyName}-{lobbyId}";
             lobbyListItem.lobbyId = lobbyId;
             lobbyListItem.LobbyName = lobbyName;
 
@@ -96,17 +96,6 @@ namespace UI.Menu.Menus
 
             _lobbies.Add(lobbyId, lobbyListItem);
 
-            lobbyList.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, lobbyList.childCount * 60);
-        }
-
-        private void RemoveServerEntry(ulong lobbyId)
-        {
-            if (!_lobbies.TryGetValue(lobbyId, out var lobbyListItem))
-                return;
-            
-            Destroy(lobbyListItem.gameObject);
-            _lobbies.Remove(lobbyId);
-            
             lobbyList.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, lobbyList.childCount * 60);
         }
 
@@ -122,7 +111,7 @@ namespace UI.Menu.Menus
                     SetButtonsDisabled(false);
             }
 
-            networkController.Client.OnConnectedToServerEvent += ConnectedToServer; 
+            networkController.Client.OnConnectedToServerEvent += ConnectedToServer;
             networkController.Client.JoinLobby(lobbyId.ToSteamID());
         }
 
@@ -135,7 +124,7 @@ namespace UI.Menu.Menus
         {
             return _cameraPosition;
         }
-        
+
         public override Quaternion GetCameraRotation()
         {
             return _cameraRotation;

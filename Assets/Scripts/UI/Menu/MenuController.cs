@@ -18,12 +18,13 @@ namespace UI.Menu
         public RawImage background;
         
         public Menu currentMenu,
-            nextMenu; // prefab
+            nextMenu;
 
         private void Update()
         {
-            if (currentMenu != null && currentMenu.canvasGroup.alpha.Same(0))
+            if (currentMenu != null && currentMenu.Closing && currentMenu.canvasGroup.alpha.Same(0))
             {
+                Logging.Log(false, "Destroying closed menu: {0}", currentMenu);
                 Destroy(currentMenu.gameObject);
                 currentMenu = null;
             }
@@ -39,10 +40,14 @@ namespace UI.Menu
 
         public void OpenMenu(Menu prefab)
         {
+            Logging.Log(false, "Opening new menu: {0}", prefab);
             if (currentMenu != null)
             {
                 if (!currentMenu.Closing)
+                {
+                    Logging.Log(false, "Closing existing menu first: {0}", currentMenu);
                     currentMenu.Closing = true;
+                }
             }
 
             var getDof = volume.profile.TryGet(out DepthOfField dof);
@@ -62,6 +67,8 @@ namespace UI.Menu
             nextMenu.menuController = this;
             nextMenu.networkController = networkController;
             nextMenu.world = world;
+
+            Logging.Log(false, "Set next menu: {0}", nextMenu);
         }
 
         public bool IsInMenu => currentMenu != null;

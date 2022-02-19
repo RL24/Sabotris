@@ -173,27 +173,30 @@ namespace UI.Menu.Menus
         public void SendPacket(Packet packet, HSteamNetConnection connection)
         {
             var data = packet.Serialize().Bytes;
-            var buffer = SteamNetworkingUtils.AllocateMessage(data.Length);
-            Marshal.Copy(data, 0, buffer, data.Length);
-            SendPacket(packet, buffer, (uint) data.Length, connection);
+            var message = Marshal.PtrToStructure<SteamNetworkingMessage_t>(SteamNetworkingUtils.AllocateMessage(data.Length));
+            Marshal.Copy(data, 0, message.m_pData, data.Length);
+            SendPacket(packet, message, (uint) data.Length, connection);
         }
 
-        public void SendPacket(Packet packet, IntPtr buffer, uint length, HSteamNetConnection connection)
+        public void SendPacket(Packet packet, SteamNetworkingMessage_t message, uint length, HSteamNetConnection connection)
         {
+            Logging.Log(true, "Sending packet: {0} ({1} bytes)", packet.GetPacketType().Id, length);
+            
             if (connection.IsLocalClient())
             {
                 NetworkController.Client.PacketHandler.Process(packet);
                 return;
             }
             
-            SendNetworkMessage(connection, buffer, length);
+            SendNetworkMessage(connection, message, length);
         }
 
-        public void SendPacketToAll(Packet packet, ulong? exclude = null)
+        private void SendPacketToAll(Packet packet, ulong? exclude = null)
         {
             var data = packet.Serialize().Bytes;
-            var buffer = SteamNetworkingUtils.AllocateMessage(data.Length);
-            Marshal.Copy(data, 0, buffer, data.Length);
+            var buffer = Marshal.PtrToStructure<SteamNetworkingMessage_t>(SteamNetworkingUtils.AllocateMessage(data.Length));
+            Logging.Log(true, "Marshalling data length: {0} for packet {1}", data.Length, packet.GetPacketType().Id);
+            Marshal.Copy(data, 0, buffer.m_pData, data.Length);
             foreach (var entry in _playerConnections.Where((entry) => entry.Key != exclude))
                 SendPacket(packet, buffer, (uint) data.Length, entry.Value);
         }

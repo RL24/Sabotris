@@ -9,15 +9,15 @@ namespace Sabotris.Util
     {
         private static readonly Assembly Assembly = typeof(ClassUtil).Assembly;
 
-        public static IEnumerable<IEnumerable<Pair<T, MethodInfo>>> GetMethodsInTypeWithAttribute<T>(Type type)
+        public static IEnumerable<IEnumerable<(T, MethodInfo)>> GetMethodsInTypeWithAttribute<T>(Type type)
         {
             return type.GetMethods()
                 .Where(method => !method.IsStatic && (uint) method.GetCustomAttributes(typeof(T), true).Length > 0)
                 .Select((methodInfo) =>
-                    methodInfo.GetCustomAttributes(typeof(T), true).Select((attribute) => new Pair<T, MethodInfo>((T) attribute, methodInfo)));
+                    methodInfo.GetCustomAttributes(typeof(T), true).Select((attribute) => ((T) attribute, methodInfo)));
         }
 
-        public static IEnumerable<IEnumerable<Pair<T, MethodInfo>>> GetMethodsWithAttribute<T>(Assembly assembly)
+        public static IEnumerable<IEnumerable<(T, MethodInfo)>> GetMethodsWithAttribute<T>(Assembly assembly)
         {
             var assembly1 = assembly;
             if ((object) assembly1 == null)

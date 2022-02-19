@@ -276,10 +276,10 @@ namespace Sabotris
                 StartDropping(GetNextOffsets());
         }
 
-        public Pair<Guid, Vector3Int>[] GetNextOffsets()
+        public (Guid, Vector3Int)[] GetNextOffsets()
         {
             return _demoShapes[_index++ % _demoShapes.Length]
-                .Select((offset) => new Pair<Guid, Vector3Int>(Guid.NewGuid(), offset)).ToArray();
+                .Select((offset) => (Guid.NewGuid(), offset)).ToArray();
         }
     }
 }

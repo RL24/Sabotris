@@ -9,6 +9,6 @@ namespace Sabotris.Network.Packets.Game
         public override PacketType GetPacketType() => PacketTypes.BlockBulkMove;
         
         public ulong ContainerId { get; set; }
-        public Pair<Guid, Vector3Int>[] Positions { get; set; }
+        public (Guid, Vector3Int)[] Positions { get; set; }
     }
 }

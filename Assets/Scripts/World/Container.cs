@@ -65,14 +65,14 @@ namespace Sabotris
             networkController.Client.DeregisterListener(this);
         }
 
-        public void StartDropping(Pair<Guid, Vector3Int>[] offsets = null)
+        public void StartDropping((Guid, Vector3Int)[] offsets = null)
         {
             if ((gameController.ControllingContainer != this && !IsDemo()) || dead)
                 return;
             
             offsets ??= ShapeUtil.Generate(4, false, GenerateBottomLeft, GenerateTopRight);
 
-            if (!DoesCollide(offsets.Select((offset) => offset.Value + DropPosition).ToArray()))
+            if (!DoesCollide(offsets.Select((offset) => offset.Item2 + DropPosition).ToArray()))
             {
                 var shape = CreateShape(Guid.NewGuid(), DropPosition, offsets, Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1));
                 shape.StartDropping();
@@ -92,11 +92,11 @@ namespace Sabotris
             {
                 var index = 0;
                 var blocks = _blocks.Values.OrderBy((block) => block.RawPosition.magnitude).ToArray();
-                var indices = new List<Pair<Guid, int>>();
+                var indices = new List<(Guid, int)>();
                 foreach (var block in blocks)
                 {
                     RemoveBlock(block, index++, blocks.Length);
-                    indices.Add(new Pair<Guid, int>(block.id, index));
+                    indices.Add((block.id, index));
                 }
 
                 dead = true;
@@ -105,7 +105,7 @@ namespace Sabotris
                     networkController.Client.SendPacket(new PacketPlayerDead
                     {
                         Id = id,
-                        BlockIndices = new Pair<Guid, int>[0]
+                        BlockIndices = indices.ToArray()
                     });
             }
         }
@@ -117,8 +117,7 @@ namespace Sabotris
             foreach (var block in shape.Blocks)
             {
                 _blocks.Add(block.Key, block.Value);
-                block.Value.RawPosition =
-                    shape.RawPosition + (shape.Offsets.FirstOrDefault((pair) => pair.Key == block.Key)?.Value ?? Vector3Int.zero);
+                block.Value.RawPosition = shape.RawPosition + shape.Offsets.First((pair) => pair.Item1 == block.Key).Item2;
             }
 
             if (gameController.ControllingContainer != this && !IsDemo())
@@ -158,7 +157,7 @@ namespace Sabotris
                     networkController.Client.SendPacket(new PacketBlockBulkMove
                     {
                         ContainerId = id,
-                        Positions = movedBlocks.Select((block) => new Pair<Guid, Vector3Int>(block.id, block.RawPosition))
+                        Positions = movedBlocks.Select((block) => (block.id, block.RawPosition))
                             .ToArray()
                     });
             }
@@ -168,12 +167,12 @@ namespace Sabotris
             StartDropping(IsDemo() ? (this as DemoContainer)?.GetNextOffsets() : null);
         }
         
-        public Shape CreateShape(Guid id, Vector3Int position, Pair<Guid, Vector3Int>[] offsets, Color? color = null)
+        private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null)
         {
             var shape = Instantiate(shapeTemplate, position, Quaternion.identity);
-            shape.name = $"Shape_{id}";
+            shape.name = $"Shape_{shapeId}";
 
-            shape.id = id;
+            shape.id = shapeId;
             shape.Offsets = offsets;
             shape.color = color;
 
@@ -185,7 +184,7 @@ namespace Sabotris
             
             shape.transform.SetParent(transform, false);
             
-            _shapes.Add(id, shape);
+            _shapes.Add(shapeId, shape);
             
             return shape;
         }
@@ -324,11 +323,11 @@ namespace Sabotris
             if (packet.ContainerId != id)
                 return;
             
-            foreach (var pair in packet.Positions)
+            foreach (var (blockId, blockPos) in packet.Positions)
             {
-                if (!_blocks.TryGetValue(pair.Key, out var block))
+                if (!_blocks.TryGetValue(blockId, out var block))
                     continue;
-                block.RawPosition = pair.Value;
+                block.RawPosition = blockPos;
             }
         }
 
@@ -350,8 +349,8 @@ namespace Sabotris
 
             dead = true;
 
-            foreach (var blockIndex in packet.BlockIndices)
-                RemoveBlock(blockIndex.Key, blockIndex.Value, packet.BlockIndices.Length);
+            foreach (var (blockId, blockIndex) in packet.BlockIndices)
+                RemoveBlock(blockId, blockIndex, packet.BlockIndices.Length);
         }
 
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Client)]

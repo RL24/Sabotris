@@ -25,25 +25,25 @@ namespace Sabotris.Network.Packets
 
         public void Register<T>(T instance)
         {
-            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Key.PacketDirection == PacketDirection)))
+            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Item1.PacketDirection == PacketDirection)))
             {
-                foreach (var pair in pairs)
+                foreach (var (packetListener, methodInfo) in pairs)
                 {
-                    var packetTypeId = pair.Key.PacketType;
+                    var packetTypeId = packetListener.PacketType;
                     if (!_cache.ContainsKey(packetTypeId))
                         _cache.Add(packetTypeId, new ConcurrentDictionary<object, MethodInfo>());
-                    _cache[packetTypeId].TryAdd(instance, pair.Value);
+                    _cache[packetTypeId].TryAdd(instance, methodInfo);
                 }
             }
         }
 
         public void Deregister<T>(T instance)
         {
-            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Key.PacketDirection == PacketDirection)))
+            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Item1.PacketDirection == PacketDirection)))
             {
-                foreach (var pair in pairs)
+                foreach (var (packetListener, _) in pairs)
                 {
-                    var packetTypeId = pair.Key.PacketType;
+                    var packetTypeId = packetListener.PacketType;
                     if (_cache.ContainsKey(packetTypeId))
                         _cache[packetTypeId].TryRemove(instance, out _);
                 }

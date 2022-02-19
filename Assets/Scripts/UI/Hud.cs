@@ -19,7 +19,7 @@ namespace UI
         public GameObject playerList, scoreList;
         public TMP_Text playerItemPrefab, scoreItemPrefab;
 
-        private readonly Dictionary<ulong, Pair<TMP_Text, TMP_Text>> _playerScoreCache = new Dictionary<ulong, Pair<TMP_Text, TMP_Text>>();
+        private readonly Dictionary<ulong, (TMP_Text, TMP_Text)> _playerScoreCache = new Dictionary<ulong, (TMP_Text, TMP_Text)>();
 
         private void Start()
         {
@@ -54,13 +54,13 @@ namespace UI
             scoreItem.name = $"Score-{player.Name}-{player.Id}";
             scoreItem.text = "0";
             
-            _playerScoreCache.Add(player.Id, new Pair<TMP_Text, TMP_Text>(playerItem, scoreItem));
+            _playerScoreCache.Add(player.Id, (playerItem, scoreItem));
         }
 
-        private void RemoveEntry(Pair<TMP_Text, TMP_Text> entry)
+        private void RemoveEntry((TMP_Text, TMP_Text) entry)
         {
-            Destroy(entry.Key.gameObject);
-            Destroy(entry.Value.gameObject);
+            Destroy(entry.Item1.gameObject);
+            Destroy(entry.Item2.gameObject);
         }
 
         private void RemoveAllEntries()
@@ -108,7 +108,7 @@ namespace UI
             if (!_playerScoreCache.TryGetValue(packet.Id, out var item))
                 return;
 
-            item.Value.text = $"{packet.Score.Score}";
+            item.Item2.text = $"{packet.Score.Score}";
         }
     }
 }

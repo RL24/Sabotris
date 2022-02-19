@@ -8,6 +8,6 @@ namespace Sabotris.Network.Packets.Game
         public override PacketType GetPacketType() => PacketTypes.PlayerDead;
         
         public ulong Id { get; set; }
-        public Pair<Guid, int>[] BlockIndices { get; set; }
+        public (Guid, int)[] BlockIndices { get; set; }
     }
 }

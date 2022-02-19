@@ -57,6 +57,8 @@ namespace Network
             
             var senderId = incoming.ReadUInt64();
             var packetType = PacketTypes.GetPacketType((PacketTypeId) incoming.ReadByte());
+            incoming.PacketType = packetType;
+            
             var packet = packetType.NewPacket();
             packet.Connection = message.m_conn;
             packet.SenderId = senderId;
@@ -97,9 +99,9 @@ namespace Network
             }
         }
 
-        protected void SendNetworkMessage(HSteamNetConnection connection, IntPtr buffer, uint length)
+        protected void SendNetworkMessage(HSteamNetConnection connection, SteamNetworkingMessage_t buffer, uint length)
         {
-            var res = SteamNetworkingSockets.SendMessageToConnection(connection, buffer, length, (int) SteamNetworkingSocketsSendType.Reliable, out _);
+            var res = SteamNetworkingSockets.SendMessageToConnection(connection, buffer.m_pData, length, (int) SteamNetworkingSocketsSendType.Reliable, out _);
             if (res != EResult.k_EResultOK)
                 Logging.Log(true, "Failed to send packet to {0}: {1}", PacketHandler.PacketDirection == PacketDirection.Client ? "server" : "client", res);
         }

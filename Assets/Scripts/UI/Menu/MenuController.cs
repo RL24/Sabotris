@@ -1,7 +1,7 @@
-﻿using UI.Menu.Menus;
-using Sabotris;
+﻿using Sabotris;
 using Sabotris.Network;
 using Sabotris.Util;
+using UI.Menu.Menus;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -18,12 +18,13 @@ namespace UI.Menu
         public RawImage background;
         
         public Menu currentMenu,
-            nextMenu; // prefab
+            nextMenu;
 
         private void Update()
         {
-            if (currentMenu != null && currentMenu.canvasGroup.alpha.Same(0))
+            if (currentMenu != null && currentMenu.Closing && currentMenu.canvasGroup.alpha.Same(0))
             {
+                Logging.Log(false, "Destroying closed menu: {0}", currentMenu);
                 Destroy(currentMenu.gameObject);
                 currentMenu = null;
             }
@@ -39,10 +40,14 @@ namespace UI.Menu
 
         public void OpenMenu(Menu prefab)
         {
+            Logging.Log(false, "Opening new menu: {0}", prefab);
             if (currentMenu != null)
             {
                 if (!currentMenu.Closing)
+                {
+                    Logging.Log(false, "Closing existing menu first: {0}", currentMenu);
                     currentMenu.Closing = true;
+                }
             }
 
             var getDof = volume.profile.TryGet(out DepthOfField dof);
@@ -56,12 +61,16 @@ namespace UI.Menu
             
             if (getDof && !(prefab is MenuGameOver))
                 dof.active = true;
+            else if (prefab is MenuGameOver)
+                dof.active = false;
             background.enabled = true;
             
             nextMenu = Instantiate(prefab, Vector3.zero, Quaternion.identity, transform);
             nextMenu.menuController = this;
             nextMenu.networkController = networkController;
             nextMenu.world = world;
+
+            Logging.Log(false, "Set next menu: {0}", nextMenu);
         }
 
         public bool IsInMenu => currentMenu != null;

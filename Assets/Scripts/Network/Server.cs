@@ -1,171 +1,237 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
-using Lidgren.Network;
+using System.Runtime.InteropServices;
+using Network;
+using Sabotris;
+using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
-using UnityEngine;
+using Steamworks;
 
-namespace Sabotris.Network
+namespace UI.Menu.Menus
 {
-    public class Server : Networker<NetServer>
+    public class Server : Networker
     {
-        public event EventHandler OnServerStart;
-        public event EventHandler<string> OnServerStop;
+        public event EventHandler OnServerStartEvent;
+        public event EventHandler<DisconnectReason> OnServerStopEvent;
+        
+        private readonly World _world;
+        
+        private readonly Dictionary<ulong, HSteamNetConnection> _playerConnections = new Dictionary<ulong, HSteamNetConnection>();
+        private HSteamNetPollGroup _connectionPollGroup;
 
-        private World _world;
-        private string _password;
+        public CSteamID? LobbyId;
+        private HSteamListenSocket? _listenSocket;
 
-        public Server(World world) : base(PacketDirection.Server)
+        private string _lobbyName;
+        private int _lobbyPlayerCount;
+
+        public bool Starting;
+        public bool Running => _listenSocket != null;
+
+        public Server(NetworkController networkController, World world) : base(networkController, PacketDirection.Server)
         {
             _world = world;
+            
             PacketHandler.Register(this);
+
+            Callback<LobbyCreated_t>.Create(OnLobbyCreated);
+            // Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdated);
+            Callback<SteamNetConnectionStatusChangedCallback_t>.Create(OnConnectionStatusChanged);
+
+            OnServerStartEvent += OnServerStart;
+            OnServerStopEvent += OnServerStop;
         }
 
-        public IEnumerator StartServer(string password, int port)
+        private void OnServerStart(object sender, EventArgs e)
         {
-            if (Running)
+            Starting = false;
+        }
+
+        private void OnServerStop(object sender, DisconnectReason e)
+        {
+            LeaveLobby();
+            Starting = false;
+        }
+
+        public void CreateLobby(string lobbyName)
+        {
+            Starting = true;
+            _lobbyName = lobbyName;
+            SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, 4);
+        }
+
+        private void OnLobbyCreated(LobbyCreated_t param)
+        {
+            if (param.m_eResult != EResult.k_EResultOK)
             {
-                Logging.Log(true, "Server already running, restarting");
-                Shutdown(Reasons.RestartServer);
-                yield return new WaitUntil(() => Peer.Status == NetPeerStatus.NotRunning);
+                Logging.Log(true, "Failed to create lobby: {0}", param.m_eResult);
+                return;
             }
 
-            Running = true;
+            LobbyId = param.m_ulSteamIDLobby.ToSteamID();
             
-            _password = password;
+            SteamMatchmaking.SetLobbyData(LobbyId.Value, HostIdKey, Client.UserId.m_SteamID.ToString());
+            SteamMatchmaking.SetLobbyData(LobbyId.Value, LobbyNameKey, _lobbyName);
+            // todo: set user count in lobby data
+
+            CreateListenerSocket();
+        }
+        
+        public void CreateListenerSocket()
+        {
+            _connectionPollGroup = SteamNetworkingSockets.CreatePollGroup();
+            _listenSocket = SteamNetworkingSockets.CreateListenSocketP2P(0, 0, new SteamNetworkingConfigValue_t[0]);
+            OnServerStartEvent?.Invoke(this, null);
+        }
+        
+        public void OnConnectionStatusChanged(SteamNetConnectionStatusChangedCallback_t param)
+        {
+            if (!Running)
+                return;
+
+            var steamId = param.m_info.m_identityRemote.GetSteamID();
+            var player = new Player(steamId.m_SteamID, SteamFriends.GetFriendPersonaName(steamId));
+            switch (param.m_info.m_eState)
+            {
+                case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_Connected:
+                    Logging.Log(true, "Player connected: {0}", player.Name);
+                    _playerConnections.Add(player.Id, param.m_hConn);
+                    SteamNetworkingSockets.SetConnectionPollGroup(param.m_hConn, _connectionPollGroup);
+
+                    SendPacketToAll(new PacketPlayerConnected
+                    {
+                        Player = player
+                    }, player.Id);
+                    break;
+                
+                case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_Connecting:
+                    SteamNetworkingSockets.AcceptConnection(param.m_hConn);
+                    break;
+                
+                case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ProblemDetectedLocally:
+                case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ClosedByPeer:
+                    SteamNetworkingSockets.CloseConnection(param.m_hConn, 0, "", false);
+                    _playerConnections.Remove(player.Id);
+                    SendPacketToAll(new PacketPlayerDisconnected
+                    {
+                        Id = player.Id
+                    }, player.Id);
+                    break;
+                
+                default:
+                    Logging.Log(true, "Unhandled connection state changed: {0} for player: {1} ({2})", param.m_info.m_eState, player.Name, player.Id);
+                    break;
+            }
+        }
+
+        private void LeaveLobby()
+        {
+            if (LobbyId == null)
+                return;
+
+            SteamMatchmaking.LeaveLobby(LobbyId.Value);
+            LobbyId = null;
+        }
+
+        public void DisconnectSockets(DisconnectReason? reason = null)
+        {
+            SteamNetworkingSockets.DestroyPollGroup(_connectionPollGroup);
             
-            var config = new NetPeerConfiguration(GameController.AppIdentifier)
-            {
-                MaximumConnections = 4,
-                Port = port
-            };
-            Logging.Log(true, "Starting server on port {0} with password '{1}'", port, password);
-            Peer = new NetServer(config);
+            foreach (var connection in _playerConnections.Values)
+                SteamNetworkingSockets.CloseConnection(connection, 0, "", false);
+            _playerConnections.Clear();
 
-            try
-            {
-                Peer.Start();
-                OnServerStart?.Invoke(this, null);
-            }
-            catch (SocketException)
-            {
-                Logging.Error(true, "Failed to start server, port in use");
-            }
+            if (_listenSocket != null)
+                SteamNetworkingSockets.CloseListenSocket(_listenSocket.Value);
+            _listenSocket = null;
+            
+            OnServerStopEvent?.Invoke(this, reason ?? DisconnectReason.ServerClosed);
         }
 
-        public void Update()
+        public void PollMessages()
         {
-            NetIncomingMessage incoming;
-            while ((incoming = Peer?.ReadMessage()) != null)
-            {
-                var connection = incoming.SenderConnection;
-                var connectionId = connection.RemoteUniqueIdentifier;
-                switch (incoming.MessageType)
-                {
-                    case NetIncomingMessageType.DebugMessage:
-                    case NetIncomingMessageType.WarningMessage:
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                        Logging.Warn(true, "Logged message: {0}", incoming.ReadString());
-                        break;
-                    case NetIncomingMessageType.ErrorMessage:
-                        Logging.Warn(true, "Logged message: {0}", incoming.ReadString());
-                        break;
-
-                    case NetIncomingMessageType.StatusChanged:
-                        var status = (NetConnectionStatus) incoming.ReadByte();
-                        var reason = incoming.ReadString();
-
-                        switch (status)
-                        {
-                            case NetConnectionStatus.Connected:
-                            {
-                                /*
-                                 * Get hail message
-                                 * Check if hail is correct packet data > else disconnect
-                                 * Check if password matches > else disconnect
-                                 * Send player list to connected player
-                                 * Send player connected packet to all players
-                                 */
-
-                                var hail = connection.RemoteHailMessage;
-
-                                if (!(GetPacket(hail) is PacketConnectingHail packet))
-                                {
-                                    connection.Disconnect(Reasons.InvalidConnectPacket);
-                                    break;
-                                }
-                                
-                                if (packet.Password != _password)
-                                {
-                                    connection.Disconnect(Reasons.IncorrectPassword);
-                                    break;
-                                }
-
-                                var player = new Player(connectionId, packet.Name);
-
-                                Peer.SendMessage(new PacketPlayerList
-                                {
-                                    Players = Players.Values.ToArray()
-                                }.Serialize(Peer), connection, NetDeliveryMethod.ReliableOrdered);
-
-                                Players.Add(connectionId, player);
-
-                                Peer.SendToAll(new PacketPlayerConnected
-                                {
-                                    Player = player
-                                }.Serialize(Peer), NetDeliveryMethod.ReliableOrdered);
-                            } break;
-
-                            case NetConnectionStatus.Disconnected:
-                            {
-                                if (!Players.TryGetValue(connectionId, out var player))
-                                    break;
-
-                                Players.Remove(player.Id);
-
-                                Peer.SendToAll(new PacketPlayerDisconnected
-                                {
-                                    Id = connectionId
-                                }.Serialize(Peer), connection, NetDeliveryMethod.ReliableOrdered, 0);
-
-                                if (Players.Count == 0)
-                                    Shutdown(Reasons.NoPlayersLeft);
-                            } break;
-                            
-                            default:
-                                Logging.Warn(true, "Status changed to {0}: {1}. For {2}", status, reason, connection.RemoteEndPoint);
-                                break;
-                        }
-                        break;
-
-                    case NetIncomingMessageType.Data:
-                    { 
-                        PacketHandler.Process(GetPacket(incoming));
-                    } break;
-                    
-                    default:
-                        Logging.Warn(true, "Unhandled message type: {0} from {1}", incoming.MessageType, incoming.SenderConnection.RemoteEndPoint);
-                        break;
-                }
-                Peer?.Recycle(incoming);
-            }
+            if (!Running)
+                return;
+            
+            var receivedMessages = new IntPtr[100];
+            var incomingMessages = SteamNetworkingSockets.ReceiveMessagesOnPollGroup(_connectionPollGroup, receivedMessages, 100);
+            ProcessIncomingMessages(receivedMessages, incomingMessages);
         }
 
-        public override void Shutdown(string reason)
+        // private void OnLobbyChatUpdated(LobbyChatUpdate_t param)
+        // {
+        //     var connectedSteamUser = param.m_ulSteamIDUserChanged.ToSteamID();
+        //     var connectedSteamUserName = SteamFriends.GetFriendPersonaName(connectedSteamUser);
+        //     Logging.Log(true, "Lobby chat updated: {0} ({1})", connectedSteamUserName, (EChatMemberStateChange) param.m_rgfChatMemberStateChange);
+        // }
+        
+        #region Sending Packets
+
+        public void SendPacket(Packet packet, HSteamNetConnection connection)
         {
-            base.Shutdown(reason);
-            OnServerStop?.Invoke(this, reason);
+            var data = packet.Serialize().Bytes;
+            var message = Marshal.PtrToStructure<SteamNetworkingMessage_t>(SteamNetworkingUtils.AllocateMessage(data.Length));
+            Marshal.Copy(data, 0, message.m_pData, data.Length);
+            SendPacket(packet, message, (uint) data.Length, connection);
+        }
+
+        public void SendPacket(Packet packet, SteamNetworkingMessage_t message, uint length, HSteamNetConnection connection)
+        {
+            Logging.Log(true, "Sending packet: {0} ({1} bytes)", packet.GetPacketType().Id, length);
+            
+            if (connection.IsLocalClient())
+            {
+                NetworkController.Client.PacketHandler.Process(packet);
+                return;
+            }
+            
+            SendNetworkMessage(connection, message, length);
+        }
+
+        private void SendPacketToAll(Packet packet, ulong? exclude = null)
+        {
+            var data = packet.Serialize().Bytes;
+            var buffer = Marshal.PtrToStructure<SteamNetworkingMessage_t>(SteamNetworkingUtils.AllocateMessage(data.Length));
+            Marshal.Copy(data, 0, buffer.m_pData, data.Length);
+            foreach (var entry in _playerConnections.Where((entry) => entry.Key != exclude))
+                SendPacket(packet, buffer, (uint) data.Length, entry.Value);
+        }
+        
+        #endregion
+        
+        #region Packet Listeners
+
+        [PacketListener(PacketTypeId.RetrievePlayerList, PacketDirection.Server)]
+        public void OnRetrievePlayerList(PacketRetrievePlayerList packet)
+        {
+            if (packet.Connection == null)
+            {
+                Logging.Error(true, "Failed to get connection from packet {0}, this malfunctioned packet shouldn't exist", packet.GetPacketType().Id);
+                return;
+            }
+            
+            var playerList = _playerConnections.Keys.Select((id) => new Player(id, SteamFriends.GetFriendPersonaName(id.ToSteamID()))).ToArray();
+            Logging.Log(true, "Got packet: RetrievePlayerList, sending player list ({0}) to client", playerList.Length);
+            SendPacket(new PacketPlayerList
+            {
+                Players = playerList
+            }, packet.Connection.Value);
         }
 
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Server)]
-        [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
-        public void OnPacketForward(Packet packet)
+        public void OnPacketGameStart(PacketGameStart packet)
         {
-            Peer.SendToAll(packet.Serialize(Peer), NetDeliveryMethod.ReliableOrdered);
+            LeaveLobby();
+            SendPacketToAll(packet);
+        }
+        
+        [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
+        public void OnPacketPlayerScore(PacketPlayerScore packet)
+        {
+            SendPacketToAll(packet);
         }
 
         [PacketListener(PacketTypeId.ShapeCreate, PacketDirection.Server)]
@@ -174,24 +240,25 @@ namespace Sabotris.Network
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkMove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.LayerMove, PacketDirection.Server)]
         public void OnPacketForwardExclude(Packet packet)
         {
-            Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
+            SendPacketToAll(packet, packet.SenderId);
         }
 
         [PacketListener(PacketTypeId.PlayerDead, PacketDirection.Server)]
         public void OnPlayerDead(PacketPlayerDead packet)
         {
-            Peer.SendToAll(packet.Serialize(Peer), Peer.Connections.First((connection) => connection.RemoteUniqueIdentifier == packet.SenderId), NetDeliveryMethod.ReliableOrdered, 0);
+            SendPacketToAll(packet, packet.SenderId);
             
-            if (Players.Any((entry) => _world.Containers.TryGetValue(entry.Key, out var deadContainer) && !deadContainer.dead))
+            if (_playerConnections.Any((entry) => _world.Containers.TryGetValue(entry.Key, out var deadContainer) && !deadContainer.dead))
                 return;
 
-            var winner = -1L;
+            ulong? winner = null;
             var score = -1;
-            var scores = new Dictionary<long, PlayerScore>();
+            var scores = new Dictionary<ulong, PlayerScore>();
 
-            foreach (var entry in Players)
+            foreach (var entry in _playerConnections)
             {
                 if (!_world.Containers.TryGetValue(entry.Key, out var container))
                     continue;
@@ -205,11 +272,13 @@ namespace Sabotris.Network
                 winner = container.id;
             }
             
-            Peer.SendToAll(new PacketGameEnd
+            SendPacketToAll(new PacketGameEnd
             {
-                Winner = winner,
+                Winner = winner ?? 0,
                 Scores = scores
-            }.Serialize(Peer), NetDeliveryMethod.ReliableOrdered);
+            });
         }
+        
+        #endregion
     }
 }

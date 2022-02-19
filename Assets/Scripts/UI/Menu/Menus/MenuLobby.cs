@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
-using Lidgren.Network;
-using Sabotris.Network;
+using Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using UnityEngine;
@@ -51,13 +49,13 @@ namespace UI.Menu.Menus
         protected override void GoBack()
         {
             base.GoBack();
-            networkController.Client.Shutdown(Reasons.ShutdownServer);
-            networkController.Server.Shutdown(Reasons.ShutdownClient);
+            networkController.Client.DisconnectSocket(DisconnectReason.ClientDisconnected);
+            networkController.Server.DisconnectSockets(DisconnectReason.ServerClosed);
         }
 
         protected override Menu GetBackMenu()
         {
-            return networkController.Server?.Peer?.Status == NetPeerStatus.Running ? menuHost : menuJoin;
+            return networkController.Server.Running ? menuHost : menuJoin;
         }
 
         public override Vector3 GetCameraPosition()

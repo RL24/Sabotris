@@ -1,5 +1,4 @@
 ﻿using System;
-using Sabotris.Util;
 using UnityEngine;
 
 namespace Sabotris.Network.Packets.Game
@@ -8,10 +7,10 @@ namespace Sabotris.Network.Packets.Game
     {
         public override PacketType GetPacketType() => PacketTypes.ShapeCreate;
         
-        public long ContainerId { get; set; }
+        public ulong ContainerId { get; set; }
         public Guid Id { get; set; }
         public Vector3Int Position { get; set; }
-        public Pair<Guid, Vector3Int>[] Offsets { get; set; }
+        public (Guid, Vector3Int)[] Offsets { get; set; }
         public Color Color { get; set; }
     }
 }

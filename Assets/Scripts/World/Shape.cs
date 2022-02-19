@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using UI.Menu;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
+using UI.Menu;
 using UnityEngine;
 
 namespace Sabotris
@@ -22,7 +22,7 @@ namespace Sabotris
         public Container parentContainer;
 
         public Guid id;
-        public Pair<Guid, Vector3Int>[] Offsets { get; set; }
+        public (Guid, Vector3Int)[] Offsets { get; set; }
         public Color? color = Color.white;
         
         [SerializeField] private Vector3Int rawPosition;
@@ -48,8 +48,8 @@ namespace Sabotris
 
             transform.localScale = Vector3.zero;
             
-            foreach (var offset in Offsets)
-                CreateBlock(offset.Key, offset.Value);
+            foreach (var (blockId, blockPos) in Offsets)
+                CreateBlock(blockId, blockPos);
 
             foreach (var ren in GetComponentsInChildren<Renderer>())
                 ren.material.color = color ?? Color.white;
@@ -88,7 +88,7 @@ namespace Sabotris
                 if (RawRotation != roundedRotationActivator)
                 {
                     var offsets = GetOffsets(RawPosition, roundedRotationActivator)
-                        ?.Select((offset) => offset.Value + RawPosition).ToArray();
+                        ?.Select((offset) => offset.Item2 + RawPosition).ToArray();
                     if (!parentContainer.DoesCollide(offsets))
                         RawRotation = rotateActivator = roundedRotationActivator;
                     else
@@ -130,10 +130,10 @@ namespace Sabotris
         private void StopDropping()
         {
             _dropTimer.Reset();
-            parentContainer.LockShape(this, Offsets.Select((offset) => RawPosition + offset.Value).ToArray());
+            parentContainer.LockShape(this, Offsets.Select((offset) => RawPosition + offset.Item2).ToArray());
         }
         
-        private Pair<Guid, Vector3Int>[] GetOffsets(Vector3Int position, Quaternion rotation)
+        private (Guid, Vector3Int)[] GetOffsets(Vector3Int position, Quaternion rotation)
         {
             if (Offsets == null || Blocks.Count == 0)
                 return null;
@@ -145,7 +145,7 @@ namespace Sabotris
             transform.rotation = rotation;
             Physics.SyncTransforms();
 
-            var offsets = Blocks.Values.Select(block => new Pair<Guid, Vector3Int>(block.id, Vector3Int.RoundToInt(block.transform.position - position))).ToArray();
+            var offsets = Blocks.Values.Select(block => (block.id, Vector3Int.RoundToInt(block.transform.position - position))).ToArray();
 
             transform.position = prevPosition;
             transform.rotation = prevRotation;
@@ -212,7 +212,7 @@ namespace Sabotris
                 moveVec = (
                     from vec in vecs
                     let rounded = Vector3Int.RoundToInt(vec)
-                    where !parentContainer.DoesCollide(Offsets.Select((offset) => offset.Value + RawPosition + rounded).ToArray())
+                    where !parentContainer.DoesCollide(Offsets.Select((offset) => offset.Item2 + RawPosition + rounded).ToArray())
                     select vec
                 ).Aggregate(moveVec, (a, b) => a + b);
             }
@@ -294,7 +294,7 @@ namespace Sabotris
             {
                 if (RawPosition == value) return;
 
-                if (!parentContainer.DoesCollide(Offsets.Select((offset) => offset.Value + value).ToArray()))
+                if (!parentContainer.DoesCollide(Offsets.Select((offset) => offset.Item2 + value).ToArray()))
                 {
                     rawPosition = value;
                     if (parentContainer.controllingShape == this)

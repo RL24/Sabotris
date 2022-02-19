@@ -1,4 +1,6 @@
 ﻿using System;
+using Steamworks;
+using UI.Menu.Menus;
 using UnityEngine;
 
 namespace Sabotris.Util
@@ -45,6 +47,16 @@ namespace Sabotris.Util
         public static int Int(this bool self)
         {
             return self ? 1 : 0;
+        }
+
+        public static CSteamID ToSteamID(this ulong self)
+        {
+            return new CSteamID(self);
+        }
+
+        public static bool IsLocalClient(this HSteamNetConnection self)
+        {
+            return self.m_HSteamNetConnection == 0;
         }
     }
 }

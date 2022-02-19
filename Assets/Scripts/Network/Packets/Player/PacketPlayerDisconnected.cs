@@ -4,6 +4,6 @@
     {
         public override PacketType GetPacketType() => PacketTypes.PlayerDisconnected;
         
-        public long Id { get; set; }
+        public ulong Id { get; set; }
     }
 }

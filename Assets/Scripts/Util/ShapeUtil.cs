@@ -12,12 +12,12 @@ namespace Sabotris.Util
         private static readonly Vector3Int[] HorizontalDirections = {Vector3Int.left, Vector3Int.forward, Vector3Int.right, Vector3Int.back};
         private static readonly Vector3Int[] OmniDirections = {Vector3Int.left, Vector3Int.forward, Vector3Int.right, Vector3Int.back, Vector3Int.up, Vector3Int.down};
 
-        public static Pair<Guid, Vector3Int>[] Generate(int offsetCount, bool vertical)
+        public static (Guid, Vector3Int)[] Generate(int offsetCount, bool vertical)
         {
             return Generate(offsetCount, vertical, NullVector3Int, NullVector3Int);
         }
         
-        public static Pair<Guid, Vector3Int>[] Generate(int offsetCount, bool vertical, Vector3Int bottomLeft, Vector3Int topRight)
+        public static (Guid, Vector3Int)[] Generate(int offsetCount, bool vertical, Vector3Int bottomLeft, Vector3Int topRight)
         {
             var offsets = new List<Vector3Int> {Vector3Int.zero};
             while (offsets.Count < offsetCount)
@@ -47,7 +47,7 @@ namespace Sabotris.Util
                 (float) offsets.Average((offset) => offset.z)
             ));
 
-            return offsets.Select((offset) => new Pair<Guid, Vector3Int>(Guid.NewGuid(), offset - centerOffset)).ToArray();
+            return offsets.Select((offset) => (Guid.NewGuid(), offset - centerOffset)).ToArray();
         }
     }
 }

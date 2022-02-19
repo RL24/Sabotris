@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Sabotris.Util;
-using UnityEngine;
 
 namespace Sabotris.Network.Packets
 {
@@ -16,35 +15,35 @@ namespace Sabotris.Network.Packets
     
     public class PacketHandler
     {
-        private readonly PacketDirection _packetDirection;
+        public readonly PacketDirection PacketDirection;
         private readonly Dictionary<PacketTypeId, ConcurrentDictionary<object, MethodInfo>> _cache = new Dictionary<PacketTypeId, ConcurrentDictionary<object, MethodInfo>>();
 
         public PacketHandler(PacketDirection packetDirection)
         {
-            _packetDirection = packetDirection;
+            PacketDirection = packetDirection;
         }
 
         public void Register<T>(T instance)
         {
-            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Key.PacketDirection == _packetDirection)))
+            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Item1.PacketDirection == PacketDirection)))
             {
-                foreach (var pair in pairs)
+                foreach (var (packetListener, methodInfo) in pairs)
                 {
-                    var packetTypeId = pair.Key.PacketType;
+                    var packetTypeId = packetListener.PacketType;
                     if (!_cache.ContainsKey(packetTypeId))
                         _cache.Add(packetTypeId, new ConcurrentDictionary<object, MethodInfo>());
-                    _cache[packetTypeId].TryAdd(instance, pair.Value);
+                    _cache[packetTypeId].TryAdd(instance, methodInfo);
                 }
             }
         }
 
         public void Deregister<T>(T instance)
         {
-            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Key.PacketDirection == _packetDirection)))
+            foreach (var pairs in ClassUtil.GetMethodsInTypeWithAttribute<PacketListener>(typeof(T)).Where((pairs) => pairs.All((pair) => pair.Item1.PacketDirection == PacketDirection)))
             {
-                foreach (var pair in pairs)
+                foreach (var (packetListener, _) in pairs)
                 {
-                    var packetTypeId = pair.Key.PacketType;
+                    var packetTypeId = packetListener.PacketType;
                     if (_cache.ContainsKey(packetTypeId))
                         _cache[packetTypeId].TryRemove(instance, out _);
                 }
@@ -55,7 +54,7 @@ namespace Sabotris.Network.Packets
         {
             if (!_cache.TryGetValue(packet.GetPacketType().Id, out var listeners))
             {
-                Logging.Log(_packetDirection == PacketDirection.Server, "No listeners for packet type {0}",
+                Logging.Log(PacketDirection == PacketDirection.Server, "No listeners for packet type {0}",
                     packet.GetPacketType().Id);
                 return;
             }

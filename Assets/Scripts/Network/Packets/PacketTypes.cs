@@ -19,11 +19,16 @@ namespace Sabotris.Network.Packets
         BlockBulkMove = 0x30,
         BlockBulkRemove = 0x31,
         
+        LayerMove = 0x40,
+        
         PlayerConnected = 0x90,
         PlayerDisconnected = 0x91,
         PlayerList = 0x92,
-        PlayerDead = 0x93,
-        PlayerScore = 0x94
+        RetrievePlayerList = 0x93,
+        PlayerDead = 0x94,
+        PlayerScore = 0x95,
+        
+        ServerShutdown = 0x1000
     }
     
     public class PacketType
@@ -52,16 +57,21 @@ namespace Sabotris.Network.Packets
         
         public static readonly PacketType BlockBulkMove = new PacketType(PacketTypeId.BlockBulkMove, () => new PacketBlockBulkMove());
         public static readonly PacketType BlockBulkRemove = new PacketType(PacketTypeId.BlockBulkRemove, () => new PacketBlockBulkRemove());
+        
+        public static readonly PacketType LayerMove = new PacketType(PacketTypeId.LayerMove, () => new PacketLayerMove());
 
         public static readonly PacketType PlayerConnected = new PacketType(PacketTypeId.PlayerConnected, () => new PacketPlayerConnected());
         public static readonly PacketType PlayerDisconnected = new PacketType(PacketTypeId.PlayerDisconnected, () => new PacketPlayerDisconnected());
         public static readonly PacketType PlayerList = new PacketType(PacketTypeId.PlayerList, () => new PacketPlayerList());
+        public static readonly PacketType RetrievePlayerList = new PacketType(PacketTypeId.RetrievePlayerList, () => new PacketRetrievePlayerList());
         public static readonly PacketType PlayerDead = new PacketType(PacketTypeId.PlayerDead, () => new PacketPlayerDead());
         public static readonly PacketType PlayerScore = new PacketType(PacketTypeId.PlayerScore, () => new PacketPlayerScore());
+        
+        public static readonly PacketType ServerShutdown = new PacketType(PacketTypeId.ServerShutdown, () => new PacketServerShutdown());
 
         public static PacketType GetPacketType(PacketTypeId packetTypeId)
         {
-            return new [] {GameStart, GameEnd, ConnectingHail, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkMove, BlockBulkRemove, PlayerConnected, PlayerDisconnected, PlayerList, PlayerDead, PlayerScore}
+            return new [] {GameStart, GameEnd, ConnectingHail, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkMove, BlockBulkRemove, LayerMove, PlayerConnected, PlayerDisconnected, PlayerList, RetrievePlayerList, PlayerDead, PlayerScore, ServerShutdown}
                 .First((packetType) => packetType.Id == packetTypeId);
         }
     }

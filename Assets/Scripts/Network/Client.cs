@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 using Network;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
@@ -16,6 +17,7 @@ namespace UI.Menu.Menus
         public event EventHandler<HSteamNetConnection?> OnConnectedToServerEvent;
         public event EventHandler<DisconnectReason> OnDisconnectedFromServerEvent;
         public event EventHandler OnFailedToConnectToServerEvent;
+        public event EventHandler<(uint, string, string)> OnLobbyChatMessageReceivedEvent;
 
         public static readonly CSteamID UserId = SteamUser.GetSteamID();
         public static readonly string Username = SteamFriends.GetPersonaName();

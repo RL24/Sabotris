@@ -2,6 +2,8 @@
 using Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Util;
+using Steamworks;
 using UnityEngine;
 
 namespace UI.Menu.Menus
@@ -11,6 +13,11 @@ namespace UI.Menu.Menus
         private readonly Vector3 _cameraPosition = new Vector3(-3, 8, -17);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(34, 34, 5);
 
+        public MenuChatHistoryItem chatHistoryItemTemplate;
+
+        public SmoothScrollRect chatHistoryScrollBox;
+        public RectTransform chatHistory;
+        public MenuInput inputChatMessage;
         public MenuButton buttonStartGame, buttonBack;
 
         public Menu menuHost, menuJoin;
@@ -22,6 +29,8 @@ namespace UI.Menu.Menus
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
+            inputChatMessage.OnSubmitEvent += OnSubmitChatMessage;
+            
             if (!networkController.Server.Running)
                 Destroy(buttonStartGame.gameObject);
 
@@ -34,6 +43,8 @@ namespace UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
+            
+            inputChatMessage.OnSubmitEvent -= OnSubmitChatMessage;
 
             networkController.Client.DeregisterListener(this);
         }
@@ -47,6 +58,21 @@ namespace UI.Menu.Menus
                 networkController.Client?.SendPacket(new PacketGameStart());
             else if (sender.Equals(buttonBack))
                 GoBack();
+        }
+
+        private void OnSubmitChatMessage(object sender, string message)
+        {
+            if (message.Length == 0)
+                return;
+
+            networkController.Client.SendPacket(new PacketChatMessage
+            {
+                Id = Guid.NewGuid(),
+                Author = Client.UserId.m_SteamID,
+                Message = message
+            });
+            if (sender is MenuInput input)
+                input.inputField.text = "";
         }
 
         protected override void GoBack()
@@ -75,6 +101,19 @@ namespace UI.Menu.Menus
         public void OnGameStart(PacketGameStart packet)
         {
             menuController.OpenMenu(null);
+        }
+
+        [PacketListener(PacketTypeId.ChatMessage, PacketDirection.Client)]
+        public void OnChatMessage(PacketChatMessage packet)
+        {
+            var chatMessage = Instantiate(chatHistoryItemTemplate, Vector3.zero, Quaternion.identity, chatHistory.transform);
+            chatMessage.name = $"ChatMessage-{packet.Id}-{packet.Author}";
+            chatMessage.id = packet.Id;
+            chatMessage.Author = SteamFriends.GetFriendPersonaName(packet.Author.ToSteamID());
+            chatMessage.Message = packet.Message;
+            
+            chatHistory.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Math.Max(500, chatHistory.childCount * 40));
+            chatHistoryScrollBox.content.anchoredPosition = new Vector2(0, Math.Max(500, chatHistory.childCount * 40) - 500);
         }
     }
 }

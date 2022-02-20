@@ -8,6 +8,8 @@ namespace Sabotris.Network.Packets
     {
         GameStart = 0x00,
         GameEnd = 0x01,
+        
+        ChatMessage = 0x10,
 
         ShapeCreate = 0x20,
         ShapeMove = 0x21,
@@ -44,6 +46,8 @@ namespace Sabotris.Network.Packets
     {
         public static readonly PacketType GameStart = new PacketType(PacketTypeId.GameStart, () => new PacketGameStart());
         public static readonly PacketType GameEnd = new PacketType(PacketTypeId.GameEnd, () => new PacketGameEnd());
+        
+        public static readonly PacketType ChatMessage = new PacketType(PacketTypeId.ChatMessage, () => new PacketChatMessage());
 
         public static readonly PacketType ShapeCreate = new PacketType(PacketTypeId.ShapeCreate, () => new PacketShapeCreate());
         public static readonly PacketType ShapeMove = new PacketType(PacketTypeId.ShapeMove, () => new PacketShapeMove());
@@ -65,7 +69,7 @@ namespace Sabotris.Network.Packets
 
         public static PacketType GetPacketType(PacketTypeId packetTypeId)
         {
-            return new[] {GameStart, GameEnd, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkRemove, LayerMove, PlayerConnected, PlayerDisconnected, PlayerList, RetrievePlayerList, PlayerDead, PlayerScore, ServerShutdown}
+            return new[] {GameStart, GameEnd, ChatMessage, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkRemove, LayerMove, PlayerConnected, PlayerDisconnected, PlayerList, RetrievePlayerList, PlayerDead, PlayerScore, ServerShutdown}
                 .First((packetType) => packetType.Id == packetTypeId);
         }
     }

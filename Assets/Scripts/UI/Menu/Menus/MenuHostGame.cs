@@ -21,7 +21,7 @@ namespace UI.Menu.Menus
                 menuButton.OnClick += OnClickButton;
 
             if (inputLobbyName is MenuInput miLobbyName)
-                miLobbyName.OnValueChanged += OnLobbyNameValueChanged;
+                miLobbyName.OnValueChangedEvent += LobbyNameValueChangedEvent;
         }
 
         protected override void OnDestroy()
@@ -32,10 +32,10 @@ namespace UI.Menu.Menus
                 menuButton.OnClick -= OnClickButton;
 
             if (inputLobbyName is MenuInput miLobbyName)
-                miLobbyName.OnValueChanged -= OnLobbyNameValueChanged;
+                miLobbyName.OnValueChangedEvent -= LobbyNameValueChangedEvent;
         }
 
-        private void OnLobbyNameValueChanged(object sender, string args)
+        private void LobbyNameValueChangedEvent(object sender, string args)
         {
             buttonJoinLobby.isDisabled = args.Length == 0;
         }

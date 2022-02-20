@@ -10,7 +10,8 @@ namespace UI.Menu
     {
         private static readonly Color SelectedColor = new Color(1, 1, 1, 0.2f);
 
-        public event EventHandler<string> OnValueChanged;
+        public event EventHandler<string> OnValueChangedEvent;
+        public event EventHandler<string> OnSubmitEvent;
 
         public RawImage background;
         public TMP_InputField inputField;
@@ -24,6 +25,8 @@ namespace UI.Menu
 
             if (background != null)
                 _startBackgroundColor = background.color;
+            
+            inputField.onSubmit.AddListener((str) => OnSubmitEvent?.Invoke(this, str));
 
             if (isSelected)
                 NavigateSelect();
@@ -58,7 +61,7 @@ namespace UI.Menu
 
                 _value = value;
 
-                OnValueChanged?.Invoke(this, Value);
+                OnValueChangedEvent?.Invoke(this, Value);
             }
         }
     }

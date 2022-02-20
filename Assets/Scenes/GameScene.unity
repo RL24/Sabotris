@@ -227,11 +227,11 @@ RectTransform:
   m_Father: {fileID: 1874238367}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -220, y: -20}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 20, y: -20}
   m_SizeDelta: {x: 260, y: 80}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &105243119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,11 +360,11 @@ RectTransform:
   m_Father: {fileID: 1874238367}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 300, y: -100}
   m_SizeDelta: {x: 200, y: -100}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &337803671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,11 +470,11 @@ RectTransform:
   m_Father: {fileID: 1874238367}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -200, y: -100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 300, y: -100}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &692258949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -743,7 +743,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuController: {fileID: 1370561258}
-  networkController: {fileID: 858393423}
 --- !u!4 &858393425
 Transform:
   m_ObjectHideFlags: 0
@@ -877,11 +876,11 @@ RectTransform:
   m_Father: {fileID: 1874238367}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -20, y: -20}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 320, y: -20}
   m_SizeDelta: {x: 160, y: 80}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &1219944888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1384,12 +1383,10 @@ MonoBehaviour:
   networkController: {fileID: 858393423}
   cameraController: {fileID: 1687258583}
   nameText: {fileID: 1867771294}
-  id: -1
+  id: 18446744073709551615
   containerName: 
   dead: 0
   controllingShape: {fileID: 0}
-  serializedShapes: []
-  serializedBlocks: []
 --- !u!114 &1867771294 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1408002484745133006, guid: 57946a97612f65247ba2c718c5f50d03, type: 3}
@@ -1574,7 +1571,6 @@ MonoBehaviour:
   menuMain: {fileID: 5792942197404027228, guid: d0d66c19eec593246b5a59618348f833, type: 3}
   menuPause: {fileID: 1478632573244512379, guid: e78c5f73faa14e240b8457f15dd1e736, type: 3}
   menuGameOver: {fileID: 8846274034861430407, guid: 8f4980fd573687244bbb0f78c909185f, type: 3}
-  serializedContainers: []
 --- !u!4 &2032613558
 Transform:
   m_ObjectHideFlags: 0

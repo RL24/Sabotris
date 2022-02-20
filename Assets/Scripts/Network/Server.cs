@@ -156,13 +156,6 @@ namespace UI.Menu.Menus
             ProcessIncomingMessages(receivedMessages, incomingMessages);
         }
 
-        // private void OnLobbyChatUpdated(LobbyChatUpdate_t param)
-        // {
-        //     var connectedSteamUser = param.m_ulSteamIDUserChanged.ToSteamID();
-        //     var connectedSteamUserName = SteamFriends.GetFriendPersonaName(connectedSteamUser);
-        //     Logging.Log(true, "Lobby chat updated: {0} ({1})", connectedSteamUserName, (EChatMemberStateChange) param.m_rgfChatMemberStateChange);
-        // }
-
         #region Sending Packets
 
         private void SendPacket(Packet packet, HSteamNetConnection connection)
@@ -220,8 +213,9 @@ namespace UI.Menu.Menus
             SendPacketToAll(packet);
         }
 
+        [PacketListener(PacketTypeId.ChatMessage, PacketDirection.Server)]
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
-        public void OnPacketPlayerScore(PacketPlayerScore packet)
+        public void OnPacketForward(Packet packet)
         {
             SendPacketToAll(packet);
         }

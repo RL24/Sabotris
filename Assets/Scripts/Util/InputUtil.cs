@@ -11,25 +11,26 @@ namespace Sabotris.Util
         #region Keyboard
 
         private static IEnumerable<KeyControl> KeyEscape => new[] {Keyboard.current?.escapeKey};
-
+        
         private static IEnumerable<KeyControl> KeyLeft => new[] {Keyboard.current?.aKey, Keyboard.current?.leftArrowKey};
-
         private static IEnumerable<KeyControl> KeyRight => new[] {Keyboard.current?.dKey, Keyboard.current?.rightArrowKey};
-
         private static IEnumerable<KeyControl> KeyForward => new[] {Keyboard.current?.wKey, Keyboard.current?.upArrowKey};
-
         private static IEnumerable<KeyControl> KeyBackward => new[] {Keyboard.current?.sKey, Keyboard.current?.downArrowKey};
-
+        
         private static IEnumerable<KeyControl> KeySpace => new[] {Keyboard.current?.spaceKey};
+
+        private static IEnumerable<KeyControl> KeyRotateYawLeft => new[] {Keyboard.current?.uKey};
+        private static IEnumerable<KeyControl> KeyRotateYawRight => new[] {Keyboard.current?.oKey};
+        private static IEnumerable<KeyControl> KeyRotatePitchUp => new[] {Keyboard.current?.iKey};
+        private static IEnumerable<KeyControl> KeyRotatePitchDown => new[] {Keyboard.current?.kKey};
+        private static IEnumerable<KeyControl> KeyRotateRollLeft => new[] {Keyboard.current?.jKey};
+        private static IEnumerable<KeyControl> KeyRotateRollRight => new[] {Keyboard.current?.lKey};
 
         #region UI
 
         private static IEnumerable<KeyControl> KeyUILeft => new[] {Keyboard.current?.leftArrowKey};
-
         private static IEnumerable<KeyControl> KeyUIRight => new[] {Keyboard.current?.rightArrowKey};
-
         private static IEnumerable<KeyControl> KeyUIUp => new[] {Keyboard.current?.upArrowKey};
-
         private static IEnumerable<KeyControl> KeyUIDown => new[] {Keyboard.current?.downArrowKey};
 
         private static IEnumerable<KeyControl> KeyUISelect => new[] {Keyboard.current?.spaceKey, Keyboard.current?.enterKey};
@@ -106,8 +107,7 @@ namespace Sabotris.Util
 
         public static bool GetMoveDown()
         {
-            return IsPressed(MouseLeftButton) || IsPressed(KeySpace) || IsPressed(GamepadRightTrigger) ||
-                   IsPressed(GamepadLeftTrigger);
+            return IsPressed(MouseLeftButton) || IsPressed(KeySpace) || IsPressed(GamepadRightTrigger) || IsPressed(GamepadLeftTrigger);
         }
 
         public static float GetMoveUINavigateVertical()
@@ -136,25 +136,25 @@ namespace Sabotris.Util
 
         public static float GetRotateYaw()
         {
-            var mouseValue = Mathf.Clamp(MouseDelta?.x.ReadValue() ?? 0, -MouseRotateSensitivity,
-                MouseRotateSensitivity) * ShouldRotateShape().Int();
+            var mouseValue = Mathf.Clamp(MouseDelta?.x.ReadValue() ?? 0, -MouseRotateSensitivity, MouseRotateSensitivity) * ShouldRotateShape().Int();
+            var keyboardValue = WasPressed(KeyRotateYawRight).Int() - WasPressed(KeyRotateYawLeft).Int();
             var gamepadValue = WasPressed(GamepadRightShoulder).Int() - WasPressed(GamepadLeftShoulder).Int();
-            return mouseValue * MouseRotateSensitivity * ShouldRotateShape().Int() +
-                   gamepadValue * GamepadRotateSensitivity;
+            return mouseValue * MouseRotateSensitivity * ShouldRotateShape().Int() + (gamepadValue + keyboardValue) * GamepadRotateSensitivity;
         }
 
         public static float GetRotatePitch()
         {
-            var mouseValue = Mathf.Clamp(MouseDelta?.y.ReadValue() ?? 0, -MouseRotateSensitivity,
-                MouseRotateSensitivity) * ShouldRotateShape().Int();
+            var mouseValue = Mathf.Clamp(MouseDelta?.y.ReadValue() ?? 0, -MouseRotateSensitivity, MouseRotateSensitivity) * ShouldRotateShape().Int();
+            var keyboardValue = WasPressed(KeyRotatePitchUp).Int() - WasPressed(KeyRotatePitchDown).Int();
             var gamepadValue = WasPressed(GamepadButtonY).Int() - WasPressed(GamepadButtonA).Int();
-            return mouseValue * MouseRotateSensitivity * ShouldRotateShape().Int() +
-                   gamepadValue * GamepadRotateSensitivity;
+            return mouseValue * MouseRotateSensitivity * ShouldRotateShape().Int() + (gamepadValue + keyboardValue) * GamepadRotateSensitivity;
         }
 
         public static float GetRotateRoll()
         {
-            return (WasPressed(GamepadButtonB).Int() - WasPressed(GamepadButtonX).Int()) * GamepadRotateSensitivity;
+            var keyboardValue = WasPressed(KeyRotateRollRight).Int() - WasPressed(KeyRotateRollLeft).Int();
+            var gamepadValue = WasPressed(GamepadButtonB).Int() - WasPressed(GamepadButtonX).Int();
+            return (gamepadValue + keyboardValue) * GamepadRotateSensitivity;
         }
 
         public static float GetCameraRotateYaw()

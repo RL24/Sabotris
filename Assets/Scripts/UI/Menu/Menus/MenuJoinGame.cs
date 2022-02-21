@@ -15,10 +15,25 @@ namespace UI.Menu.Menus
         public MenuLobbyListItem lobbyListItemTemplate;
 
         public RectTransform lobbyList;
-        public MenuButton buttonBack;
+        public MenuButton buttonRefresh, buttonBack;
 
         public Menu menuMain, menuLobby;
 
+        private bool _requestingLobbies;
+        private bool RequestingLobbies
+        {
+            get => _requestingLobbies;
+            set
+            {
+                if (value == _requestingLobbies)
+                    return;
+                
+                _requestingLobbies = value;
+
+                buttonRefresh.isDisabled = RequestingLobbies;
+            }
+        }
+        
         private readonly Dictionary<ulong, MenuLobbyListItem> _lobbies = new Dictionary<ulong, MenuLobbyListItem>();
 
         protected override void Start()
@@ -27,7 +42,7 @@ namespace UI.Menu.Menus
 
             networkController.Client.OnLobbiesFetchedEvent += OnLobbiesFetched;
 
-            Client.RequestLobbyList();
+            RefreshLobbies();
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
@@ -45,8 +60,40 @@ namespace UI.Menu.Menus
             networkController.Client.OnLobbiesFetchedEvent -= OnLobbiesFetched;
         }
 
+        private void OnClickButton(object sender, EventArgs args)
+        {
+            if (!Open)
+                return;
+
+            if (sender.Equals(buttonRefresh))
+                RefreshLobbies();
+            else if (sender.Equals(buttonBack))
+                GoBack();
+        }
+
+        private void OnClickLobbyItem(object sender, EventArgs args)
+        {
+            if (sender is MenuLobbyListItem lobbyListItem)
+                JoinLobby(lobbyListItem.lobbyId);
+        }
+
+        private void RefreshLobbies()
+        {
+            if (RequestingLobbies)
+                return;
+            
+            RequestingLobbies = true;
+            foreach (var lobby in _lobbies.Values)
+                Destroy(lobby.gameObject);
+            _lobbies.Clear();
+            
+            AddServerEntry(0, "Refreshing...");
+            Client.RequestLobbyList();
+        }
+
         private void OnLobbiesFetched(object sender, uint lobbyCount)
         {
+            RequestingLobbies = false;
             foreach (var lobby in _lobbies.Values)
                 Destroy(lobby.gameObject);
             _lobbies.Clear();
@@ -63,21 +110,6 @@ namespace UI.Menu.Menus
                 var lobbyName = SteamMatchmaking.GetLobbyData(lobbyId, Networker.LobbyNameKey);
                 AddServerEntry(lobbyId.m_SteamID, lobbyName);
             }
-        }
-
-        private void OnClickButton(object sender, EventArgs args)
-        {
-            if (!Open)
-                return;
-
-            if (sender.Equals(buttonBack))
-                GoBack();
-        }
-
-        private void OnClickLobbyItem(object sender, EventArgs args)
-        {
-            if (sender is MenuLobbyListItem lobbyListItem)
-                JoinLobby(lobbyListItem.lobbyId);
         }
 
         private void AddServerEntry(ulong lobbyId, string lobbyName)

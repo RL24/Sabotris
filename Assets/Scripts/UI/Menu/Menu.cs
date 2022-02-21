@@ -12,6 +12,7 @@ namespace UI.Menu
     {
         public MenuController menuController;
         public NetworkController networkController;
+        public CameraController cameraController;
         public World world;
 
         public CanvasGroup canvasGroup;

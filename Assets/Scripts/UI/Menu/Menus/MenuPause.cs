@@ -6,9 +6,6 @@ namespace UI.Menu.Menus
 {
     public class MenuPause : Menu
     {
-        private readonly Vector3 _cameraPosition = new Vector3(-9, 2, 4);
-        private readonly Quaternion _cameraRotation = Quaternion.Euler(5, 120, 2);
-
         public MenuButton buttonDisconnect,
             buttonSettings,
             buttonBack;
@@ -56,12 +53,12 @@ namespace UI.Menu.Menus
 
         public override Vector3 GetCameraPosition()
         {
-            return _cameraPosition;
+            return cameraController.cameraPosition;
         }
 
         public override Quaternion GetCameraRotation()
         {
-            return _cameraRotation;
+            return cameraController.cameraRotation;
         }
     }
 }

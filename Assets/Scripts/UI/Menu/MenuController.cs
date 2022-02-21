@@ -12,6 +12,7 @@ namespace UI.Menu
     public class MenuController : MonoBehaviour
     {
         public NetworkController networkController;
+        public CameraController cameraController;
         public World world;
 
         public Volume volume;
@@ -20,15 +21,22 @@ namespace UI.Menu
         public Menu currentMenu,
             nextMenu;
 
+        public DepthOfField dof;
+
+        private void Start()
+        {
+            volume.profile.TryGet(out dof);
+        }
+        
         private void Update()
         {
-            if (currentMenu != null && currentMenu.Closing && currentMenu.canvasGroup.alpha.Same(0))
+            if (currentMenu && currentMenu.Closing && currentMenu.canvasGroup.alpha.Same(0))
             {
                 Destroy(currentMenu.gameObject);
                 currentMenu = null;
             }
 
-            if (currentMenu == null && nextMenu != null)
+            if (!currentMenu && nextMenu)
             {
                 currentMenu = nextMenu;
                 currentMenu.canvasGroup.alpha = 0;
@@ -39,19 +47,18 @@ namespace UI.Menu
 
         public void OpenMenu(Menu prefab)
         {
-            if (currentMenu != null && !currentMenu.Closing)
+            if (currentMenu && !currentMenu.Closing)
                 currentMenu.Closing = true;
 
-            var getDof = volume.profile.TryGet(out DepthOfField dof);
-            if (prefab == null)
+            if (!prefab)
             {
-                if (getDof)
+                if (dof)
                     dof.active = false;
                 background.enabled = false;
                 return;
             }
 
-            if (getDof && !(prefab is MenuGameOver))
+            if (dof && !(prefab is MenuGameOver))
                 dof.active = true;
             else if (prefab is MenuGameOver)
                 dof.active = false;
@@ -61,11 +68,12 @@ namespace UI.Menu
             nextMenu.name = $"Menu-{prefab.name}";
             nextMenu.menuController = this;
             nextMenu.networkController = networkController;
+            nextMenu.cameraController = cameraController;
             nextMenu.world = world;
         }
 
-        public bool IsInMenu => currentMenu != null;
+        public bool IsInMenu => currentMenu;
 
-        public Menu GetTargetMenu() => nextMenu != null ? nextMenu : currentMenu;
+        public Menu GetTargetMenu() => nextMenu ? nextMenu : currentMenu;
     }
 }

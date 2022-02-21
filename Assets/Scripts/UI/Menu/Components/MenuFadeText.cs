@@ -17,13 +17,13 @@ namespace UI.Menu
 
         private void Start()
         {
-            if (text != null)
+            if (text)
                 _startColor = text.color;
         }
 
         private void Update()
         {
-            if (text == null)
+            if (!text)
                 return;
 
             var color = _isHovered

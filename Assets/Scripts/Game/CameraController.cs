@@ -16,8 +16,8 @@ namespace Sabotris
         private float _aspectRatio;
         private float _tanFov;
 
-        private Vector3 _cameraPosition = Vector3.zero;
-        private Quaternion _cameraRotation = Quaternion.identity;
+        public Vector3 cameraPosition = Vector3.zero;
+        public Quaternion cameraRotation = Quaternion.identity;
         private Vector3 _rotationInput = Vector3.zero; // yaw pitch zoom
 
         private Container _targetContainer;
@@ -30,8 +30,8 @@ namespace Sabotris
         private void Start()
         {
             var ct = camera.transform;
-            _cameraPosition = _defaultPosition = ct.position;
-            _cameraRotation = _defaultRotation = ct.rotation;
+            cameraPosition = _defaultPosition = ct.position;
+            cameraRotation = _defaultRotation = ct.rotation;
 
             _aspectRatio = Screen.width / (float) Screen.height;
             _tanFov = Mathf.Tan(Mathf.Deg2Rad * camera.fieldOfView / 2.0f);
@@ -39,7 +39,7 @@ namespace Sabotris
 
         private void Update()
         {
-            if (!camera || gameController.ControllingContainer == null)
+            if (!camera || !gameController.ControllingContainer)
                 return;
 
             var container = gameController.ControllingContainer;
@@ -50,7 +50,7 @@ namespace Sabotris
                 _targetContainer = container;
             }
 
-            if (container.controllingShape != null)
+            if (container.controllingShape)
                 _targetShapePosition = container.controllingShape.transform.position;
 
             var shapePosition = _targetShapePosition;
@@ -75,8 +75,8 @@ namespace Sabotris
             Pitch = Mathf.Clamp(Pitch, -80, 80);
             Zoom = Mathf.Clamp(Zoom, 10, 20);
 
-            _cameraRotation = Quaternion.Euler(Pitch, Yaw, 0);
-            _cameraPosition = _cameraRotation * new Vector3(0f, 0f, -cameraDistance - Zoom) + targetPosition;
+            cameraRotation = Quaternion.Euler(Pitch, Yaw, 0);
+            cameraPosition = cameraRotation * new Vector3(0f, 0f, -cameraDistance - Zoom) + targetPosition;
         }
 
         private void FixedUpdate()
@@ -85,8 +85,8 @@ namespace Sabotris
             var cameraTransformPosition = cameraTransform.position;
             var cameraTransformRotation = cameraTransform.rotation;
 
-            var toPosition = _cameraPosition;
-            var toRotation = _cameraRotation;
+            var toPosition = cameraPosition;
+            var toRotation = cameraRotation;
             var animationTime = GameSettings.GameCameraSpeed;
 
             if (menuController.IsInMenu)
@@ -104,8 +104,8 @@ namespace Sabotris
         public void ResetCamera()
         {
             var ct = camera.transform;
-            ct.position = _cameraPosition = _defaultPosition;
-            ct.rotation = _cameraRotation = _defaultRotation;
+            ct.position = cameraPosition = _defaultPosition;
+            ct.rotation = cameraRotation = _defaultRotation;
         }
     }
 }

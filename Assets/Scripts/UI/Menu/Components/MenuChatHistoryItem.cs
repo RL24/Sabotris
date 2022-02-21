@@ -17,7 +17,7 @@ namespace UI.Menu
 
         private void UpdateText()
         {
-            if (text == null)
+            if (!text)
                 return;
 
             text.text = $"{Author}: {Message}";

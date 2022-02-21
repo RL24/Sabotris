@@ -23,7 +23,7 @@ namespace UI.Menu
         {
             base.Start();
 
-            if (background != null)
+            if (background)
                 _startBackgroundColor = background.color;
             
             inputField.onSubmit.AddListener((str) => OnSubmitEvent?.Invoke(this, str));

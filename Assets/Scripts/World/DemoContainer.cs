@@ -271,7 +271,7 @@ namespace Sabotris
         {
             DropPosition = new Vector3Int(0, 7, 0);
 
-            if (controllingShape == null)
+            if (!controllingShape)
                 StartDropping(GetNextOffsets());
         }
 

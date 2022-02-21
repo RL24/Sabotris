@@ -61,7 +61,7 @@ namespace Sabotris
             foreach (var (blockId, blockPos) in Offsets)
             {
                 CreateBlock(blockId, blockPos);
-                // if (_previewShape != null)
+                // if (_previewShape)
                 //     CreatePreviewBlock(blockId, blockPos);
             }
 
@@ -112,7 +112,7 @@ namespace Sabotris
             transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.GameTransitionSpeed);
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.GameTransitionSpeed);
 
-            // if (_previewShape != null)
+            // if (_previewShape)
             // {
             //     _previewShape.transform.position = transform.position;
             //     _previewShape.transform.rotation = rotateActivator;

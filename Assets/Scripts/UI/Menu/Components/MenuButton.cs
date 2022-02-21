@@ -26,16 +26,16 @@ namespace UI.Menu
 
         protected virtual void Start()
         {
-            if (rectTransform != null)
+            if (rectTransform)
                 _startPosition = rectTransform.localPosition;
 
-            if (text != null)
+            if (text)
                 _startColor = text.color;
         }
 
         protected virtual void Update()
         {
-            if (text == null)
+            if (!text)
                 return;
 
             var color = isDisabled
@@ -48,7 +48,7 @@ namespace UI.Menu
 
         private void FixedUpdate()
         {
-            if (rectTransform != null)
+            if (rectTransform)
                 rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, (isHovered || isSelected) && !isDisabled ? HoverPosition + _startPosition : _startPosition, GameSettings.UIAnimationSpeed);
         }
 

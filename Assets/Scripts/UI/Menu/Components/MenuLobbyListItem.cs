@@ -9,7 +9,7 @@
         {
             base.Start();
 
-            if (text != null)
+            if (text)
                 text.text = LobbyName;
         }
 
@@ -23,7 +23,7 @@
 
                 _lobbyName = value;
 
-                if (text != null)
+                if (text)
                     text.text = LobbyName;
             }
         }

@@ -93,7 +93,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]
         public void OnGameStart(PacketGameStart packet)
         {
-            if (gameController.ControllingContainer != null)
+            if (gameController.ControllingContainer)
                 gameController.ControllingContainer.StartDropping();
         }
 

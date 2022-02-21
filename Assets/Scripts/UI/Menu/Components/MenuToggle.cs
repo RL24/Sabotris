@@ -12,25 +12,27 @@ namespace UI.Menu
 
         public RawImage checkbox;
 
-        private bool _isToggledOn;
+        public bool isToggledOn;
         private float _isToggledOnLerp;
 
         protected override void Start()
         {
-            checkbox.color = new Color(checkbox.color.r, checkbox.color.g, checkbox.color.b, _isToggledOn.Int());
+            checkbox.color = new Color(checkbox.color.r, checkbox.color.g, checkbox.color.b, isToggledOn.Int());
             OnClick += OnButtonClick;
         }
 
         protected override void Update()
         {
-            _isToggledOnLerp += _isToggledOnLerp.Lerp(_isToggledOn.Int(), GameSettings.UIAnimationSpeed);
+            _isToggledOnLerp += _isToggledOnLerp.Lerp(isToggledOn.Int(), GameSettings.UIAnimationSpeed);
             checkbox.color = new Color(checkbox.color.r, checkbox.color.g, checkbox.color.b, _isToggledOnLerp);
+
+            base.Update();
         }
 
         public override void NavigateSelect()
         {
-            _isToggledOn = !_isToggledOn;
-            OnValueChanged?.Invoke(this, _isToggledOn);
+            isToggledOn = !isToggledOn;
+            OnValueChanged?.Invoke(this, isToggledOn);
         }
 
         private void OnButtonClick(object sender, EventArgs args)

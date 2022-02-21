@@ -1025,11 +1025,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkController: {fileID: 858393423}
+  cameraController: {fileID: 1687258583}
   world: {fileID: 2032613557}
   volume: {fileID: 653260036}
   background: {fileID: 78413785}
   currentMenu: {fileID: 0}
   nextMenu: {fileID: 1680366592}
+  dof: {fileID: 0}
 --- !u!224 &1680366591 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5792942197404027229, guid: d0d66c19eec593246b5a59618348f833, type: 3}
@@ -1089,6 +1091,8 @@ MonoBehaviour:
   gameController: {fileID: 858393424}
   menuController: {fileID: 1370561258}
   camera: {fileID: 1687258584}
+  cameraPosition: {x: 0, y: 0, z: 0}
+  cameraRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!20 &1687258584
 Camera:
   m_ObjectHideFlags: 0

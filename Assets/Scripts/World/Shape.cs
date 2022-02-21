@@ -41,6 +41,8 @@ namespace Sabotris
 
         public readonly Dictionary<Guid, Block> Blocks = new Dictionary<Guid, Block>();
 
+        // private GameObject _previewShape;
+
         private void Start()
         {
             RawPosition = Vector3Int.RoundToInt(transform.position - parentContainer.transform.position);
@@ -48,8 +50,20 @@ namespace Sabotris
 
             transform.localScale = Vector3.zero;
 
+            // if (!parentContainer.IsDemo())
+            // {
+            //     _previewShape = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
+            //     _previewShape.transform.localScale = Vector3.one * 0.9f;
+            //     
+            //     _previewShape.transform.SetParent(parentContainer.transform, false);
+            // }
+
             foreach (var (blockId, blockPos) in Offsets)
+            {
                 CreateBlock(blockId, blockPos);
+                // if (_previewShape != null)
+                //     CreatePreviewBlock(blockId, blockPos);
+            }
 
             foreach (var ren in GetComponentsInChildren<Renderer>())
                 ren.material.color = color ?? Color.white;
@@ -83,12 +97,10 @@ namespace Sabotris
 
                 DoRotate();
 
-                var roundedRotationActivator =
-                    Quaternion.Euler(rotateActivator.eulerAngles.Round(parentContainer.RotateThreshold));
-                if (RawRotation != roundedRotationActivator)
+                var roundedRotationActivator = Quaternion.Euler(rotateActivator.eulerAngles.Round(parentContainer.RotateThreshold));
+                if (!RawRotation.eulerAngles.Same(roundedRotationActivator.eulerAngles))
                 {
-                    var offsets = GetOffsets(RawPosition, roundedRotationActivator)
-                        ?.Select((offset) => offset.Item2 + RawPosition).ToArray();
+                    var offsets = GetOffsets(RawPosition, roundedRotationActivator)?.Select((offset) => offset.Item2 + RawPosition).ToArray();
                     if (!parentContainer.DoesCollide(offsets))
                         RawRotation = rotateActivator = roundedRotationActivator;
                     else
@@ -99,7 +111,25 @@ namespace Sabotris
             transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.GameTransitionSpeed);
             transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.GameTransitionSpeed);
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.GameTransitionSpeed);
+
+            // if (_previewShape != null)
+            // {
+            //     _previewShape.transform.position = transform.position;
+            //     _previewShape.transform.rotation = rotateActivator;
+            // }
         }
+
+        // private void CreatePreviewBlock(Guid blockId, Vector3Int offset)
+        // {
+        //     var block = Instantiate(blockTemplate, offset, Quaternion.identity);
+        //     block.name = $"Preview-Block-{blockId}";
+        //
+        //     block.id = blockId;
+        //
+        //     block.transform.SetParent(_previewShape.transform, false);
+        //
+        //     block.color = Color.gray;
+        // }
 
         private void CreateBlock(Guid blockId, Vector3Int offset)
         {

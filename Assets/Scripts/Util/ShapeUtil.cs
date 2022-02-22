@@ -12,42 +12,38 @@ namespace Sabotris.Util
         private static readonly Vector3Int[] HorizontalDirections = {Vector3Int.left, Vector3Int.forward, Vector3Int.right, Vector3Int.back};
         private static readonly Vector3Int[] OmniDirections = {Vector3Int.left, Vector3Int.forward, Vector3Int.right, Vector3Int.back, Vector3Int.up, Vector3Int.down};
 
-        public static (Guid, Vector3Int)[] Generate(int offsetCount, bool vertical)
-        {
-            return Generate(offsetCount, vertical, NullVector3Int, NullVector3Int);
-        }
+        private static readonly List<Vector3Int[]> GeneratedShapes = new List<Vector3Int[]>();
 
-        public static (Guid, Vector3Int)[] Generate(int offsetCount, bool vertical, Vector3Int bottomLeft, Vector3Int topRight)
+        public static (Guid, Vector3Int)[] Generate(int offsetCount, bool vertical, Vector3Int bottomLeft, Vector3Int topRight, int regenerated = 0)
         {
-            var offsets = new List<Vector3Int> {Vector3Int.zero};
-            while (offsets.Count < offsetCount)
+            for (;;)
             {
-                var free = new List<Vector3Int>();
-                foreach (var offset in offsets)
+                regenerated++;
+                var offsets = new List<Vector3Int> {Vector3Int.zero};
+                while (offsets.Count < offsetCount)
                 {
-                    var directionals = vertical ? OmniDirections : HorizontalDirections;
-                    foreach (var direction in directionals)
-                    {
-                        var adjacent = offset + direction;
-                        if (!offsets.Contains(adjacent) && !free.Contains(adjacent) && (bottomLeft == NullVector3Int || topRight == NullVector3Int || !adjacent.IsOutside(bottomLeft, topRight)))
-                            free.Add(adjacent);
-                    }
+                    var free = new List<Vector3Int>();
+                    foreach (var adjacent in from offset in offsets let directionals = vertical ? OmniDirections : HorizontalDirections from direction in directionals select offset + direction into adjacent where !offsets.Contains(adjacent) && !free.Contains(adjacent) && (bottomLeft == NullVector3Int || topRight == NullVector3Int || !adjacent.IsOutside(bottomLeft, topRight)) select adjacent)
+                        free.Add(adjacent);
+
+                    if (!free.Any()) break;
+
+                    var pick = Random.Range(0, free.Count);
+                    offsets.Add(free[pick]);
                 }
 
-                if (!free.Any())
-                    break;
+                var centerOffset = Vector3Int.RoundToInt(new Vector3((float) offsets.Average((offset) => offset.x), (float) offsets.Average((offset) => offset.y), (float) offsets.Average((offset) => offset.z)));
 
-                var pick = Random.Range(0, free.Count);
-                offsets.Add(free[pick]);
+                var centered = offsets.Select((offset) => offset - centerOffset).ToArray();
+                var generated = centered.Select((offset) => (Guid.NewGuid(), offset)).ToArray();
+                if (regenerated < 10 && GeneratedShapes.Any(alreadyGenerated => alreadyGenerated.Same(centered)))
+                    continue;
+                if (regenerated >= 10)
+                    GeneratedShapes.Clear();
+
+                GeneratedShapes.Add(centered);
+                return generated;
             }
-
-            var centerOffset = Vector3Int.RoundToInt(new Vector3(
-                (float) offsets.Average((offset) => offset.x),
-                (float) offsets.Average((offset) => offset.y),
-                (float) offsets.Average((offset) => offset.z)
-            ));
-
-            return offsets.Select((offset) => (Guid.NewGuid(), offset - centerOffset)).ToArray();
         }
     }
 }

@@ -11,7 +11,6 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
         public MenuButton buttonGamepadCameraSensitivity,
-            buttonGamepadRotateSensitivity,
             buttonMouseCameraSensitivity,
             buttonMouseRotateSensitivity,
             buttonApply,
@@ -30,12 +29,6 @@ namespace Sabotris.UI.Menu.Menus
             {
                 sgcs.OnValueChanged += OnGamepadCameraSensitivityChanged;
                 sgcs.SetValue(InputUtil.GamepadCameraSensitivity * 50);
-            }
-
-            if (buttonGamepadRotateSensitivity is MenuSlider sgrs)
-            {
-                sgrs.OnValueChanged += OnGamepadRotateSensitivityChanged;
-                sgrs.SetValue(InputUtil.GamepadRotateSensitivity / 3.6f);
             }
 
             if (buttonMouseCameraSensitivity is MenuSlider smcs)
@@ -64,22 +57,17 @@ namespace Sabotris.UI.Menu.Menus
 
         private void OnGamepadCameraSensitivityChanged(object sender, float value)
         {
-            InputUtil.GamepadCameraSensitivity = value / 50f;
-        }
-
-        private void OnGamepadRotateSensitivityChanged(object sender, float value)
-        {
-            InputUtil.GamepadRotateSensitivity = value * 3.6f;
+            GameSettings.Input.GamepadRotateCameraSensitivity = value / 50f;
         }
 
         private void OnMouseCameraSensitivityChanged(object sender, float value)
         {
-            InputUtil.MouseCameraSensitivity = value / 50f;
+            GameSettings.Input.MouseRotateCameraSensitivity = value / 50f;
         }
 
         private void OnMouseRotateSensitivityChanged(object sender, float value)
         {
-            InputUtil.MouseRotateSensitivity = value / 10f;
+            GameSettings.Input.MouseRotateBlockSensitivity = value / 10f;
         }
 
         private void OnClickButton(object sender, EventArgs args)

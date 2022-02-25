@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using Sabotris.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace Sabotris.Util
 {
@@ -10,30 +11,30 @@ namespace Sabotris.Util
     {
         #region Keyboard
 
-        private static IEnumerable<KeyControl> KeyEscape => new[] {Keyboard.current?.escapeKey};
+        private static KeyControl KeyPause => Keyboard.current?.escapeKey;
         
-        private static IEnumerable<KeyControl> KeyLeft => new[] {Keyboard.current?.aKey, Keyboard.current?.leftArrowKey};
-        private static IEnumerable<KeyControl> KeyRight => new[] {Keyboard.current?.dKey, Keyboard.current?.rightArrowKey};
-        private static IEnumerable<KeyControl> KeyForward => new[] {Keyboard.current?.wKey, Keyboard.current?.upArrowKey};
-        private static IEnumerable<KeyControl> KeyBackward => new[] {Keyboard.current?.sKey, Keyboard.current?.downArrowKey};
+        private static KeyControl KeyLeft => Tern(GameSettings.Input.KeyboardBinds.MoveLeft);
+        private static KeyControl KeyRight => Tern(GameSettings.Input.KeyboardBinds.MoveRight);
+        private static KeyControl KeyForward => Tern(GameSettings.Input.KeyboardBinds.MoveForward);
+        private static KeyControl KeyBackward => Tern(GameSettings.Input.KeyboardBinds.MoveBack);
         
-        private static IEnumerable<KeyControl> KeySpace => new[] {Keyboard.current?.spaceKey};
+        private static KeyControl KeyMoveDown => Tern(GameSettings.Input.KeyboardBinds.MoveDown);
 
-        private static IEnumerable<KeyControl> KeyRotateYawLeft => new[] {Keyboard.current?.uKey};
-        private static IEnumerable<KeyControl> KeyRotateYawRight => new[] {Keyboard.current?.oKey};
-        private static IEnumerable<KeyControl> KeyRotatePitchUp => new[] {Keyboard.current?.iKey};
-        private static IEnumerable<KeyControl> KeyRotatePitchDown => new[] {Keyboard.current?.kKey};
-        private static IEnumerable<KeyControl> KeyRotateRollLeft => new[] {Keyboard.current?.jKey};
-        private static IEnumerable<KeyControl> KeyRotateRollRight => new[] {Keyboard.current?.lKey};
+        private static KeyControl KeyRotateYawLeft => Tern(GameSettings.Input.KeyboardBinds.RotateYawLeft);
+        private static KeyControl KeyRotateYawRight => Tern(GameSettings.Input.KeyboardBinds.RotateYawRight);
+        private static KeyControl KeyRotatePitchUp => Tern(GameSettings.Input.KeyboardBinds.RotatePitchUp);
+        private static KeyControl KeyRotatePitchDown => Tern(GameSettings.Input.KeyboardBinds.RotatePitchDown);
+        private static KeyControl KeyRotateRollLeft => Tern(GameSettings.Input.KeyboardBinds.RotateRollLeft);
+        private static KeyControl KeyRotateRollRight => Tern(GameSettings.Input.KeyboardBinds.RotateRollRight);
 
         #region UI
 
-        private static IEnumerable<KeyControl> KeyUILeft => new[] {Keyboard.current?.leftArrowKey};
-        private static IEnumerable<KeyControl> KeyUIRight => new[] {Keyboard.current?.rightArrowKey};
-        private static IEnumerable<KeyControl> KeyUIUp => new[] {Keyboard.current?.upArrowKey};
-        private static IEnumerable<KeyControl> KeyUIDown => new[] {Keyboard.current?.downArrowKey};
-
-        private static IEnumerable<KeyControl> KeyUISelect => new[] {Keyboard.current?.spaceKey, Keyboard.current?.enterKey};
+        private static KeyControl KeyNavigateLeft => Tern(GameSettings.Input.KeyboardBinds.NavigateLeft);
+        private static KeyControl KeyNavigateRight => Tern(GameSettings.Input.KeyboardBinds.NavigateRight);
+        private static KeyControl KeyNavigateUp => Tern(GameSettings.Input.KeyboardBinds.NavigateUp);
+        private static KeyControl KeyNavigateDown => Tern(GameSettings.Input.KeyboardBinds.NavigateDown);
+        private static KeyControl KeyNavigateEnter => Tern(GameSettings.Input.KeyboardBinds.NavigateEnter);
+        private static KeyControl KeyNavigateBack => Tern(GameSettings.Input.KeyboardBinds.NavigateBack);
 
         #endregion
 
@@ -41,8 +42,8 @@ namespace Sabotris.Util
 
         #region Mouse
 
-        public static float MouseCameraSensitivity = 1; // * 50
-        public static float MouseRotateSensitivity = 5; // * 10
+        public static float MouseCameraSensitivity => GameSettings.Input.MouseRotateCameraSensitivity; // * 50
+        public static float MouseRotateSensitivity => GameSettings.Input.MouseRotateBlockSensitivity; // * 10
 
         private static Vector2Control MouseDelta => Mouse.current?.delta;
         private static Vector2Control MouseScroll => Mouse.current?.scroll;
@@ -53,92 +54,118 @@ namespace Sabotris.Util
 
         #region Gamepad
 
-        public static float GamepadCameraSensitivity = 1; // * 50
-        public static float GamepadRotateSensitivity = 90; // / 3.6
+        public const float GamepadRotateSensitivity = 90; // / 3.6
+        public static float GamepadCameraSensitivity => GameSettings.Input.GamepadRotateCameraSensitivity; // * 50
 
         private static ButtonControl GamepadPause => Gamepad.current?.startButton;
 
         private static StickControl GamepadLeftStick => Gamepad.current?.leftStick;
         private static StickControl GamepadRightStick => Gamepad.current?.rightStick;
 
-        private static ButtonControl GamepadLeftShoulder => Gamepad.current?.leftShoulder;
-        private static ButtonControl GamepadRightShoulder => Gamepad.current?.rightShoulder;
+        private static ButtonControl GamepadLeftTrigger => Gamepad.current?.leftTrigger;
+        private static ButtonControl GamepadRightTrigger => Gamepad.current?.rightTrigger;
 
-        private static IEnumerable<ButtonControl> GamepadLeftTrigger => new[] {Gamepad.current?.leftTrigger};
-        private static IEnumerable<ButtonControl> GamepadRightTrigger => new[] {Gamepad.current?.rightTrigger};
-
-        private static ButtonControl GamepadButtonUp => Gamepad.current?.dpad?.up;
-        private static ButtonControl GamepadButtonDown => Gamepad.current?.dpad?.down;
-        private static ButtonControl GamepadButtonLeft => Gamepad.current?.dpad?.left;
-        private static ButtonControl GamepadButtonRight => Gamepad.current?.dpad?.right;
-
-        private static ButtonControl GamepadButtonZoomIn => Gamepad.current?.leftStickButton;
-        private static ButtonControl GamepadButtonZoomOut => Gamepad.current?.rightStickButton;
-
-        private static ButtonControl GamepadButtonA => Gamepad.current?.buttonSouth;
-        private static ButtonControl GamepadButtonB => Gamepad.current?.buttonEast;
-        private static ButtonControl GamepadButtonX => Gamepad.current?.buttonWest;
-        private static ButtonControl GamepadButtonY => Gamepad.current?.buttonNorth;
+        private static ButtonControl GamepadRotateYawLeft => Tern(GameSettings.Input.GamepadBinds.RotateYawLeft);
+        private static ButtonControl GamepadRotateYawRight => Tern(GameSettings.Input.GamepadBinds.RotateYawRight);
+        private static ButtonControl GamepadRotatePitchUp => Tern(GameSettings.Input.GamepadBinds.RotatePitchUp);
+        private static ButtonControl GamepadRotatePitchDown => Tern(GameSettings.Input.GamepadBinds.RotatePitchDown);
+        private static ButtonControl GamepadRotateRollLeft => Tern(GameSettings.Input.GamepadBinds.RotateRollLeft);
+        private static ButtonControl GamepadRotateRollRight => Tern(GameSettings.Input.GamepadBinds.RotateRollRight);
+        
+        private static ButtonControl GamepadButtonZoomIn => Tern(GameSettings.Input.GamepadBinds.ZoomIn);
+        private static ButtonControl GamepadButtonZoomOut => Tern(GameSettings.Input.GamepadBinds.ZoomOut);
+        
+        private static ButtonControl GamepadNavigateLeft => Tern(GameSettings.Input.GamepadBinds.NavigateLeft);
+        private static ButtonControl GamepadNavigateRight => Tern(GameSettings.Input.GamepadBinds.NavigateRight);
+        private static ButtonControl GamepadNavigateUp => Tern(GameSettings.Input.GamepadBinds.NavigateUp);
+        private static ButtonControl GamepadNavigateDown => Tern(GameSettings.Input.GamepadBinds.NavigateDown);
+        private static ButtonControl GamepadNavigateEnter => Tern(GameSettings.Input.GamepadBinds.NavigateEnter);
+        private static ButtonControl GamepadNavigateBack => Tern(GameSettings.Input.GamepadBinds.NavigateBack);
 
         #endregion
 
+        private static KeyControl Tern(Key key)
+        {
+            if (key == Key.None)
+                return null;
+            
+            try
+            {
+                return Keyboard.current == null ? null : Keyboard.current[key];
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return null;
+            }
+        }
+
+        private static ButtonControl Tern(GamepadButton button)
+        {
+            try
+            {
+                return Gamepad.current == null ? null : Gamepad.current[button];
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return null;
+            }
+        }
+
         private static bool WasPressed(ButtonControl key) => key?.wasPressedThisFrame ?? false;
-        private static bool WasPressed(IEnumerable<ButtonControl> keys) => keys.Any(WasPressed);
 
         private static bool IsPressed(ButtonControl key) => key?.IsPressed() ?? false;
-        private static bool IsPressed(IEnumerable<ButtonControl> keys) => keys.Any(IsPressed);
 
-        public static bool ShouldPause() => WasPressed(KeyEscape) || WasPressed(GamepadPause);
+        public static bool ShouldPause() => WasPressed(KeyPause) || WasPressed(GamepadPause);
         public static bool ShouldRotateShape() => IsPressed(MouseRightButton);
 
         public static float GetMoveStrafe()
         {
             var keyboardValue = IsPressed(KeyRight).Int() - IsPressed(KeyLeft).Int();
-            var gamepadValue = GamepadLeftStick?.x.ReadValue() + (IsPressed(GamepadButtonRight).Int() - IsPressed(GamepadButtonLeft).Int()) ?? 0;
+            var gamepadValue = GamepadLeftStick?.x.ReadValue() + (IsPressed(GamepadNavigateRight).Int() - IsPressed(GamepadNavigateLeft).Int()) ?? 0;
             return Mathf.Clamp(keyboardValue + gamepadValue, -1, 1);
         }
 
         public static float GetMoveAdvance()
         {
             var keyboardValue = IsPressed(KeyBackward).Int() - IsPressed(KeyForward).Int();
-            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadButtonUp).Int() - IsPressed(GamepadButtonDown).Int()) ?? 0;
+            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadNavigateUp).Int() - IsPressed(GamepadNavigateDown).Int()) ?? 0;
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
 
         public static bool GetMoveDown()
         {
-            return IsPressed(MouseLeftButton) || IsPressed(KeySpace) || IsPressed(GamepadRightTrigger) || IsPressed(GamepadLeftTrigger);
+            return IsPressed(MouseLeftButton) || IsPressed(KeyMoveDown) || IsPressed(GamepadRightTrigger) || IsPressed(GamepadLeftTrigger);
         }
 
         public static float GetMoveUINavigateVertical()
         {
-            var keyboardValue = IsPressed(KeyUIDown).Int() - IsPressed(KeyUIUp).Int();
-            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadButtonUp).Int() - IsPressed(GamepadButtonDown).Int()) ?? 0;
+            var keyboardValue = IsPressed(KeyNavigateDown).Int() - IsPressed(KeyNavigateUp).Int();
+            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadNavigateUp).Int() - IsPressed(GamepadNavigateDown).Int()) ?? 0;
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
 
         public static float GetMoveUINavigateHorizontal()
         {
-            var keyboardValue = IsPressed(KeyUIRight).Int() - IsPressed(KeyUILeft).Int();
-            var gamepadValue = -GamepadLeftStick?.x.ReadValue() + (IsPressed(GamepadButtonLeft).Int() - IsPressed(GamepadButtonRight).Int()) ?? 0;
+            var keyboardValue = IsPressed(KeyNavigateRight).Int() - IsPressed(KeyNavigateLeft).Int();
+            var gamepadValue = -GamepadLeftStick?.x.ReadValue() + (IsPressed(GamepadNavigateLeft).Int() - IsPressed(GamepadNavigateRight).Int()) ?? 0;
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
 
         public static bool GetUISelect()
         {
-            return WasPressed(KeyUISelect) || WasPressed(GamepadButtonA);
+            return WasPressed(KeyNavigateEnter) || WasPressed(GamepadNavigateEnter);
         }
 
         public static bool GetUIBack()
         {
-            return WasPressed(KeyEscape) || WasPressed(GamepadButtonB);
+            return WasPressed(KeyNavigateBack) || WasPressed(GamepadNavigateBack);
         }
 
         public static float GetRotateYaw()
         {
             var mouseValue = Mathf.Clamp(MouseDelta?.x.ReadValue() ?? 0, -MouseRotateSensitivity, MouseRotateSensitivity) * ShouldRotateShape().Int();
             var keyboardValue = WasPressed(KeyRotateYawRight).Int() - WasPressed(KeyRotateYawLeft).Int();
-            var gamepadValue = WasPressed(GamepadRightShoulder).Int() - WasPressed(GamepadLeftShoulder).Int();
+            var gamepadValue = WasPressed(GamepadRotateYawRight).Int() - WasPressed(GamepadRotateYawLeft).Int();
             return mouseValue * MouseRotateSensitivity * ShouldRotateShape().Int() + (gamepadValue + keyboardValue) * GamepadRotateSensitivity;
         }
 
@@ -146,14 +173,14 @@ namespace Sabotris.Util
         {
             var mouseValue = Mathf.Clamp(MouseDelta?.y.ReadValue() ?? 0, -MouseRotateSensitivity, MouseRotateSensitivity) * ShouldRotateShape().Int();
             var keyboardValue = WasPressed(KeyRotatePitchUp).Int() - WasPressed(KeyRotatePitchDown).Int();
-            var gamepadValue = WasPressed(GamepadButtonY).Int() - WasPressed(GamepadButtonA).Int();
+            var gamepadValue = WasPressed(GamepadRotatePitchUp).Int() - WasPressed(GamepadRotatePitchDown).Int();
             return mouseValue * MouseRotateSensitivity * ShouldRotateShape().Int() + (gamepadValue + keyboardValue) * GamepadRotateSensitivity;
         }
 
         public static float GetRotateRoll()
         {
             var keyboardValue = WasPressed(KeyRotateRollRight).Int() - WasPressed(KeyRotateRollLeft).Int();
-            var gamepadValue = WasPressed(GamepadButtonB).Int() - WasPressed(GamepadButtonX).Int();
+            var gamepadValue = WasPressed(GamepadRotateRollRight).Int() - WasPressed(GamepadRotateRollLeft).Int();
             return (gamepadValue + keyboardValue) * GamepadRotateSensitivity;
         }
 

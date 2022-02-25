@@ -32,15 +32,12 @@ namespace Sabotris.IO
         public Key MoveRight { get; set; } = Key.D;
         public Key MoveForward { get; set; } = Key.W;
         public Key MoveBack { get; set; } = Key.S;
-
         public Key MoveDown { get; set; } = Key.Space;
 
         public Key RotateYawLeft { get; set; } = Key.U;
         public Key RotateYawRight { get; set; } = Key.O;
-        
         public Key RotatePitchUp { get; set; } = Key.I;
         public Key RotatePitchDown { get; set; } = Key.K;
-
         public Key RotateRollLeft { get; set; } = Key.J;
         public Key RotateRollRight { get; set; } = Key.L;
 
@@ -48,8 +45,9 @@ namespace Sabotris.IO
         public Key NavigateRight { get; set; } = Key.RightArrow;
         public Key NavigateUp { get; set; } = Key.UpArrow;
         public Key NavigateDown { get; set; } = Key.DownArrow;
-
         public Key NavigateEnter { get; set; } = Key.Enter;
+        public Key NavigateBack { get; set; } = Key.Escape;
+
     }
 
     [Serializable]
@@ -57,10 +55,8 @@ namespace Sabotris.IO
     {
         public GamepadButton RotateYawLeft { get; set; } = GamepadButton.LeftShoulder;
         public GamepadButton RotateYawRight { get; set; } = GamepadButton.RightShoulder;
-
         public GamepadButton RotatePitchUp { get; set; } = GamepadButton.North;
         public GamepadButton RotatePitchDown { get; set; } = GamepadButton.South;
-
         public GamepadButton RotateRollLeft { get; set; } = GamepadButton.West;
         public GamepadButton RotateRollRight { get; set; } = GamepadButton.East;
 
@@ -71,6 +67,8 @@ namespace Sabotris.IO
         public GamepadButton NavigateRight { get; set; } = GamepadButton.DpadRight;
         public GamepadButton NavigateUp { get; set; } = GamepadButton.DpadUp;
         public GamepadButton NavigateDown { get; set; } = GamepadButton.DpadDown;
+        public GamepadButton NavigateEnter { get; set; } = GamepadButton.South;
+        public GamepadButton NavigateBack { get; set; } = GamepadButton.East;
     }
 
     [Serializable]

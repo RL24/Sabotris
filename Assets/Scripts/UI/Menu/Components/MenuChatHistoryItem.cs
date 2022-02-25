@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UI.Menu
+namespace Sabotris.UI.Menu
 {
     public class MenuChatHistoryItem : MenuButton
     {

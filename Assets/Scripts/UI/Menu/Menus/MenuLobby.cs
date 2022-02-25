@@ -1,12 +1,12 @@
 ﻿using System;
-using Network;
+using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using Steamworks;
 using UnityEngine;
 
-namespace UI.Menu.Menus
+namespace Sabotris.UI.Menu.Menus
 {
     public class MenuLobby : Menu
     {

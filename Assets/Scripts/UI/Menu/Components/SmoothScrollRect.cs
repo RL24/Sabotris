@@ -1,7 +1,7 @@
 ﻿using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace UI.Menu
+namespace Sabotris.UI.Menu
 {
     public class SmoothScrollRect : ScrollRect
     {

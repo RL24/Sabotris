@@ -2,7 +2,7 @@
 using Sabotris.Util;
 using UnityEngine;
 
-namespace UI.Menu.Menus
+namespace Sabotris.UI.Menu.Menus
 {
     public class MenuHostGame : Menu
     {

@@ -1,13 +1,12 @@
-﻿using Sabotris;
-using Sabotris.Network;
+﻿using Sabotris.Network;
+using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
-using UI.Menu.Menus;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-namespace UI.Menu
+namespace Sabotris.UI.Menu
 {
     public class MenuController : MonoBehaviour
     {

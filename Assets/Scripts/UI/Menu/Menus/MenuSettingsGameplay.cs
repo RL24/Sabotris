@@ -1,8 +1,8 @@
 ﻿using System;
-using Sabotris;
+using Sabotris.IO;
 using UnityEngine;
 
-namespace UI.Menu.Menus
+namespace Sabotris.UI.Menu.Menus
 {
     public class MenuSettingsGameplay : Menu
     {
@@ -13,6 +13,7 @@ namespace UI.Menu.Menus
             buttonUIAnimationSpeed,
             buttonGameCameraSpeed,
             buttonMenuCameraSpeed,
+            buttonApply,
             buttonBack;
 
         public Menu menuSettings;
@@ -27,25 +28,25 @@ namespace UI.Menu.Menus
             if (buttonGameTransitionSpeed is MenuSlider sgts)
             {
                 sgts.OnValueChanged += OnGameTransitionSpeedChanged;
-                sgts.SetValue(GameSettings.GameTransitionSpeed * 100);
+                sgts.SetValue(GameSettings.Settings.GameTransitionSpeed * 100);
             }
 
             if (buttonUIAnimationSpeed is MenuSlider suas)
             {
                 suas.OnValueChanged += OnUIAnimationSpeed;
-                suas.SetValue(GameSettings.UIAnimationSpeed * 100);
+                suas.SetValue(GameSettings.Settings.UIAnimationSpeed * 100);
             }
 
             if (buttonGameCameraSpeed is MenuSlider sgcs)
             {
                 sgcs.OnValueChanged += OnGameCameraSpeedChanged;
-                sgcs.SetValue(GameSettings.GameCameraSpeed * 100);
+                sgcs.SetValue(GameSettings.Settings.GameCameraSpeed * 100);
             }
 
             if (buttonMenuCameraSpeed is MenuSlider smcs)
             {
                 smcs.OnValueChanged += OnMenuCameraSpeedChanged;
-                smcs.SetValue(GameSettings.MenuCameraSpeed * 100);
+                smcs.SetValue(GameSettings.Settings.MenuCameraSpeed * 100);
             }
         }
 
@@ -62,22 +63,22 @@ namespace UI.Menu.Menus
 
         private void OnGameTransitionSpeedChanged(object sender, float value)
         {
-            GameSettings.GameTransitionSpeed = value / 100f;
+            GameSettings.Settings.GameTransitionSpeed = value / 100f;
         }
 
         private void OnUIAnimationSpeed(object sender, float value)
         {
-            GameSettings.UIAnimationSpeed = value / 100f;
+            GameSettings.Settings.UIAnimationSpeed = value / 100f;
         }
 
         private void OnGameCameraSpeedChanged(object sender, float value)
         {
-            GameSettings.GameCameraSpeed = value / 100f;
+            GameSettings.Settings.GameCameraSpeed = value / 100f;
         }
 
         private void OnMenuCameraSpeedChanged(object sender, float value)
         {
-            GameSettings.MenuCameraSpeed = value / 100f;
+            GameSettings.Settings.MenuCameraSpeed = value / 100f;
         }
 
         private void OnClickButton(object sender, EventArgs args)
@@ -85,8 +86,16 @@ namespace UI.Menu.Menus
             if (!Open)
                 return;
 
-            if (sender.Equals(buttonBack))
+            if (sender.Equals(buttonApply))
+                Save();
+            else if (sender.Equals(buttonBack))
                 GoBack();
+        }
+
+        private void Save()
+        {
+            GameSettings.Save();
+            GoBack();
         }
 
         protected override Menu GetBackMenu()

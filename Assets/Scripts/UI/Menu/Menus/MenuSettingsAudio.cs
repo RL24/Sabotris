@@ -1,15 +1,17 @@
 ﻿using System;
-using Sabotris;
+using Sabotris.IO;
 using UnityEngine;
 
-namespace UI.Menu.Menus
+namespace Sabotris.UI.Menu.Menus
 {
     public class MenuSettingsAudio : Menu
     {
         private readonly Vector3 _cameraPosition = new Vector3(3, 6, 8);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
-        public MenuButton buttonMasterVolume, buttonBack;
+        public MenuButton buttonMasterVolume,
+            buttonApply,
+            buttonBack;
 
         public Menu menuSettings;
 
@@ -23,7 +25,7 @@ namespace UI.Menu.Menus
             if (buttonMasterVolume is MenuSlider sliderMasterVolume)
             {
                 sliderMasterVolume.OnValueChanged += OnMasterVolumeChanged;
-                sliderMasterVolume.SetValue(GameSettings.MasterVolume);
+                sliderMasterVolume.SetValue(GameSettings.Settings.MasterVolume);
             }
         }
 
@@ -40,16 +42,24 @@ namespace UI.Menu.Menus
 
         private void OnMasterVolumeChanged(object sender, float value)
         {
-            GameSettings.MasterVolume = value;
+            GameSettings.Settings.MasterVolume = value;
         }
 
         private void OnClickButton(object sender, EventArgs args)
         {
             if (!Open)
                 return;
-
-            if (sender.Equals(buttonBack))
+            
+            if (sender.Equals(buttonApply))
+                Save();
+            else if (sender.Equals(buttonBack))
                 GoBack();
+        }
+
+        private void Save()
+        {
+            GameSettings.Save();
+            GoBack();
         }
 
         protected override Menu GetBackMenu()

@@ -5,9 +5,9 @@ using System.Linq;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
+using Sabotris.UI.Menu;
 using Sabotris.Util;
 using TMPro;
-using UI.Menu;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

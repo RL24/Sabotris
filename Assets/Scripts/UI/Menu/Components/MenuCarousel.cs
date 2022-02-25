@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace UI.Menu
+namespace Sabotris.UI.Menu
 {
     public class MenuCarousel : MenuButton
     {

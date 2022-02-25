@@ -1,8 +1,9 @@
 ﻿using System;
+using Sabotris.IO;
 using Sabotris.Util;
 using UnityEngine;
 
-namespace UI.Menu.Menus
+namespace Sabotris.UI.Menu.Menus
 {
     public class MenuSettingsControls : Menu
     {
@@ -13,6 +14,7 @@ namespace UI.Menu.Menus
             buttonGamepadRotateSensitivity,
             buttonMouseCameraSensitivity,
             buttonMouseRotateSensitivity,
+            buttonApply,
             buttonBack;
 
         public Menu menuSettings;
@@ -84,9 +86,16 @@ namespace UI.Menu.Menus
         {
             if (!Open)
                 return;
-
-            if (sender.Equals(buttonBack))
+            if (sender.Equals(buttonApply))
+                Save();
+            else if (sender.Equals(buttonBack))
                 GoBack();
+        }
+
+        private void Save()
+        {
+            GameSettings.Save();
+            GoBack();
         }
 
         protected override Menu GetBackMenu()

@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using Network;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
+using Sabotris.UI.Menu;
+using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
 using Steamworks;
-using UI.Menu;
-using UI.Menu.Menus;
 using UnityEngine;
 
 namespace Sabotris

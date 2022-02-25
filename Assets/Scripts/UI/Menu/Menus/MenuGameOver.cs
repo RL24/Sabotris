@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Network;
+using Sabotris.Network;
 using UnityEngine;
 
-namespace UI.Menu.Menus
+namespace Sabotris.UI.Menu.Menus
 {
     public class MenuGameOver : Menu
     {

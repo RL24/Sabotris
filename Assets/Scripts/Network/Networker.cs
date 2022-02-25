@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Util;
 using Steamworks;
 
-namespace Network
+namespace Sabotris.Network
 {
     public enum DisconnectReason
     {

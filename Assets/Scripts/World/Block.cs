@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Sabotris.IO;
 using Sabotris.Util;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -34,9 +35,9 @@ namespace Sabotris
         private void FixedUpdate()
         {
             if (rawPosition != ShapeUtil.NullVector3Int && shifted)
-                transform.position = Vector3.Lerp(transform.position, _parentContainer.transform.position + rawPosition, GameSettings.GameTransitionSpeed);
+                transform.position = Vector3.Lerp(transform.position, _parentContainer.transform.position + rawPosition, GameSettings.Settings.GameTransitionSpeed);
 
-            transform.localScale = Vector3.Lerp(transform.localScale, doRemove ? Vector3.zero : Vector3.one, GameSettings.GameTransitionSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, doRemove ? Vector3.zero : Vector3.one, GameSettings.Settings.GameTransitionSpeed);
 
             if (doRemove && transform.localScale.GetMinValue() < 0.01)
                 Destroy(gameObject);

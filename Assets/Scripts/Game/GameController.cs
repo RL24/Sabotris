@@ -1,18 +1,39 @@
+using System;
+using System.Text;
+using Sabotris.IO;
+using Sabotris.Util;
 using Steamworks;
-using UI.Menu;
+using Sabotris.UI.Menu;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 namespace Sabotris
 {
     public class GameController : MonoBehaviour
     {
         public MenuController menuController;
+        
+        public ForwardRendererData forwardRendererData;
+        public Volume renderVolume;
+        
+        private ScriptableRendererFeature _renderFeatureSsao;
+        private DepthOfField _dof;
 
         public Container ControllingContainer { get; set; }
 
         private void Start()
         {
+            _renderFeatureSsao = forwardRendererData.rendererFeatures.Find((feature) => feature.name.Equals("NewScreenSpaceAmbientOcclusion"));
+            renderVolume.profile.TryGet(out _dof);
+            
             SteamNetworkingUtils.InitRelayNetworkAccess();
+
+            GameSettings.OnBeforeSaveEvent += OnBeforeSave;
+            GameSettings.OnAfterLoadEvent += OnAfterLoad;
+            
+            GameSettings.Load();
+            GameSettings.Save();
         }
 
         private void Update()
@@ -30,6 +51,30 @@ namespace Sabotris
 
             if (Cursor.visible != visible)
                 Cursor.visible = visible;
+        }
+
+        private void OnBeforeSave(object sender, EventArgs e)
+        {
+            UpdateToSettings();
+        }
+
+        private void OnAfterLoad(object sender, EventArgs e)
+        {
+            UpdateFromSettings();
+        }
+
+        private void UpdateToSettings()
+        {
+            GameSettings.Settings.AmbientOcclusion = _renderFeatureSsao.isActive;
+            GameSettings.Settings.MenuDofMode = _dof.mode.value;
+            GameSettings.Settings.FullscreenMode = Screen.fullScreenMode;
+        }
+
+        private void UpdateFromSettings()
+        {
+            _renderFeatureSsao.SetActive(GameSettings.Settings.AmbientOcclusion);
+            _dof.mode.value = GameSettings.Settings.MenuDofMode;
+            Screen.fullScreenMode = GameSettings.Settings.FullscreenMode;
         }
     }
 }

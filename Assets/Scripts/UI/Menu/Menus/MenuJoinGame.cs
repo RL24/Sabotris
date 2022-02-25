@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Network;
+using Sabotris.Network;
 using Sabotris.Util;
 using Steamworks;
 using UnityEngine;
 
-namespace UI.Menu.Menus
+namespace Sabotris.UI.Menu.Menus
 {
     public class MenuJoinGame : Menu
     {

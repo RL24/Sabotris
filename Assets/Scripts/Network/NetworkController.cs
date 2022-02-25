@@ -1,4 +1,4 @@
-﻿using UI.Menu.Menus;
+﻿using Sabotris.UI.Menu.Menus;
 using UnityEngine;
 
 namespace Sabotris.Network

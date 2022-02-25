@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
-using Network;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using Steamworks;
 
-namespace UI.Menu.Menus
+namespace Sabotris.UI.Menu.Menus
 {
     public class Client : Networker
     {

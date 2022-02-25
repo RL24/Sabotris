@@ -1,4 +1,4 @@
-﻿namespace UI.Menu
+﻿namespace Sabotris.UI.Menu
 {
     public class MenuLobbyListItem : MenuButton
     {

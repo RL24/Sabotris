@@ -1,10 +1,10 @@
 ﻿using System;
-using Sabotris;
+using Sabotris.IO;
 using Sabotris.Util;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Menu
+namespace Sabotris.UI.Menu
 {
     public class MenuToggle : MenuButton
     {
@@ -23,7 +23,7 @@ namespace UI.Menu
 
         protected override void Update()
         {
-            _isToggledOnLerp += _isToggledOnLerp.Lerp(isToggledOn.Int(), GameSettings.UIAnimationSpeed);
+            _isToggledOnLerp += _isToggledOnLerp.Lerp(isToggledOn.Int(), GameSettings.Settings.UIAnimationSpeed);
             checkbox.color = new Color(checkbox.color.r, checkbox.color.g, checkbox.color.b, _isToggledOnLerp);
 
             base.Update();

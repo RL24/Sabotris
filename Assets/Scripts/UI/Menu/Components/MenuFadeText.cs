@@ -1,9 +1,9 @@
-﻿using Sabotris;
+﻿using Sabotris.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace UI.Menu
+namespace Sabotris.UI.Menu
 {
     public class MenuFadeText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
@@ -29,7 +29,7 @@ namespace UI.Menu
             var color = _isHovered
                 ? ColorHover
                 : _startColor;
-            text.color = Color.Lerp(text.color, color, GameSettings.UIAnimationSpeed);
+            text.color = Color.Lerp(text.color, color, GameSettings.Settings.UIAnimationSpeed);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

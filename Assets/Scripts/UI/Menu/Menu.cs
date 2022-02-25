@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Sabotris;
+using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Util;
 using UnityEngine;
 
-namespace UI.Menu
+namespace Sabotris.UI.Menu
 {
     public abstract class Menu : MonoBehaviour
     {
@@ -97,7 +97,7 @@ namespace UI.Menu
                     buttons[SelectedButton].NavigateHorizontal(navigateHor);
             }
 
-            canvasGroup.alpha += canvasGroup.alpha.Lerp((!Closing).Int(), GameSettings.MenuCameraSpeed * 2);
+            canvasGroup.alpha += canvasGroup.alpha.Lerp((!Closing).Int(), GameSettings.Settings.MenuCameraSpeed * 2);
 
             if (InputUtil.GetUISelect())
             {

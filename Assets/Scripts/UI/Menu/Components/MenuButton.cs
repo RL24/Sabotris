@@ -1,10 +1,10 @@
 ﻿using System;
-using Sabotris;
+using Sabotris.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace UI.Menu
+namespace Sabotris.UI.Menu
 {
     public class MenuButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
@@ -43,13 +43,13 @@ namespace UI.Menu
                 : isHovered || isSelected
                     ? ColorActive
                     : _startColor;
-            text.color = Color.Lerp(text.color, color, GameSettings.UIAnimationSpeed);
+            text.color = Color.Lerp(text.color, color, GameSettings.Settings.UIAnimationSpeed);
         }
 
         private void FixedUpdate()
         {
             if (rectTransform)
-                rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, (isHovered || isSelected) && !isDisabled ? HoverPosition + _startPosition : _startPosition, GameSettings.UIAnimationSpeed);
+                rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, (isHovered || isSelected) && !isDisabled ? HoverPosition + _startPosition : _startPosition, GameSettings.Settings.UIAnimationSpeed);
         }
 
         public virtual void NavigateSelect()

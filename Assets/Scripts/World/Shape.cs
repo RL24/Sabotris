@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
+using Sabotris.UI.Menu;
 using Sabotris.Util;
-using UI.Menu;
 using UnityEngine;
 
 namespace Sabotris
@@ -108,9 +109,9 @@ namespace Sabotris
                 }
             }
 
-            transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.GameTransitionSpeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.GameTransitionSpeed);
-            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.GameTransitionSpeed);
+            transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.Settings.GameTransitionSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.Settings.GameTransitionSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.Settings.GameTransitionSpeed);
 
             // if (_previewShape)
             // {
@@ -135,7 +136,7 @@ namespace Sabotris
         {
             var block = Instantiate(blockTemplate, offset, Quaternion.identity);
             block.name = $"Block-{blockId}";
-
+            
             block.id = blockId;
 
             block.transform.SetParent(transform, false);

@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Linq;
+using Sabotris.IO;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace UI.Menu.Menus
+namespace Sabotris.UI.Menu.Menus
 {
     public class MenuSettingsVideo : Menu
     {
         private readonly Vector3 _cameraPosition = new Vector3(3, 6, 8);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
-        public ForwardRendererData forwardRendererData;
-
-        private ScriptableRendererFeature _renderFeatureSsao;
-
         public MenuButton buttonSsao,
             buttonMenuDof,
             buttonFullscreen,
+            buttonApply,
             buttonBack;
 
         public Menu menuSettings;
@@ -26,49 +22,36 @@ namespace UI.Menu.Menus
         {
             base.Start();
 
-            _renderFeatureSsao = forwardRendererData.rendererFeatures.Find((feature) => feature.name.Equals("NewScreenSpaceAmbientOcclusion"));
-            
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
             if (buttonSsao is MenuToggle toggleSsao)
             {
-                toggleSsao.isToggledOn = _renderFeatureSsao is {isActive: true};
+                toggleSsao.isToggledOn = GameSettings.Settings.AmbientOcclusion;
                 toggleSsao.OnValueChanged += OnSsaoToggled;
             }
             
             if (buttonMenuDof is MenuCarousel carouselMenuDof)
             {
-                switch (menuController.dof.mode.value)
+                carouselMenuDof.index = GameSettings.Settings.MenuDofMode switch
                 {
-                    case DepthOfFieldMode.Off:
-                        carouselMenuDof.index = 0;
-                        break;
-                    case DepthOfFieldMode.Gaussian:
-                        carouselMenuDof.index = 1;
-                        break;
-                    case DepthOfFieldMode.Bokeh:
-                        carouselMenuDof.index = 2;
-                        break;
-                }
+                    DepthOfFieldMode.Off => 0,
+                    DepthOfFieldMode.Gaussian => 1,
+                    DepthOfFieldMode.Bokeh => 2,
+                    _ => carouselMenuDof.index
+                };
 
                 carouselMenuDof.OnValueChanged += OnMenuDofModeChanged;
             }
 
             if (buttonFullscreen is MenuCarousel carouselFullscreen)
             {
-                switch (Screen.fullScreenMode)
+                carouselFullscreen.index = GameSettings.Settings.FullscreenMode switch
                 {
-                    case FullScreenMode.FullScreenWindow:
-                        carouselFullscreen.index = 0;
-                        break;
-                    case FullScreenMode.ExclusiveFullScreen:
-                        carouselFullscreen.index = 1;
-                        break;
-                    default:
-                        carouselFullscreen.index = 2;
-                        break;
-                }
+                    FullScreenMode.FullScreenWindow => 0,
+                    FullScreenMode.ExclusiveFullScreen => 1,
+                    _ => 2
+                };
 
                 carouselFullscreen.OnValueChanged += OnFullscreenModeChanged;
             }
@@ -87,46 +70,43 @@ namespace UI.Menu.Menus
             if (!Open)
                 return;
 
-            if (sender.Equals(buttonBack))
+            if (sender.Equals(buttonApply))
+                Save();
+            else if (sender.Equals(buttonBack))
                 GoBack();
         }
 
         private void OnSsaoToggled(object sender, bool active)
         {
-            if (_renderFeatureSsao)
-                _renderFeatureSsao.SetActive(active);
+            GameSettings.Settings.AmbientOcclusion = active;
         }
 
         private void OnMenuDofModeChanged(object sender, int index)
         {
-            switch (index)
+            GameSettings.Settings.MenuDofMode = index switch
             {
-                case 0:
-                    menuController.dof.mode.value = DepthOfFieldMode.Off;
-                    break;
-                case 1:
-                    menuController.dof.mode.value = DepthOfFieldMode.Gaussian;
-                    break;
-                case 2:
-                    menuController.dof.mode.value = DepthOfFieldMode.Bokeh;
-                    break;
-            }
+                0 => DepthOfFieldMode.Off,
+                1 => DepthOfFieldMode.Gaussian,
+                2 => DepthOfFieldMode.Bokeh,
+                _ => GameSettings.Settings.MenuDofMode
+            };
         }
 
         private void OnFullscreenModeChanged(object sender, int index)
         {
-            switch (index)
+            GameSettings.Settings.FullscreenMode = index switch
             {
-                case 0:
-                    Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
-                    break;
-                case 1:
-                    Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
-                    break;
-                case 2:
-                    Screen.fullScreenMode = FullScreenMode.Windowed;
-                    break;
-            }
+                0 => FullScreenMode.FullScreenWindow,
+                1 => FullScreenMode.ExclusiveFullScreen,
+                2 => FullScreenMode.Windowed,
+                _ => GameSettings.Settings.FullscreenMode
+            };
+        }
+
+        private void Save()
+        {
+            GameSettings.Save();
+            GoBack();
         }
 
         protected override Menu GetBackMenu()

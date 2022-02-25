@@ -1,10 +1,10 @@
 ﻿using System;
-using Sabotris;
+using Sabotris.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Menu
+namespace Sabotris.UI.Menu
 {
     public class MenuInput : MenuButton
     {
@@ -39,8 +39,7 @@ namespace UI.Menu
             isSelected = inputField.isFocused;
 
             Value = inputField.text;
-            background.color = Color.Lerp(background.color, inputField.isFocused ? SelectedColor : _startBackgroundColor,
-                GameSettings.UIAnimationSpeed);
+            background.color = Color.Lerp(background.color, inputField.isFocused ? SelectedColor : _startBackgroundColor, GameSettings.Settings.UIAnimationSpeed);
         }
 
         public override void NavigateSelect()

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Menu
+namespace Sabotris.UI.Menu
 {
     public class MenuSlider : MenuButton
     {

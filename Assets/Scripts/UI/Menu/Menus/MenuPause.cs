@@ -1,8 +1,8 @@
 ﻿using System;
-using Network;
+using Sabotris.Network;
 using UnityEngine;
 
-namespace UI.Menu.Menus
+namespace Sabotris.UI.Menu.Menus
 {
     public class MenuPause : Menu
     {

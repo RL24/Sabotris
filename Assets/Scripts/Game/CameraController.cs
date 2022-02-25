@@ -1,5 +1,6 @@
-﻿using Sabotris.Util;
-using UI.Menu;
+﻿using Sabotris.IO;
+using Sabotris.UI.Menu;
+using Sabotris.Util;
 using UnityEngine;
 
 namespace Sabotris
@@ -87,14 +88,14 @@ namespace Sabotris
 
             var toPosition = cameraPosition;
             var toRotation = cameraRotation;
-            var animationTime = GameSettings.GameCameraSpeed;
+            var animationTime = GameSettings.Settings.GameCameraSpeed;
 
             if (menuController.IsInMenu)
             {
                 var targetMenu = menuController.GetTargetMenu();
                 toPosition = targetMenu.GetCameraPosition();
                 toRotation = targetMenu.GetCameraRotation();
-                animationTime = GameSettings.MenuCameraSpeed;
+                animationTime = GameSettings.Settings.MenuCameraSpeed;
             }
 
             cameraTransform.position = Vector3.Lerp(cameraTransformPosition, toPosition, animationTime);

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Audio;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Util;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Sabotris.UI.Menu
 {
@@ -13,6 +15,7 @@ namespace Sabotris.UI.Menu
         public MenuController menuController;
         public NetworkController networkController;
         public CameraController cameraController;
+        public AudioController audioController;
         public World world;
 
         public CanvasGroup canvasGroup;
@@ -178,7 +181,16 @@ namespace Sabotris.UI.Menu
                 _selectedButton = value;
 
                 if (SelectedButton != -1)
+                {
                     buttons[SelectedButton].isSelected = true;
+
+                    if (audioController != null)
+                    {
+                        audioController.hoverButton.volume = 0.3f * (GameSettings.Settings.MasterVolume * 0.01f);
+                        audioController.hoverButton.pitch = Random.Range(1.4f, 1.8f);
+                        audioController.hoverButton.Play();
+                    }
+                }
             }
         }
     }

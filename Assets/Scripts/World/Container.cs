@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Audio;
+using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
@@ -33,6 +35,7 @@ namespace Sabotris
         public MenuController menuController;
         public NetworkController networkController;
         public CameraController cameraController;
+        public AudioController audioController;
         public TMP_Text nameText;
 
         public ulong id;
@@ -119,11 +122,16 @@ namespace Sabotris
                 return;
 
             if (!IsDemo())
+            {
+                audioController.shapeLock.volume = 1f * (GameSettings.Settings.MasterVolume * 0.01f);
+                audioController.shapeLock.Play();
+                
                 networkController.Client.SendPacket(new PacketShapeLock
                 {
                     Id = shape.id,
                     Offsets = addedBlocks
                 });
+            }
 
             StartCoroutine(StartClearingLayers(addedBlocks));
         }
@@ -140,18 +148,23 @@ namespace Sabotris
 
                 clearedLayers.Sort((a, b) => b.CompareTo(a));
                 foreach (var layer in clearedLayers)
-                foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
-                {
-                    block.RawPosition += Vector3Int.down;
-                    block.shifted = true;
-                }
+                    foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
+                    {
+                        block.RawPosition += Vector3Int.down;
+                        block.shifted = true;
+                    }
 
                 if (!IsDemo())
+                {
+                    audioController.layerDelete.volume = 1f * (GameSettings.Settings.MasterVolume * 0.01f);
+                    audioController.layerDelete.Play();
+                    
                     networkController.Client.SendPacket(new PacketLayerMove
                     {
                         ContainerId = id,
                         Layers = clearedLayers.ToArray()
                     });
+                }
             }
 
             yield return new WaitForSeconds(DropNewShapeSpeed);
@@ -172,6 +185,7 @@ namespace Sabotris
             shape.menuController = menuController;
             shape.networkController = networkController;
             shape.cameraController = cameraController;
+            shape.audioController = audioController;
             shape.parentContainer = this;
 
             shape.transform.SetParent(transform, false);

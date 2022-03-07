@@ -3,6 +3,7 @@ using Sabotris.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 namespace Sabotris.UI.Menu
 {
@@ -66,8 +67,16 @@ namespace Sabotris.UI.Menu
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (!menu.Interactable)
+            if (!menu.Interactable || isDisabled)
                 return;
+            
+            if (menu.audioController != null)
+            {
+                menu.audioController.clickButton.volume = 0.5f * (GameSettings.Settings.MasterVolume * 0.01f);
+                menu.audioController.clickButton.pitch = Random.Range(1f, 1.2f);
+                menu.audioController.clickButton.Play();
+            }
+            
             NavigateSelect();
         }
 

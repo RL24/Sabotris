@@ -1,4 +1,5 @@
-﻿using Sabotris.Network;
+﻿using Audio;
+using Sabotris.Network;
 using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
 using UnityEngine;
@@ -12,11 +13,12 @@ namespace Sabotris.UI.Menu
     {
         public NetworkController networkController;
         public CameraController cameraController;
+        public AudioController audioController;
         public World world;
 
         public Volume volume;
         public RawImage background;
-
+        
         public Menu currentMenu,
             nextMenu;
 
@@ -70,6 +72,7 @@ namespace Sabotris.UI.Menu
             nextMenu.menuController = this;
             nextMenu.networkController = networkController;
             nextMenu.cameraController = cameraController;
+            nextMenu.audioController = audioController;
             nextMenu.world = world;
         }
 

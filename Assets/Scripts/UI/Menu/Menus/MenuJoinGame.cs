@@ -81,6 +81,9 @@ namespace Sabotris.UI.Menu.Menus
         {
             if (RequestingLobbies)
                 return;
+
+            audioController.refreshingLobbies.loop = true;
+            audioController.refreshingLobbies.Play();
             
             RequestingLobbies = true;
             foreach (var lobby in _lobbies.Values)
@@ -93,6 +96,8 @@ namespace Sabotris.UI.Menu.Menus
 
         private void OnLobbiesFetched(object sender, uint lobbyCount)
         {
+            audioController.refreshingLobbies.loop = false;
+            
             RequestingLobbies = false;
             foreach (var lobby in _lobbies.Values)
                 Destroy(lobby.gameObject);
@@ -116,6 +121,7 @@ namespace Sabotris.UI.Menu.Menus
         {
             var lobbyListItem = Instantiate(lobbyListItemTemplate, Vector3.zero, Quaternion.identity, lobbyList.transform);
             lobbyListItem.name = $"Server-{lobbyName}-{lobbyId}";
+            lobbyListItem.menu = this;
             lobbyListItem.lobbyId = lobbyId;
             lobbyListItem.LobbyName = lobbyName;
 

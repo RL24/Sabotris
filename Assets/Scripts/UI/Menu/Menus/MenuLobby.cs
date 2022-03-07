@@ -108,6 +108,7 @@ namespace Sabotris.UI.Menu.Menus
         {
             var chatMessage = Instantiate(chatHistoryItemTemplate, Vector3.zero, Quaternion.identity, chatHistory.transform);
             chatMessage.name = $"ChatMessage-{packet.Id}-{packet.Author}";
+            chatMessage.menu = this;
             chatMessage.id = packet.Id;
             chatMessage.Author = SteamFriends.GetFriendPersonaName(packet.Author.ToSteamID());
             chatMessage.Message = packet.Message;

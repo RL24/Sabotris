@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Audio;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
@@ -20,6 +21,7 @@ namespace Sabotris
         public MenuController menuController;
         public NetworkController networkController;
         public CameraController cameraController;
+        public AudioController audioController;
         public Container parentContainer;
 
         public Guid id;
@@ -253,6 +255,12 @@ namespace Sabotris
                 StopDropping();
             else if (roundedMoveVec != Vector3Int.zero)
             {
+                if (isDropping && !parentContainer.IsDemo())
+                {
+                    audioController.shapeDrop.volume = 1f * (GameSettings.Settings.MasterVolume * 0.01f);
+                    audioController.shapeDrop.Play();
+                }
+                
                 RawPosition += roundedMoveVec;
                 if (roundedMoveVec.x != 0 || roundedMoveVec.z != 0)
                     _moveTimer.Start();

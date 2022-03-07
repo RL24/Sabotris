@@ -454,6 +454,10 @@ PrefabInstance:
       value: Apply
       objectReference: {fileID: 0}
     - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -597207757410605322}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
       propertyPath: isSelected
       value: 0
       objectReference: {fileID: 0}
@@ -483,9 +487,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 5792942196348346672}
     m_Modifications:
     - target: {fileID: 2679539501238754884, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
-      propertyPath: isSelected
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -597207757410605322}
     - target: {fileID: 2679539501238754884, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
       propertyPath: values.Array.size
       value: 3
@@ -511,9 +515,17 @@ PrefabInstance:
       value: 40.8
       objectReference: {fileID: 0}
     - target: {fileID: 3783316215129015495, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -597207757410605322}
+    - target: {fileID: 3783316215129015495, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
       propertyPath: rectTransform
       value: 
       objectReference: {fileID: 1582496566044927474}
+    - target: {fileID: 7063066348095631039, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -597207757410605322}
     - target: {fileID: 7063066348095631039, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
       propertyPath: rectTransform
       value: 
@@ -714,6 +726,10 @@ PrefabInstance:
       value: Back
       objectReference: {fileID: 0}
     - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -597207757410605322}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
       propertyPath: isSelected
       value: 0
       objectReference: {fileID: 0}
@@ -743,6 +759,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 5792942196348346672}
     m_Modifications:
     - target: {fileID: 2679539501238754884, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -597207757410605322}
+    - target: {fileID: 2679539501238754884, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
       propertyPath: values.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -766,6 +786,14 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 49.2
       objectReference: {fileID: 0}
+    - target: {fileID: 3783316215129015495, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -597207757410605322}
+    - target: {fileID: 7063066348095631039, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -597207757410605322}
     - target: {fileID: 7888667336010401159, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
       propertyPath: m_text
       value: Menu Depth of Field
@@ -887,6 +915,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5792942196348346672}
     m_Modifications:
+    - target: {fileID: 3929288096849682768, guid: 184b04afce612e44d86724e408a87313, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -597207757410605322}
+    - target: {fileID: 3929288096849682768, guid: 184b04afce612e44d86724e408a87313, type: 3}
+      propertyPath: isSelected
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6901728461677083480, guid: 184b04afce612e44d86724e408a87313, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

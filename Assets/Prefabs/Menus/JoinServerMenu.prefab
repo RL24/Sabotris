@@ -907,6 +907,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuController: {fileID: 0}
   networkController: {fileID: 0}
+  cameraController: {fileID: 0}
   world: {fileID: 0}
   canvasGroup: {fileID: -8426725243307142463}
   buttons:
@@ -1183,6 +1184,10 @@ PrefabInstance:
       value: Refresh
       objectReference: {fileID: 0}
     - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -8655037702688118414}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
       propertyPath: isSelected
       value: 0
       objectReference: {fileID: 0}
@@ -1303,6 +1308,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Back
       objectReference: {fileID: 0}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -8655037702688118414}
     - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
       propertyPath: isSelected
       value: 0

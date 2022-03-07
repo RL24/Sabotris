@@ -26,7 +26,12 @@ namespace Sabotris.UI.Menu
             if (background)
                 _startBackgroundColor = background.color;
             
-            inputField.onSubmit.AddListener((str) => OnSubmitEvent?.Invoke(this, str));
+            inputField.onSubmit.AddListener((str) =>
+            {
+                if (!menu.Interactable)
+                    return;
+                OnSubmitEvent?.Invoke(this, str);
+            });
 
             if (isSelected)
                 NavigateSelect();

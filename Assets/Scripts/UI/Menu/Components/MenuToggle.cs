@@ -18,7 +18,6 @@ namespace Sabotris.UI.Menu
         protected override void Start()
         {
             checkbox.color = new Color(checkbox.color.r, checkbox.color.g, checkbox.color.b, isToggledOn.Int());
-            OnClick += OnButtonClick;
         }
 
         protected override void Update()
@@ -33,11 +32,6 @@ namespace Sabotris.UI.Menu
         {
             isToggledOn = !isToggledOn;
             OnValueChanged?.Invoke(this, isToggledOn);
-        }
-
-        private void OnButtonClick(object sender, EventArgs args)
-        {
-            NavigateSelect();
         }
     }
 }

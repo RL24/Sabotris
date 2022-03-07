@@ -35,6 +35,21 @@ namespace Sabotris.UI.Menu
         public bool Open { get; set; }
         public bool Closing { get; set; }
 
+        private bool _interactable = true;
+        public bool Interactable
+        {
+            get => _interactable;
+            set
+            {
+                if (_interactable == value)
+                    return;
+               
+                _interactable = value;
+
+                menuController.PreventInteractions(!Interactable);
+            }
+        }
+
         protected virtual void Start()
         {
             canvasGroup.alpha = 0;
@@ -63,12 +78,19 @@ namespace Sabotris.UI.Menu
             if (!Open)
                 return;
 
-            var navigate = Mathf.RoundToInt(InputUtil.GetMoveUINavigateVertical());
+            var navigate = Mathf.RoundToInt(InputUtil.GetMoveUINavigateVertical()) * Interactable.Int();
+            var navigateHor = Mathf.RoundToInt(InputUtil.GetMoveUINavigateHorizontal()) * Interactable.Int();
 
             if (_selectTimer.ElapsedMilliseconds > _selectDelayMs || navigate == 0)
             {
                 _selectTimer.Reset();
                 _selectDelayMs = navigate != 0 ? Mathf.Clamp(_selectDelayMs - 20, SelectDelayMsMin, SelectDelayMsMax) : SelectDelayMsMax;
+            }
+
+            if (_sideTimer.ElapsedMilliseconds > _sideDelayMs || navigateHor == 0)
+            {
+                _sideTimer.Reset();
+                _sideDelayMs = navigateHor != 0 ? Mathf.Clamp(_sideDelayMs - 40, SideDelayMsMin, SideDelayMsMax) : SideDelayMsMax;
             }
 
             if (navigate != 0 && !_selectTimer.IsRunning)
@@ -81,14 +103,6 @@ namespace Sabotris.UI.Menu
                     SelectedButton = (int) Mathf.Repeat(SelectedButton + navigate, buttons.Count);
             }
 
-            var navigateHor = Mathf.RoundToInt(InputUtil.GetMoveUINavigateHorizontal());
-
-            if (_sideTimer.ElapsedMilliseconds > _sideDelayMs || navigateHor == 0)
-            {
-                _sideTimer.Reset();
-                _sideDelayMs = navigateHor != 0 ? Mathf.Clamp(_sideDelayMs - 40, SideDelayMsMin, SideDelayMsMax) : SideDelayMsMax;
-            }
-
             if (navigateHor != 0 && !_sideTimer.IsRunning)
             {
                 _sideTimer.Start();
@@ -99,20 +113,25 @@ namespace Sabotris.UI.Menu
 
             canvasGroup.alpha += canvasGroup.alpha.Lerp((!Closing).Int(), GameSettings.Settings.MenuCameraSpeed * 2);
 
-            if (InputUtil.GetUISelect())
+            if (Interactable)
             {
-                if (_selectedButton != -1)
-                    buttons[SelectedButton].NavigateSelect();
-                else SelectedButton = _lastSelectedButton;
+                if (InputUtil.GetUISelect())
+                {
+                    if (_selectedButton != -1)
+                        buttons[SelectedButton].NavigateSelect();
+                    else SelectedButton = _lastSelectedButton;
+                }
+                else if (InputUtil.GetUIBack())
+                    GoBack();
             }
-            else if (InputUtil.GetUIBack())
-                GoBack();
         }
 
         protected virtual Menu GetBackMenu() => null;
 
         protected virtual void GoBack()
         {
+            GameSettings.Load();
+            
             SetButtonsDisabled();
 
             menuController.OpenMenu(GetBackMenu());
@@ -126,7 +145,7 @@ namespace Sabotris.UI.Menu
 
         private void OnMouseEnterButton(object sender, EventArgs args)
         {
-            if (!Open)
+            if (!Open || !Interactable)
                 return;
 
             SelectedButton = _lastSelectedButton = buttons.IndexOf(sender as MenuButton);
@@ -134,11 +153,9 @@ namespace Sabotris.UI.Menu
 
         private void OnMouseExitButton(object sender, EventArgs args)
         {
-            if (!Open)
+            if (!Open || !Interactable || SelectedButton < 0 || SelectedButton >= buttons.Count)
                 return;
-
-            if (SelectedButton < 0 || SelectedButton >= buttons.Count)
-                return;
+            
             var selectedButton = buttons[SelectedButton];
             selectedButton.isSelected = false;
             SelectedButton = -1;

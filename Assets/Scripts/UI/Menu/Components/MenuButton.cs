@@ -14,6 +14,7 @@ namespace Sabotris.UI.Menu
 
         public event EventHandler OnMouseEnter, OnMouseExit, OnClick;
 
+        public Menu menu;
         public RectTransform rectTransform;
         public TMP_Text text;
 
@@ -65,18 +66,22 @@ namespace Sabotris.UI.Menu
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (!menu.Interactable)
+                return;
             NavigateSelect();
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (isDisabled)
+            if (!menu.Interactable || isDisabled)
                 return;
             OnMouseEnter?.Invoke(this, null);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            if (!menu.Interactable)
+                return;
             OnMouseExit?.Invoke(this, null);
         }
     }

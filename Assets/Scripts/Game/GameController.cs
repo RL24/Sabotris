@@ -55,19 +55,12 @@ namespace Sabotris
 
         private void OnBeforeSave(object sender, EventArgs e)
         {
-            UpdateToSettings();
+            UpdateFromSettings();
         }
 
         private void OnAfterLoad(object sender, EventArgs e)
         {
             UpdateFromSettings();
-        }
-
-        private void UpdateToSettings()
-        {
-            GameSettings.Settings.AmbientOcclusion = _renderFeatureSsao.isActive;
-            GameSettings.Settings.MenuDofMode = _dof.mode.value;
-            GameSettings.Settings.FullscreenMode = Screen.fullScreenMode;
         }
 
         private void UpdateFromSettings()

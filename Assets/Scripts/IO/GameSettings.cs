@@ -53,15 +53,15 @@ namespace Sabotris.IO
     [Serializable]
     public class GamepadBinds
     {
+        public GamepadButton ZoomIn { get; set; } = GamepadButton.LeftStick;
+        public GamepadButton ZoomOut { get; set; } = GamepadButton.RightStick;
+        
         public GamepadButton RotateYawLeft { get; set; } = GamepadButton.LeftShoulder;
         public GamepadButton RotateYawRight { get; set; } = GamepadButton.RightShoulder;
         public GamepadButton RotatePitchUp { get; set; } = GamepadButton.North;
         public GamepadButton RotatePitchDown { get; set; } = GamepadButton.South;
         public GamepadButton RotateRollLeft { get; set; } = GamepadButton.West;
         public GamepadButton RotateRollRight { get; set; } = GamepadButton.East;
-
-        public GamepadButton ZoomIn { get; set; } = GamepadButton.LeftStick;
-        public GamepadButton ZoomOut { get; set; } = GamepadButton.RightStick;
 
         public GamepadButton NavigateLeft { get; set; } = GamepadButton.DpadLeft;
         public GamepadButton NavigateRight { get; set; } = GamepadButton.DpadRight;

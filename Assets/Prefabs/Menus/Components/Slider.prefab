@@ -190,6 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 984a343168b4438bbf9fd84655bb5686, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menu: {fileID: 0}
   rectTransform: {fileID: 0}
   text: {fileID: 2091041817134601110}
   isHovered: 0

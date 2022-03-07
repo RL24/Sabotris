@@ -20,6 +20,8 @@ namespace Sabotris.UI.Menu
         public Menu currentMenu,
             nextMenu;
 
+        public GameObject interactionBlocker;
+
         public DepthOfField dof;
 
         private void Start()
@@ -69,6 +71,11 @@ namespace Sabotris.UI.Menu
             nextMenu.networkController = networkController;
             nextMenu.cameraController = cameraController;
             nextMenu.world = world;
+        }
+
+        public void PreventInteractions(bool prevent)
+        {
+            interactionBlocker.SetActive(prevent);    
         }
 
         public bool IsInMenu => currentMenu;

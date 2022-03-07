@@ -10,13 +10,14 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Vector3 _cameraPosition = new Vector3(3, 6, 8);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
-        public MenuButton buttonGamepadCameraSensitivity,
+        public MenuButton buttonInputBindings,
+            buttonGamepadCameraSensitivity,
             buttonMouseCameraSensitivity,
             buttonMouseRotateSensitivity,
             buttonApply,
             buttonBack;
 
-        public Menu menuSettings;
+        public Menu menuInputBindings, menuSettings;
 
         protected override void Start()
         {
@@ -74,6 +75,8 @@ namespace Sabotris.UI.Menu.Menus
         {
             if (!Open)
                 return;
+            if (sender.Equals(buttonInputBindings))
+                menuController.OpenMenu(menuInputBindings);
             if (sender.Equals(buttonApply))
                 Save();
             else if (sender.Equals(buttonBack))

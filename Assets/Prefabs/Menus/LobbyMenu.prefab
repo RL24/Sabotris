@@ -936,6 +936,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuController: {fileID: 0}
   networkController: {fileID: 0}
+  cameraController: {fileID: 0}
   world: {fileID: 0}
   canvasGroup: {fileID: -8426725243307142463}
   buttons:
@@ -1187,6 +1188,10 @@ PrefabInstance:
       value: StartGame
       objectReference: {fileID: 0}
     - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: 4760543252229514958}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
       propertyPath: isSelected
       value: 1
       objectReference: {fileID: 0}
@@ -1303,6 +1308,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChatHistoryInput
       objectReference: {fileID: 0}
+    - target: {fileID: 5002232254306731548, guid: 513d8774acdc50e40a92895f9e8e17c2, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: 4760543252229514958}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 513d8774acdc50e40a92895f9e8e17c2, type: 3}
 --- !u!224 &4640516074207693864 stripped
@@ -1420,6 +1429,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Back
       objectReference: {fileID: 0}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: 4760543252229514958}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
 --- !u!224 &8134573086075478341 stripped

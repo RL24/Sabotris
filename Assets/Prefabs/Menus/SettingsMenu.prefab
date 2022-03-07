@@ -339,6 +339,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuController: {fileID: 0}
   networkController: {fileID: 0}
+  cameraController: {fileID: 0}
+  world: {fileID: 0}
   canvasGroup: {fileID: 9035484819361145973}
   buttons:
   - {fileID: 5373309104205842308}
@@ -456,6 +458,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Audio
       objectReference: {fileID: 0}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -7139808284224212026}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
 --- !u!224 &6505729276908167312 stripped
@@ -573,6 +579,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Back
       objectReference: {fileID: 0}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -7139808284224212026}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
 --- !u!224 &6825558035578753795 stripped
@@ -690,6 +700,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Video
       objectReference: {fileID: 0}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -7139808284224212026}
     - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
       propertyPath: isSelected
       value: 1
@@ -811,6 +825,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Controls
       objectReference: {fileID: 0}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -7139808284224212026}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
 --- !u!224 &8085387122249967137 stripped
@@ -928,6 +946,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gameplay
       objectReference: {fileID: 0}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -7139808284224212026}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
 --- !u!224 &7113307692942990028 stripped

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sabotris.IO;
+using UnityEngine;
 
 namespace Audio
 {
@@ -7,9 +8,15 @@ namespace Audio
         public AudioSource hoverButton, clickButton,
             refreshingLobbies,
             playerJoinLobby, playerLeaveLobby,
-            shapeDrop, shapeLock,
+            shapeDrop, shapeMove, shapeRotate, shapeLock,
             layerDelete,
             playerDie,
-            gameOver;
+            gameOver,
+            music;
+
+        private void Update()
+        {
+            music.volume = 0.25f * (GameSettings.Settings.MasterVolume * 0.01f);
+        }
     }
 }

@@ -6,7 +6,7 @@ namespace Sabotris.Util
 {
     public static class Extensions
     {
-        private const float Tolerance = 0.001f;
+        private const float Tolerance = 0.1f;
 
         private static bool IsLessThan(this Vector3Int self, Vector3Int pos) => self.x < pos.x || self.y < pos.y || self.z < pos.z;
 

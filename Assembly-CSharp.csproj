@@ -93,6 +93,7 @@
      <Compile Include="Assets\Scripts\UI\Menu\MenuController.cs" />
      <Compile Include="Assets\Scripts\Game\CameraController.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Block\PacketBlockBulkRemove.cs" />
+     <Compile Include="Assets\Scripts\Audio\AudioController.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeLock.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuMain.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketRetrievePlayerList.cs" />
@@ -153,7 +154,6 @@
      <Compile Include="Assets\Scripts\UI\Menu\Menu.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsInputBindings.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
-     <Compile Include="Assets\Scripts\Audio\AudioController.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

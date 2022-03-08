@@ -10,6 +10,7 @@ using Sabotris.Network.Packets.Game;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Sabotris
 {
@@ -81,7 +82,7 @@ namespace Sabotris
 
         private void Update()
         {
-            if (parentContainer.controllingShape != this)
+            if (!IsControlling())
                 return;
 
             DoMove();
@@ -93,7 +94,7 @@ namespace Sabotris
 
         private void FixedUpdate()
         {
-            if (parentContainer.controllingShape == this && !parentContainer.IsDemo() && !menuController.IsInMenu)
+            if (IsControlling() && !parentContainer.IsDemo() && !menuController.IsInMenu)
             {
                 if (!InputUtil.ShouldRotateShape())
                     rotateActivator = RawRotation;
@@ -105,7 +106,13 @@ namespace Sabotris
                 {
                     var offsets = GetOffsets(RawPosition, roundedRotationActivator)?.Select((offset) => offset.Item2 + RawPosition).ToArray();
                     if (!parentContainer.DoesCollide(offsets))
+                    {
                         RawRotation = rotateActivator = roundedRotationActivator;
+                        
+                        audioController.shapeRotate.pitch = Random.Range(1.4f, 1.8f);
+                        audioController.shapeRotate.volume = 0.7f * (GameSettings.Settings.MasterVolume * 0.01f);
+                        audioController.shapeRotate.Play();
+                    }
                     else
                         rotateActivator = RawRotation;
                 }
@@ -191,8 +198,9 @@ namespace Sabotris
         {
             var moveVec = Vector3.zero;
 
+            var doFastMoveDown = InputUtil.GetMoveDown();
             var isDropping = false;
-            if (_dropTimer.ElapsedMilliseconds > (InputUtil.GetMoveDown() && !parentContainer.IsDemo() && !menuController.IsInMenu ? Container.DropSpeedFastMs : parentContainer.DropSpeedMs))
+            if (_dropTimer.ElapsedMilliseconds > (doFastMoveDown && !parentContainer.IsDemo() && !menuController.IsInMenu ? Container.DropSpeedFastMs : parentContainer.DropSpeedMs))
             {
                 _dropTimer.Restart();
                 isDropping = true;
@@ -255,10 +263,15 @@ namespace Sabotris
                 StopDropping();
             else if (roundedMoveVec != Vector3Int.zero)
             {
-                if (isDropping && !parentContainer.IsDemo())
+                if (IsControlling() && !parentContainer.IsDemo())
                 {
-                    audioController.shapeDrop.volume = 1f * (GameSettings.Settings.MasterVolume * 0.01f);
-                    audioController.shapeDrop.Play();
+                    var sound = isDropping ? audioController.shapeDrop : audioController.shapeMove;
+                    if (isDropping && doFastMoveDown && !sound.isPlaying || isDropping && !doFastMoveDown || !isDropping)
+                    {
+                        sound.pitch = Random.Range(1f, 1.4f);
+                        sound.volume = 0.7f * (GameSettings.Settings.MasterVolume * 0.01f);
+                        sound.Play();
+                    }
                 }
                 
                 RawPosition += roundedMoveVec;
@@ -325,6 +338,8 @@ namespace Sabotris
 
             parentContainer.LockShape(this, packet.Offsets.ToArray());
         }
+        
+        private bool IsControlling() => parentContainer.controllingShape == this;
 
         public Vector3Int RawPosition
         {
@@ -336,7 +351,7 @@ namespace Sabotris
                 if (!parentContainer.DoesCollide(Offsets.Select((offset) => offset.Item2 + value).ToArray()))
                 {
                     rawPosition = value;
-                    if (parentContainer.controllingShape == this)
+                    if (IsControlling())
                     {
                         networkController.Client.SendPacket(new PacketShapeMove
                         {
@@ -361,7 +376,7 @@ namespace Sabotris
                 if (offsets != null)
                     Offsets = offsets;
 
-                if (parentContainer.controllingShape == this)
+                if (IsControlling())
                     networkController.Client.SendPacket(new PacketShapeRotate
                     {
                         Id = id,

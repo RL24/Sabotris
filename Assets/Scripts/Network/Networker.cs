@@ -27,9 +27,6 @@ namespace Sabotris.Network
 
     public class Networker
     {
-        public const string HostIdKey = "HostId";
-        public const string LobbyNameKey = "LobbyName";
-
         protected readonly NetworkController NetworkController;
         public readonly PacketHandler PacketHandler;
 

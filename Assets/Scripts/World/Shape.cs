@@ -203,7 +203,7 @@ namespace Sabotris
             if (_dropTimer.ElapsedMilliseconds > (doFastMoveDown && !parentContainer.IsDemo() && !menuController.IsInMenu ? Container.DropSpeedFastMs : parentContainer.DropSpeedMs))
             {
                 _dropTimer.Restart();
-                isDropping = true;
+                isDropping = !networkController.Client.LobbyData.PracticeMode || doFastMoveDown || parentContainer.IsDemo();
             }
 
             var advance = InputUtil.GetMoveAdvance();

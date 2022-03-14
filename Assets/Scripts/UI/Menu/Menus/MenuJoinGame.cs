@@ -90,7 +90,7 @@ namespace Sabotris.UI.Menu.Menus
                 Destroy(lobby.gameObject);
             _lobbies.Clear();
             
-            AddServerEntry(0, "Refreshing...");
+            AddServerEntry(0, "Refreshing...", null);
             Client.RequestLobbyList();
         }
 
@@ -105,25 +105,33 @@ namespace Sabotris.UI.Menu.Menus
 
             if (lobbyCount == 0)
             {
-                AddServerEntry(0, "No lobbies found");
+                AddServerEntry(0, "No lobbies found", null);
                 return;
             }
 
             for (var i = 0; i < lobbyCount; i++)
             {
                 var lobbyId = SteamMatchmaking.GetLobbyByIndex(i);
-                var lobbyName = SteamMatchmaking.GetLobbyData(lobbyId, Networker.LobbyNameKey);
-                AddServerEntry(lobbyId.m_SteamID, lobbyName);
+
+                var lobbyData = new LobbyData();
+                lobbyData.Retrieve(lobbyId);
+                
+                if (!lobbyData.PracticeMode)
+                    AddServerEntry(lobbyId.m_SteamID, lobbyData.LobbyName, lobbyData.PlayerCount);
             }
+            
+            if (_lobbies.Count == 0)
+                AddServerEntry(0, "No lobbies found", null);
         }
 
-        private void AddServerEntry(ulong lobbyId, string lobbyName)
+        private void AddServerEntry(ulong lobbyId, string lobbyName, int? lobbyPlayerCount)
         {
             var lobbyListItem = Instantiate(lobbyListItemTemplate, Vector3.zero, Quaternion.identity, lobbyList.transform);
             lobbyListItem.name = $"Server-{lobbyName}-{lobbyId}";
             lobbyListItem.menu = this;
             lobbyListItem.lobbyId = lobbyId;
             lobbyListItem.LobbyName = lobbyName;
+            lobbyListItem.LobbyPlayerCount = lobbyPlayerCount;
 
             if (lobbyId != 0)
             {

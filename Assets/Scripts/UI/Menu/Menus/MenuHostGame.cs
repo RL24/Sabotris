@@ -1,5 +1,7 @@
 ﻿using System;
+using Sabotris.Network;
 using Sabotris.Util;
+using Steamworks;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus
@@ -9,7 +11,9 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Vector3 _cameraPosition = new Vector3(5, 11, -3.5f);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(55, -51, -7);
 
-        public MenuButton inputLobbyName, buttonJoinLobby, buttonBack;
+        public MenuSlider sliderBlocksPerShape;
+        public MenuToggle toggleGenerateVerticalBlocks, togglePracticeMode;
+        public MenuButton buttonCreateLobby, buttonBack;
 
         public Menu menuMain, menuLobby;
 
@@ -19,9 +23,6 @@ namespace Sabotris.UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
-
-            if (inputLobbyName is MenuInput miLobbyName)
-                miLobbyName.OnValueChangedEvent += LobbyNameValueChangedEvent;
         }
 
         protected override void OnDestroy()
@@ -30,14 +31,6 @@ namespace Sabotris.UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
-
-            if (inputLobbyName is MenuInput miLobbyName)
-                miLobbyName.OnValueChangedEvent -= LobbyNameValueChangedEvent;
-        }
-
-        private void LobbyNameValueChangedEvent(object sender, string args)
-        {
-            buttonJoinLobby.isDisabled = args.Length == 0;
         }
 
         private void OnClickButton(object sender, EventArgs args)
@@ -45,7 +38,7 @@ namespace Sabotris.UI.Menu.Menus
             if (!Open)
                 return;
 
-            if (sender.Equals(buttonJoinLobby))
+            if (sender.Equals(buttonCreateLobby))
                 StartServer();
             else if (sender.Equals(buttonBack))
                 GoBack();
@@ -53,9 +46,6 @@ namespace Sabotris.UI.Menu.Menus
 
         private void StartServer()
         {
-            if (!(inputLobbyName is MenuInput miLobbyName))
-                return;
-
             SetButtonsDisabled();
 
             void ServerStarted(object sender, EventArgs args)
@@ -73,8 +63,16 @@ namespace Sabotris.UI.Menu.Menus
                 menuController.OpenMenu(menuLobby);
             }
 
+            var lobbyData = new LobbyData
+            {
+                LobbyName = $"{Client.Username}'s Lobby",
+                BlocksPerShape = (int) sliderBlocksPerShape.slider.value,
+                GenerateVerticalBlocks = toggleGenerateVerticalBlocks.isToggledOn,
+                PracticeMode = togglePracticeMode.isToggledOn
+            };
+
             networkController.Server.OnServerStartEvent += ServerStarted;
-            networkController.Server.CreateLobby(miLobbyName.inputField.text);
+            networkController.Server.CreateLobby(lobbyData);
         }
 
         protected override Menu GetBackMenu()

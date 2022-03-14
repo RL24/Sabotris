@@ -21,10 +21,8 @@ namespace Sabotris.UI.Menu.Menus
         private HSteamNetPollGroup _connectionPollGroup;
 
         public CSteamID? LobbyId;
+        private LobbyData _lobbyData = new LobbyData();
         private HSteamListenSocket? _listenSocket;
-
-        private string _lobbyName;
-        private int _lobbyPlayerCount;
 
         public bool Starting;
         public bool Running => _listenSocket != null;
@@ -54,11 +52,11 @@ namespace Sabotris.UI.Menu.Menus
             Starting = false;
         }
 
-        public void CreateLobby(string lobbyName)
+        public void CreateLobby(LobbyData lobbyData)
         {
             Starting = true;
-            _lobbyName = lobbyName;
-            SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, 4);
+            _lobbyData = lobbyData;
+            SteamMatchmaking.CreateLobby(lobbyData.PracticeMode ? ELobbyType.k_ELobbyTypeInvisible : ELobbyType.k_ELobbyTypePublic, 4);
         }
 
         private void OnLobbyCreated(LobbyCreated_t param)
@@ -71,9 +69,9 @@ namespace Sabotris.UI.Menu.Menus
 
             LobbyId = param.m_ulSteamIDLobby.ToSteamID();
 
-            SteamMatchmaking.SetLobbyData(LobbyId.Value, HostIdKey, Client.UserId.m_SteamID.ToString());
-            SteamMatchmaking.SetLobbyData(LobbyId.Value, LobbyNameKey, _lobbyName);
-            // todo: set user count in lobby data
+            _lobbyData.Store(LobbyId);
+
+            NetworkController.Client.LobbyData = _lobbyData;
 
             CreateListenerSocket();
         }
@@ -98,6 +96,8 @@ namespace Sabotris.UI.Menu.Menus
                     _playerConnections.Add(player.Id, param.m_hConn);
                     SteamNetworkingSockets.SetConnectionPollGroup(param.m_hConn, _connectionPollGroup);
 
+                    _lobbyData.UpdatePlayerCount(LobbyId, _playerConnections.Count);
+
                     SendPacketToAll(new PacketPlayerConnected
                     {
                         Player = player
@@ -112,6 +112,9 @@ namespace Sabotris.UI.Menu.Menus
                 case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ClosedByPeer:
                     SteamNetworkingSockets.CloseConnection(param.m_hConn, 0, "", false);
                     _playerConnections.Remove(player.Id);
+                    
+                    _lobbyData.UpdatePlayerCount(LobbyId, _playerConnections.Count);
+                    
                     SendPacketToAll(new PacketPlayerDisconnected
                     {
                         Id = player.Id

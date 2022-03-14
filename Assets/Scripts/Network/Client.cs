@@ -15,7 +15,6 @@ namespace Sabotris.UI.Menu.Menus
         public event EventHandler<HSteamNetConnection?> OnConnectedToServerEvent;
         public event EventHandler<DisconnectReason> OnDisconnectedFromServerEvent;
         public event EventHandler OnFailedToConnectToServerEvent;
-        public event EventHandler<(uint, string, string)> OnLobbyChatMessageReceivedEvent;
 
         public static readonly CSteamID UserId = SteamUser.GetSteamID();
         public static readonly string Username = SteamFriends.GetPersonaName();
@@ -28,6 +27,7 @@ namespace Sabotris.UI.Menu.Menus
 
         private bool IsHosting => NetworkController.Server.Running || NetworkController.Server.Starting || _connection == LocalConnection;
         public bool IsConnected => _connection != null;
+        public LobbyData LobbyData = new LobbyData();
 
         public Client(NetworkController networkController) : base(networkController, PacketDirection.Client)
         {
@@ -112,10 +112,13 @@ namespace Sabotris.UI.Menu.Menus
 
         private void CreateSocket(CSteamID lobbyId)
         {
-            var hostIdString = SteamMatchmaking.GetLobbyData(lobbyId, HostIdKey);
-            if (!ulong.TryParse(hostIdString, out var hostId))
+            LobbyData = new LobbyData();
+            LobbyData.Retrieve(lobbyId);
+            
+            if (LobbyData.HostId == null)
             {
-                Logging.Log(false, "Failed to parse host ID {0}, leaving lobby", hostIdString);
+                // This should never happen, but in the off chance it does
+                Logging.Log(false, "Failed to parse host ID, leaving lobby");
                 OnFailedToConnectToServerEvent?.Invoke(this, null);
                 return;
             }
@@ -124,7 +127,7 @@ namespace Sabotris.UI.Menu.Menus
             {
                 m_eType = ESteamNetworkingIdentityType.k_ESteamNetworkingIdentityType_SteamID
             };
-            identity.SetSteamID(hostId.ToSteamID());
+            identity.SetSteamID(LobbyData.HostId.Value);
             SteamNetworkingSockets.ConnectP2P(ref identity, 0, 0, new SteamNetworkingConfigValue_t[0]);
         }
 

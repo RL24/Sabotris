@@ -3033,6 +3033,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5583828230554776297, guid: 57946a97612f65247ba2c718c5f50d03, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8036950200310878368, guid: 57946a97612f65247ba2c718c5f50d03, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -3070,6 +3074,7 @@ MonoBehaviour:
   cameraController: {fileID: 1687258583}
   audioController: {fileID: 441727066}
   nameText: {fileID: 1867771294}
+  dropSpeedText: {fileID: 0}
   id: 18446744073709551615
   containerName: 
   dead: 0

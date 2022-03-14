@@ -36,7 +36,7 @@ namespace Sabotris
         public NetworkController networkController;
         public CameraController cameraController;
         public AudioController audioController;
-        public TMP_Text nameText;
+        public TMP_Text nameText, dropSpeedText;
 
         public ulong id;
         [SerializeField] private string containerName;
@@ -68,12 +68,18 @@ namespace Sabotris
             networkController.Client.DeregisterListener(this);
         }
 
+        private void Update()
+        {
+            if (dropSpeedText)
+                dropSpeedText.text = $"Drop Speed: {(DropSpeedMs == 0 ? 100 : 1000f / DropSpeedMs):F1}";
+        }
+
         public void StartDropping((Guid, Vector3Int)[] offsets = null)
         {
             if ((gameController.ControllingContainer != this && !IsDemo()) || dead)
                 return;
 
-            offsets ??= ShapeUtil.Generate(4, false, GenerateBottomLeft, GenerateTopRight);
+            offsets ??= ShapeUtil.Generate(networkController.Client.LobbyData.BlocksPerShape, networkController.Client.LobbyData.GenerateVerticalBlocks, GenerateBottomLeft, GenerateTopRight);
 
             if (!DoesCollide(offsets.Select((offset) => offset.Item2 + DropPosition).ToArray()))
             {

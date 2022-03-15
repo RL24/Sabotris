@@ -73,6 +73,7 @@ namespace Sabotris
             container.id = id;
             container.ContainerName = playerName;
 
+            container.world = this;
             container.gameController = gameController;
             container.menuController = menuController;
             container.networkController = networkController;

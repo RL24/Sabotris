@@ -9,6 +9,7 @@ namespace Sabotris.UI.Menu
         public ulong lobbyId;
         private string _lobbyName;
         private int? _lobbyPlayerCount;
+        private int? _maxLobbyPlayers;
 
         protected override void Start()
         {
@@ -17,8 +18,13 @@ namespace Sabotris.UI.Menu
             if (text)
                 text.text = LobbyName;
 
+            UpdatePlayerCountText();
+        }
+
+        private void UpdatePlayerCountText()
+        {
             if (playerCountText)
-                playerCountText.text = LobbyPlayerCount == null ? "" : $"{LobbyPlayerCount} Player{(LobbyPlayerCount > 1 ? "s" : "")}";
+                playerCountText.text = LobbyPlayerCount == null || MaxLobbyPlayers == null ? "" : $"{LobbyPlayerCount}/{MaxLobbyPlayers} Players";
         }
 
         public string LobbyName
@@ -46,8 +52,21 @@ namespace Sabotris.UI.Menu
 
                 _lobbyPlayerCount = value;
 
-                if (playerCountText)
-                    playerCountText.text = LobbyPlayerCount == null ? "" : $"{LobbyPlayerCount} Player{(LobbyPlayerCount > 1 ? "s" : "")}";
+                UpdatePlayerCountText();
+            }
+        }
+
+        public int? MaxLobbyPlayers
+        {
+            get => _maxLobbyPlayers;
+            set
+            {
+                if (value == _maxLobbyPlayers)
+                    return;
+
+                _maxLobbyPlayers = value;
+
+                UpdatePlayerCountText();
             }
         }
     }

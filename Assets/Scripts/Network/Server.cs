@@ -56,7 +56,7 @@ namespace Sabotris.UI.Menu.Menus
         {
             Starting = true;
             _lobbyData = lobbyData;
-            SteamMatchmaking.CreateLobby(lobbyData.PracticeMode ? ELobbyType.k_ELobbyTypeInvisible : ELobbyType.k_ELobbyTypePublic, 4);
+            SteamMatchmaking.CreateLobby(lobbyData.PracticeMode ? ELobbyType.k_ELobbyTypeInvisible : ELobbyType.k_ELobbyTypePublic, lobbyData.MaxPlayers);
         }
 
         private void OnLobbyCreated(LobbyCreated_t param)

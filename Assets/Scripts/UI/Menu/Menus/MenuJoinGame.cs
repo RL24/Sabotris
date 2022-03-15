@@ -90,7 +90,7 @@ namespace Sabotris.UI.Menu.Menus
                 Destroy(lobby.gameObject);
             _lobbies.Clear();
             
-            AddServerEntry(0, "Refreshing...", null);
+            AddNoticeMessage("Refreshing...");
             Client.RequestLobbyList();
         }
 
@@ -105,7 +105,7 @@ namespace Sabotris.UI.Menu.Menus
 
             if (lobbyCount == 0)
             {
-                AddServerEntry(0, "No lobbies found", null);
+                AddNoticeMessage("No lobbies found");
                 return;
             }
 
@@ -115,25 +115,35 @@ namespace Sabotris.UI.Menu.Menus
 
                 var lobbyData = new LobbyData();
                 lobbyData.Retrieve(lobbyId);
-                
+
                 if (!lobbyData.PracticeMode)
-                    AddServerEntry(lobbyId.m_SteamID, lobbyData.LobbyName, lobbyData.PlayerCount);
+                    AddServerEntry(lobbyId.m_SteamID, lobbyData);
             }
             
             if (_lobbies.Count == 0)
-                AddServerEntry(0, "No lobbies found", null);
+                AddNoticeMessage("No lobbies found");
         }
 
-        private void AddServerEntry(ulong lobbyId, string lobbyName, int? lobbyPlayerCount)
+        private void AddNoticeMessage(string message)
+        {
+            AddServerEntry(0, new LobbyData
+            {
+                LobbyName = message,
+                PlayerCount = -1
+            });
+        }
+
+        private void AddServerEntry(ulong lobbyId, LobbyData lobbyData)
         {
             var lobbyListItem = Instantiate(lobbyListItemTemplate, Vector3.zero, Quaternion.identity, lobbyList.transform);
-            lobbyListItem.name = $"Server-{lobbyName}-{lobbyId}";
+            lobbyListItem.name = $"Server-{lobbyData.LobbyName}-{lobbyId}";
             lobbyListItem.menu = this;
             lobbyListItem.lobbyId = lobbyId;
-            lobbyListItem.LobbyName = lobbyName;
-            lobbyListItem.LobbyPlayerCount = lobbyPlayerCount;
+            lobbyListItem.LobbyName = lobbyData.LobbyName;
+            lobbyListItem.LobbyPlayerCount = (lobbyData.PlayerCount == -1 ? (int?) null : lobbyData.PlayerCount);
+            lobbyListItem.MaxLobbyPlayers = lobbyData.MaxPlayers;
 
-            if (lobbyId != 0)
+            if (lobbyId != 0 && lobbyData.PlayerCount <= lobbyData.MaxPlayers)
             {
                 buttons.Add(lobbyListItem);
                 lobbyListItem.OnClick += OnClickLobbyItem;

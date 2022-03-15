@@ -31,6 +31,7 @@ namespace Sabotris
         public Shape shapeTemplate;
         public Block blockTemplate;
 
+        public World world;
         public GameController gameController;
         public MenuController menuController;
         public NetworkController networkController;
@@ -52,6 +53,7 @@ namespace Sabotris
 
         public int DropSpeedMs { get; private set; } = 1000;
         public const int DropSpeedFastMs = 10;
+        private int DropSpeedIncrementMs => Math.Max(5, 40 / (world == null ? 1 : world.Containers.Count));
 
         public int MoveSpeedMs { get; } = 200;
         public int MoveResetSpeedMs { get; } = 50;
@@ -370,7 +372,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Client)]
         public void OnPlayerScore(PacketPlayerScore packet)
         {
-            DropSpeedMs = Mathf.Clamp(DropSpeedMs - 50, 100, 1000);
+            DropSpeedMs = Mathf.Clamp(DropSpeedMs - DropSpeedIncrementMs, 100, 1000);
 
             if (packet.Id != id)
                 return;

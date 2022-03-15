@@ -21,6 +21,8 @@ namespace Sabotris.UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
+            
+            audioController.music.pitch = 1;
         }
 
         protected override void OnDestroy()

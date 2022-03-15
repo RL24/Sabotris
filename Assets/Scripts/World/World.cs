@@ -67,7 +67,7 @@ namespace Sabotris
             if (Containers.ContainsKey(id))
                 return Containers[id];
 
-            var container = Instantiate(containerTemplate, Vector3.right * (Containers.Count * (Container.Radius * 2 + 4)), Quaternion.identity);
+            var container = Instantiate(containerTemplate, Vector3.right * (Containers.Count * ((networkController.Client?.LobbyData?.PlayFieldSize ?? 5) * 2 + 4)), Quaternion.identity);
             container.name = $"Container-{playerName}-{id}";
 
             container.id = id;

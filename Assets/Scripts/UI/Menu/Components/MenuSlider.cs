@@ -11,12 +11,14 @@ namespace Sabotris.UI.Menu
 
         public Slider slider;
         public TMP_Text sliderValueText;
+        public float sliderValueMultiplier = 1;
+        public float offset = 0;
 
         protected override void Update()
         {
             base.Update();
 
-            sliderValueText.text = $"{Mathf.RoundToInt(slider.value)}";
+            sliderValueText.text = $"{((slider.wholeNumbers ? Mathf.RoundToInt(slider.value) : slider.value) + offset) * sliderValueMultiplier}";
         }
 
         public override void NavigateHorizontal(float val)
@@ -32,7 +34,7 @@ namespace Sabotris.UI.Menu
 
         public void OnSliderValueChanged()
         {
-            OnValueChanged?.Invoke(this, slider.value);
+            OnValueChanged?.Invoke(this, (slider.value + offset) * sliderValueMultiplier);
         }
     }
 }

@@ -4,6 +4,7 @@ using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
+using Sabotris.UI.Menu;
 using Sabotris.Util;
 using TMPro;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Sabotris.UI
     public class Hud : MonoBehaviour
     {
         public NetworkController networkController;
+        public MenuController menuController;
 
         public CanvasGroup canvasGroup;
         public GameObject playerList, scoreList;
@@ -40,7 +42,7 @@ namespace Sabotris.UI
 
         private void Update()
         {
-            canvasGroup.alpha += canvasGroup.alpha.Lerp(_playerScoreCache.Any().Int(), GameSettings.Settings.UIAnimationSpeed);
+            canvasGroup.alpha += canvasGroup.alpha.Lerp((_playerScoreCache.Any() && !menuController.IsInMenu).Int(), GameSettings.Settings.UIAnimationSpeed);
         }
 
         private void AddEntry(Player player)

@@ -17,12 +17,12 @@ namespace Sabotris
 {
     public class Container : MonoBehaviour
     {
-        public const int Radius = 2;
-        private static readonly Vector3Int BottomLeft = new Vector3Int(-Radius, 1, -Radius);
-        private static readonly Vector3Int TopRight = new Vector3Int(Radius, 25, Radius);
+        private int Radius => networkController.Client?.LobbyData?.PlayFieldSize ?? 5;
+        private Vector3Int BottomLeft => new Vector3Int(-Radius, 1, -Radius);
+        private Vector3Int TopRight => new Vector3Int(Radius, 25, Radius);
 
-        private static readonly Vector3Int GenerateBottomLeft = new Vector3Int(-Radius, 0, -Radius);
-        private static readonly Vector3Int GenerateTopRight = new Vector3Int(Radius, 24, Radius);
+        private Vector3Int GenerateBottomLeft => new Vector3Int(-Radius, 0, -Radius);
+        private Vector3Int GenerateTopRight => new Vector3Int(Radius, 24, Radius);
 
         private const float ClearLayerSpeed = 0.1f;
         private const float ClearedLayerDropSpeed = 0.25f;
@@ -37,6 +37,8 @@ namespace Sabotris
         public NetworkController networkController;
         public CameraController cameraController;
         public AudioController audioController;
+
+        public GameObject floor;
         public TMP_Text nameText, dropSpeedText;
 
         public ulong id;
@@ -63,6 +65,13 @@ namespace Sabotris
         protected virtual void Start()
         {
             networkController.Client.RegisterListener(this);
+
+            if (floor)
+                floor.transform.localScale = new Vector3(Radius * 2 + 1, 1, Radius * 2 + 1);
+            if (nameText)
+                nameText.transform.position = new Vector3(0, -2, -(Radius * 2 + 1) * 0.5f);
+            if (dropSpeedText)
+                dropSpeedText.transform.position = new Vector3(0, -4, -(Radius * 2 + 1) * 0.5f);
         }
 
         private void OnDestroy()

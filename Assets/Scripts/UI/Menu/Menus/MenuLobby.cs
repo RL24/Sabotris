@@ -4,6 +4,7 @@ using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using Steamworks;
+using TMPro;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus
@@ -19,6 +20,9 @@ namespace Sabotris.UI.Menu.Menus
         public RectTransform chatHistory;
         public MenuInput inputChatMessage;
         public MenuButton buttonStartGame, buttonBack;
+        
+        public TMP_Text playFieldSizeText, maxPlayersText, blocksPerShapeText, 
+            generateVerticalBlocksText, practiceModeText;
 
         public Menu menuHost, menuJoin;
 
@@ -35,6 +39,22 @@ namespace Sabotris.UI.Menu.Menus
                 Destroy(buttonStartGame.gameObject);
 
             networkController.Client.RegisterListener(this);
+
+            var data = networkController.Client.LobbyData;
+            if (playFieldSizeText)
+                playFieldSizeText.text = $"Play Field Size: {data.PlayFieldSize}x{data.PlayFieldSize}";
+
+            if (maxPlayersText)
+                maxPlayersText.text = $"Max Players: {data.MaxPlayers}";
+
+            if (blocksPerShapeText)
+                blocksPerShapeText.text = $"Blocks Per Shape: {data.BlocksPerShape}";
+
+            if (generateVerticalBlocksText)
+                generateVerticalBlocksText.text = $"Generate Vertical Blocks: {(data.GenerateVerticalBlocks ? "Yes" : "No")}";
+
+            if (practiceModeText)
+                practiceModeText.text = $"Practice Mode: {(data.PracticeMode ? "Yes" : "No")}";
         }
 
         protected override void OnDestroy()

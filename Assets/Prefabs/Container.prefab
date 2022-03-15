@@ -48,11 +48,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shapeTemplate: {fileID: 6628176699013324170, guid: 40610ab6bfc61f845ae4d7effa4d5ede, type: 3}
   blockTemplate: {fileID: 771673464604701970, guid: 6649352b212ec1640bae16559d3fb9c0, type: 3}
+  world: {fileID: 0}
   gameController: {fileID: 0}
   menuController: {fileID: 0}
   networkController: {fileID: 0}
   cameraController: {fileID: 0}
   audioController: {fileID: 0}
+  floor: {fileID: 5185334002143873886}
   nameText: {fileID: 1408002484745133006}
   dropSpeedText: {fileID: 2532283006568663056}
   id: 0

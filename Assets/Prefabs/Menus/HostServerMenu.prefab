@@ -876,7 +876,7 @@ PrefabInstance:
       objectReference: {fileID: 2032812322354958047}
     - target: {fileID: 2885300215979823966, guid: 1400b3c06d33569408a0935e130f7969, type: 3}
       propertyPath: isSelected
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3479214194453903301, guid: 1400b3c06d33569408a0935e130f7969, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1039,6 +1039,10 @@ PrefabInstance:
       propertyPath: menu
       value: 
       objectReference: {fileID: 2032812322354958047}
+    - target: {fileID: 2885300215979823966, guid: 1400b3c06d33569408a0935e130f7969, type: 3}
+      propertyPath: isSelected
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3479214194453903301, guid: 1400b3c06d33569408a0935e130f7969, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

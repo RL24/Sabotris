@@ -107,6 +107,8 @@ namespace Sabotris
         {
             audioController.gameOver.volume = 1f * (GameSettings.Settings.MasterVolume * 0.01f);
             audioController.gameOver.Play();
+
+            audioController.music.pitch = 1;
             
             menuController.OpenMenu(menuGameOver);
         }

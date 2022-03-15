@@ -51,7 +51,7 @@ namespace Sabotris
 
         public Vector3Int DropPosition { get; protected set; } = new Vector3Int(0, 20, 0);
 
-        public int DropSpeedMs { get; private set; } = 1000;
+        private int _dropSpeedMs = 1000;
         public const int DropSpeedFastMs = 10;
         private int DropSpeedIncrementMs => Math.Max(5, 40 / (world == null ? 1 : world.Containers.Count));
 
@@ -393,6 +393,20 @@ namespace Sabotris
                 containerName = value;
 
                 nameText.text = value;
+            }
+        }
+        
+        public int DropSpeedMs
+        {
+            get => _dropSpeedMs;
+            private set
+            {
+                if (_dropSpeedMs == value)
+                    return;
+                
+                _dropSpeedMs = value;
+
+                audioController.music.pitch = Mathf.Min(audioController.music.pitch + 0.02f, 2);
             }
         }
     }

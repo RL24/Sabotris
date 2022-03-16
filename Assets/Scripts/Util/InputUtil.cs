@@ -17,6 +17,8 @@ namespace Sabotris.Util
         private static KeyControl KeyRight => Tern(GameSettings.Input.KeyboardBinds.MoveRight);
         private static KeyControl KeyForward => Tern(GameSettings.Input.KeyboardBinds.MoveForward);
         private static KeyControl KeyBackward => Tern(GameSettings.Input.KeyboardBinds.MoveBack);
+        private static KeyControl KeyAscend => Tern(GameSettings.Input.KeyboardBinds.MoveAscend);
+        private static KeyControl KeyDescend => Tern(GameSettings.Input.KeyboardBinds.MoveDescend);
         
         private static KeyControl KeyMoveDown => Tern(GameSettings.Input.KeyboardBinds.MoveDown);
 
@@ -65,6 +67,9 @@ namespace Sabotris.Util
         private static ButtonControl GamepadLeftTrigger => Gamepad.current?.leftTrigger;
         private static ButtonControl GamepadRightTrigger => Gamepad.current?.rightTrigger;
 
+        private static ButtonControl GamepadAscend => Tern(GameSettings.Input.GamepadBinds.MoveAscend);
+        private static ButtonControl GamepadDescend => Tern(GameSettings.Input.GamepadBinds.MoveDescend);
+        
         private static ButtonControl GamepadRotateYawLeft => Tern(GameSettings.Input.GamepadBinds.RotateYawLeft);
         private static ButtonControl GamepadRotateYawRight => Tern(GameSettings.Input.GamepadBinds.RotateYawRight);
         private static ButtonControl GamepadRotatePitchUp => Tern(GameSettings.Input.GamepadBinds.RotatePitchUp);
@@ -129,6 +134,13 @@ namespace Sabotris.Util
         {
             var keyboardValue = IsPressed(KeyBackward).Int() - IsPressed(KeyForward).Int();
             var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadNavigateUp).Int() - IsPressed(GamepadNavigateDown).Int()) ?? 0;
+            return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
+        }
+
+        public static float GetMoveAscend()
+        {
+            var keyboardValue = IsPressed(KeyAscend).Int() - IsPressed(KeyDescend).Int();
+            var gamepadValue = IsPressed(GamepadDescend).Int() - IsPressed(GamepadAscend).Int();
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
 

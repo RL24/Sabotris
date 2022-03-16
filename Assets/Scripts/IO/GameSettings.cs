@@ -33,6 +33,8 @@ namespace Sabotris.IO
         public Key MoveForward { get; set; } = Key.W;
         public Key MoveBack { get; set; } = Key.S;
         public Key MoveDown { get; set; } = Key.Space;
+        public Key MoveAscend { get; set; } = Key.Space;
+        public Key MoveDescend { get; set; } = Key.LeftShift;
 
         public Key RotateYawLeft { get; set; } = Key.U;
         public Key RotateYawRight { get; set; } = Key.O;
@@ -53,6 +55,9 @@ namespace Sabotris.IO
     [Serializable]
     public class GamepadBinds
     {
+        public GamepadButton MoveAscend { get; set; } = GamepadButton.RightShoulder;
+        public GamepadButton MoveDescend { get; set; } = GamepadButton.LeftShoulder;
+        
         public GamepadButton ZoomIn { get; set; } = GamepadButton.LeftStick;
         public GamepadButton ZoomOut { get; set; } = GamepadButton.RightStick;
         

@@ -2,6 +2,7 @@
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Sabotris
 {
@@ -20,6 +21,10 @@ namespace Sabotris
         public Vector3 cameraPosition = Vector3.zero;
         public Quaternion cameraRotation = Quaternion.identity;
         private Vector3 _rotationInput = Vector3.zero; // yaw pitch zoom
+
+        private const float Acceleration = 0.01f;
+        private const float Friction = 0.95f;
+        private Vector3 _velocity = Vector3.zero;
 
         private Container _targetContainer;
         private Vector3 _targetShapePosition;
@@ -77,7 +82,20 @@ namespace Sabotris
             Zoom = Mathf.Clamp(Zoom, 10, 20);
 
             cameraRotation = Quaternion.Euler(Pitch, Yaw, 0);
-            cameraPosition = cameraRotation * new Vector3(0f, 0f, -cameraDistance - Zoom) + targetPosition;
+            if (IsSpectating)
+            {
+                var advance = -InputUtil.GetMoveAdvance() * Acceleration;
+                var strafe = InputUtil.GetMoveStrafe() * Acceleration;
+                var ascend = InputUtil.GetMoveAscend() * Acceleration;
+                _velocity += transform.forward * advance + transform.right * strafe + Vector3.up * ascend;
+                cameraPosition += _velocity;
+                _velocity *= Friction;
+            }
+            else
+            {
+                _velocity = Vector3.zero;
+                cameraPosition = cameraRotation * new Vector3(0f, 0f, -cameraDistance - Zoom) + targetPosition;
+            }
         }
 
         private void FixedUpdate()
@@ -98,6 +116,9 @@ namespace Sabotris
                 animationTime = GameSettings.Settings.MenuCameraSpeed;
             }
 
+            if (IsSpectating)
+                animationTime *= 0.5f;
+            
             cameraTransform.position = Vector3.Lerp(cameraTransformPosition, toPosition, animationTime);
             cameraTransform.rotation = Quaternion.Lerp(cameraTransformRotation, toRotation, animationTime);
         }
@@ -108,5 +129,7 @@ namespace Sabotris
             ct.position = cameraPosition = _defaultPosition;
             ct.rotation = cameraRotation = _defaultRotation;
         }
+
+        private bool IsSpectating => gameController.ControllingContainer is {dead: true} && !gameController.menuController.IsInMenu;
     }
 }

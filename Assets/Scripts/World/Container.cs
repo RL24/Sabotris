@@ -69,9 +69,9 @@ namespace Sabotris
             if (floor)
                 floor.transform.localScale = new Vector3(Radius * 2 + 1, 1, Radius * 2 + 1);
             if (nameText)
-                nameText.transform.position = new Vector3(0, -2, -(Radius * 2 + 1) * 0.5f);
+                nameText.transform.position = new Vector3(nameText.transform.position.x, -2, -(Radius * 2 + 1) * 0.5f);
             if (dropSpeedText)
-                dropSpeedText.transform.position = new Vector3(0, -4, -(Radius * 2 + 1) * 0.5f);
+                dropSpeedText.transform.position = new Vector3(dropSpeedText.transform.position.x, -4, -(Radius * 2 + 1) * 0.5f);
         }
 
         private void OnDestroy()

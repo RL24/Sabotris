@@ -5,6 +5,7 @@ using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.UI.Menu;
+using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
 using TMPro;
 using UnityEngine;
@@ -42,7 +43,7 @@ namespace Sabotris.UI
 
         private void Update()
         {
-            canvasGroup.alpha += canvasGroup.alpha.Lerp((_playerScoreCache.Any() && !menuController.IsInMenu).Int(), GameSettings.Settings.UIAnimationSpeed);
+            canvasGroup.alpha += canvasGroup.alpha.Lerp((_playerScoreCache.Any() && (!menuController.IsInMenu || menuController.currentMenu is MenuGameOver)).Int(), GameSettings.Settings.UIAnimationSpeed);
         }
 
         private void AddEntry(Player player)

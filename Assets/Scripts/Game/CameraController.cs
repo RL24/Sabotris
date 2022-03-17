@@ -1,8 +1,12 @@
-﻿using Sabotris.IO;
+using System.Numerics;
+using Sabotris.IO;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Sabotris
 {
@@ -22,8 +26,8 @@ namespace Sabotris
         public Quaternion cameraRotation = Quaternion.identity;
         private Vector3 _rotationInput = Vector3.zero; // yaw pitch zoom
 
-        private const float Acceleration = 0.01f;
-        private const float Friction = 0.95f;
+        private const float Acceleration = 0.002f;
+        private const float Friction = 0.98f;
         private Vector3 _velocity = Vector3.zero;
 
         private Container _targetContainer;
@@ -87,7 +91,8 @@ namespace Sabotris
                 var advance = -InputUtil.GetMoveAdvance() * Acceleration;
                 var strafe = InputUtil.GetMoveStrafe() * Acceleration;
                 var ascend = InputUtil.GetMoveAscend() * Acceleration;
-                _velocity += transform.forward * advance + transform.right * strafe + Vector3.up * ascend;
+
+                _velocity += transform.forward.Horizontal(true) * advance + transform.right * strafe + Vector3.up * ascend;
                 cameraPosition += _velocity;
                 _velocity *= Friction;
             }

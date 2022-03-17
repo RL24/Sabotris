@@ -24,6 +24,14 @@ namespace Sabotris.Util
             );
         }
 
+        public static Vector3 Horizontal(this Vector3 self, bool normalized)
+        {
+            var vec = new Vector3(self.x, 0, self.z);
+            if (normalized)
+                vec.Normalize();
+            return vec.normalized;
+        }
+
         public static bool Same(this float self, float compare, float tolerance = Tolerance) => Math.Abs(self - compare) <= tolerance;
 
         public static bool Same(this Vector3 self, Vector3 compare, float tolerance = Tolerance) => self.x.Same(compare.x) && self.y.Same(compare.y) && self.z.Same(compare.z);

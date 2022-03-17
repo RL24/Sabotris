@@ -336,6 +336,7 @@ MonoBehaviour:
   menuController: {fileID: 0}
   networkController: {fileID: 0}
   cameraController: {fileID: 0}
+  audioController: {fileID: 0}
   world: {fileID: 0}
   canvasGroup: {fileID: 9035484819361145973}
   buttons:
@@ -445,6 +446,10 @@ PrefabInstance:
       propertyPath: menu
       value: 
       objectReference: {fileID: 8846274034861430407}
+    - target: {fileID: 1794963037273742399, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
+      propertyPath: isSelected
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84c04aedfc1d565478c423b1392ff8ed, type: 3}
 --- !u!224 &6825558035578753795 stripped

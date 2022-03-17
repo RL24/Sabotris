@@ -180,15 +180,18 @@ namespace Sabotris
 
             var prevPosition = transform.position;
             var prevRotation = transform.rotation;
+            var prevScale = transform.localScale;
 
             transform.position = position;
             transform.rotation = rotation;
+            transform.localScale = Vector3.one;
             Physics.SyncTransforms();
 
             var offsets = Blocks.Values.Select(block => (block.id, Vector3Int.RoundToInt(block.transform.position - position))).ToArray();
 
             transform.position = prevPosition;
             transform.rotation = prevRotation;
+            transform.localScale = prevScale;
             Physics.SyncTransforms();
 
             return offsets;
@@ -293,9 +296,11 @@ namespace Sabotris
 
             var prevPosition = transform.position;
             var prevRotation = transform.rotation;
+            var prevScale = transform.localScale;
 
             transform.position = RawPosition;
             transform.rotation = rotateActivator;
+            transform.localScale = Vector3.one;
             Physics.SyncTransforms();
 
             var pitchAxis = Quaternion.AngleAxis(cameraController.Yaw, Vector3.up) * Vector3Int.right;
@@ -309,6 +314,7 @@ namespace Sabotris
 
             transform.position = prevPosition;
             transform.rotation = prevRotation;
+            transform.localScale = prevScale;
             Physics.SyncTransforms();
         }
 

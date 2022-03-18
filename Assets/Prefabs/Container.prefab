@@ -153,6 +153,7 @@ GameObject:
   - component: {fileID: 4068024223998797665}
   - component: {fileID: 6452913122482028329}
   - component: {fileID: 2532283006568663056}
+  - component: {fileID: 8468930042868996023}
   m_Layer: 0
   m_Name: DropSpeed
   m_TagString: Untagged
@@ -312,6 +313,20 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+--- !u!114 &8468930042868996023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5583828230554776297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8b99b97d94e5b42b4473bd63717351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 193
+  text: {fileID: 2532283006568663056}
 --- !u!1 &8036950200310878368
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using Steamworks;
 using TMPro;
+using Translations;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus
@@ -42,19 +43,19 @@ namespace Sabotris.UI.Menu.Menus
 
             var data = networkController.Client.LobbyData;
             if (playFieldSizeText)
-                playFieldSizeText.text = $"Play Field Size: {data.PlayFieldSize}x{data.PlayFieldSize}";
+                playFieldSizeText.text = Localization.Translate(TranslationKey.UiMenuDisplayPlayFieldSize, data.PlayFieldSize * 2 + 1);
 
             if (maxPlayersText)
-                maxPlayersText.text = $"Max Players: {data.MaxPlayers}";
+                maxPlayersText.text = Localization.Translate(TranslationKey.UiMenuDisplayMaxPlayers, data.MaxPlayers);
 
             if (blocksPerShapeText)
-                blocksPerShapeText.text = $"Blocks Per Shape: {data.BlocksPerShape}";
+                blocksPerShapeText.text = Localization.Translate(TranslationKey.UiMenuDisplayBlocksPerShape, data.BlocksPerShape);
 
             if (generateVerticalBlocksText)
-                generateVerticalBlocksText.text = $"Generate Vertical Blocks: {(data.GenerateVerticalBlocks ? "Yes" : "No")}";
+                generateVerticalBlocksText.text = Localization.Translate(TranslationKey.UiMenuDisplayGenerateVerticalBlocks, Localization.Translate(data.GenerateVerticalBlocks ? TranslationKey.UiYes : TranslationKey.UiNo));
 
             if (practiceModeText)
-                practiceModeText.text = $"Practice Mode: {(data.PracticeMode ? "Yes" : "No")}";
+                practiceModeText.text = Localization.Translate(TranslationKey.UiMenuDisplayPracticeMode, Localization.Translate(data.PracticeMode ? TranslationKey.UiYes : TranslationKey.UiNo));
         }
 
         protected override void OnDestroy()

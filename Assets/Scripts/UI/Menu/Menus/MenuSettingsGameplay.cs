@@ -1,5 +1,6 @@
 ﻿using System;
 using Sabotris.IO;
+using Translations;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus
@@ -9,6 +10,7 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Vector3 _cameraPosition = new Vector3(3, 6, 8);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
+        public MenuCarousel carouselLanguage;
         public MenuButton buttonGameTransitionSpeed,
             buttonUIAnimationSpeed,
             buttonGameCameraSpeed,
@@ -25,6 +27,9 @@ namespace Sabotris.UI.Menu.Menus
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
+            carouselLanguage.index = (int) GameSettings.Settings.Language;
+            carouselLanguage.OnValueChanged += OnLanguageChanged;
+            
             if (buttonGameTransitionSpeed is MenuSlider sgts)
             {
                 sgts.OnValueChanged += OnGameTransitionSpeedChanged;
@@ -59,6 +64,11 @@ namespace Sabotris.UI.Menu.Menus
 
             if (buttonGameTransitionSpeed is MenuSlider sgcs)
                 sgcs.OnValueChanged -= OnGameTransitionSpeedChanged;
+        }
+
+        private void OnLanguageChanged(object sender, int index)
+        {
+            GameSettings.Settings.Language = (LocaleKey) index;
         }
 
         private void OnGameTransitionSpeedChanged(object sender, float value)

@@ -2,6 +2,7 @@ using System;
 using Sabotris.IO;
 using Sabotris.UI.Menu;
 using Steamworks;
+using Translations;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -66,6 +67,7 @@ namespace Sabotris
             _renderFeatureSsao.SetActive(GameSettings.Settings.AmbientOcclusion);
             _dof.mode.value = GameSettings.Settings.MenuDofMode;
             Screen.fullScreenMode = GameSettings.Settings.FullscreenMode;
+            Localization.CurrentLocale = GameSettings.Settings.Language;
         }
     }
 }

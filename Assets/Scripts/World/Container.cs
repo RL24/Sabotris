@@ -10,6 +10,7 @@ using Sabotris.Network.Packets.Game;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using TMPro;
+using Translations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -82,7 +83,7 @@ namespace Sabotris
         private void Update()
         {
             if (dropSpeedText)
-                dropSpeedText.text = $"Drop Speed: {(DropSpeedMs == 0 ? 100 : 1000f / DropSpeedMs):F1}";
+                dropSpeedText.text = Localization.Translate(TranslationKey.GameContainerDropSpeed, Math.Round((DropSpeedMs == 0 ? 100 : 1000f / DropSpeedMs) * 10) / 10);
         }
 
         public void StartDropping((Guid, Vector3Int)[] offsets = null)
@@ -415,7 +416,7 @@ namespace Sabotris
                 
                 _dropSpeedMs = value;
 
-                audioController.music.pitch = Mathf.Min(audioController.music.pitch + 0.02f, 2);
+                audioController.music.pitch = Mathf.Min(audioController.music.pitch + 0.01f, 2);
             }
         }
     }

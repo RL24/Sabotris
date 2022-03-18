@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sabotris.Network;
 using Sabotris.Util;
 using Steamworks;
+using Translations;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus
@@ -90,7 +91,7 @@ namespace Sabotris.UI.Menu.Menus
                 Destroy(lobby.gameObject);
             _lobbies.Clear();
             
-            AddNoticeMessage("Refreshing...");
+            AddNoticeMessage(Localization.Translate(TranslationKey.UiMenuNoticeRefreshing));
             Client.RequestLobbyList();
         }
 
@@ -105,7 +106,7 @@ namespace Sabotris.UI.Menu.Menus
 
             if (lobbyCount == 0)
             {
-                AddNoticeMessage("No lobbies found");
+                AddNoticeMessage(Localization.Translate(TranslationKey.UiMenuNoticeNoLobbies));
                 return;
             }
 
@@ -121,7 +122,7 @@ namespace Sabotris.UI.Menu.Menus
             }
             
             if (_lobbies.Count == 0)
-                AddNoticeMessage("No lobbies found");
+                AddNoticeMessage(Localization.Translate(TranslationKey.UiMenuNoticeNoLobbies));
         }
 
         private void AddNoticeMessage(string message)

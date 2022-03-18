@@ -1,5 +1,6 @@
 ﻿using System;
 using TMPro;
+using Translations;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu
@@ -10,21 +11,23 @@ namespace Sabotris.UI.Menu
 
         public MenuButton previous, next;
         public TMP_Text value;
-        public string[] values;
+        public TranslationKey[] values;
         public int index;
 
         protected override void Start()
         {
+            base.Start();
+            
             previous.OnClick += OnPreviousClick;
             next.OnClick += OnNextClick;
 
-            value.text = values[index];
+            value.text = Localization.Translate(values[index]);
         }
 
         public override void NavigateHorizontal(float val)
         {
             index = (int) Mathf.Repeat(index + val, values.Length);
-            value.text = values[index];
+            value.text = Localization.Translate(values[index]);
             OnValueChanged?.Invoke(this, index);
         }
 

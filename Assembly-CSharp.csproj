@@ -53,6 +53,7 @@
   </PropertyGroup>
   <ItemGroup>
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
+     <Compile Include="Assets\Scripts\Translations\Locales\LocaleGerman.cs" />
      <Compile Include="Assets\Scripts\Network\Handler\ByteBuffer.cs" />
      <Compile Include="Assets\Scripts\Util\Extensions.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
@@ -62,14 +63,17 @@
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsVideo.cs" />
      <Compile Include="Assets\Scripts\Network\NetworkController.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettings.cs" />
+     <Compile Include="Assets\Scripts\Translations\Locales\LocaleItalian.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeRotate.cs" />
      <Compile Include="Assets\Scripts\Network\LobbyData.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Game\PacketServerShutdown.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
+     <Compile Include="Assets\Scripts\Translations\Locales\LocaleEnglish.cs" />
      <Compile Include="Assets\Scripts\World\World.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Chat\PacketChatMessage.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\PacketTypes.cs" />
+     <Compile Include="Assets\Scripts\UI\TranslatableTMP.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
      <Compile Include="Assets\Scripts\Network\Networker.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuJoinGame.cs" />
@@ -96,6 +100,7 @@
      <Compile Include="Assets\Scripts\Network\Packets\Block\PacketBlockBulkRemove.cs" />
      <Compile Include="Assets\Scripts\Audio\AudioController.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeLock.cs" />
+     <Compile Include="Assets\Scripts\Translations\Locales\LocaleSpanish.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuMain.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketRetrievePlayerList.cs" />
      <Compile Include="Assets\Scripts\Network\Handler\PacketListener.cs" />
@@ -116,6 +121,7 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerList.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuPause.cs" />
+     <Compile Include="Assets\Scripts\Translations\Localization.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuLobbyListItem.cs" />
      <Compile Include="Assets\Scripts\Network\Client.cs" />
@@ -133,6 +139,7 @@
      <Compile Include="Assets\Scripts\Network\Handler\PacketHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
      <Compile Include="Assets\Scripts\World\Container.cs" />
+     <Compile Include="Assets\Scripts\Translations\Locale.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerScore.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
@@ -143,6 +150,7 @@
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuGameOver.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuFadeText.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuChatHistoryItem.cs" />
+     <Compile Include="Assets\Scripts\Translations\Locales\LocaleFrench.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeCreate.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsAudio.cs" />

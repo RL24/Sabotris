@@ -1,5 +1,6 @@
 ﻿using System;
 using Sabotris.Util;
+using Translations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -11,6 +12,7 @@ namespace Sabotris.IO
     public class GameSettingsConfig
     {
         // Gameplay menu
+        public LocaleKey Language { get; set; } = LocaleKey.English;
         public float GameTransitionSpeed { get; set; } = 0.4f;
         public float UIAnimationSpeed { get; set; } = 0.2f;
         public float GameCameraSpeed { get; set; } = 0.75f;

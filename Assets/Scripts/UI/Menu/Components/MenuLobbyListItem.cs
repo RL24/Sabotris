@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using Translations;
 
 namespace Sabotris.UI.Menu
 {
@@ -24,7 +25,7 @@ namespace Sabotris.UI.Menu
         private void UpdatePlayerCountText()
         {
             if (playerCountText)
-                playerCountText.text = LobbyPlayerCount == null || MaxLobbyPlayers == null ? "" : $"{LobbyPlayerCount}/{MaxLobbyPlayers} Players";
+                playerCountText.text = LobbyPlayerCount == null || MaxLobbyPlayers == null ? "" : Localization.Translate(TranslationKey.UiMenuLobbyItemPlayerCount, LobbyPlayerCount, MaxLobbyPlayers);
         }
 
         public string LobbyName

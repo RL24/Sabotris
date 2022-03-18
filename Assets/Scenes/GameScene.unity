@@ -532,6 +532,7 @@ GameObject:
   - component: {fileID: 105243118}
   - component: {fileID: 105243120}
   - component: {fileID: 105243119}
+  - component: {fileID: 105243121}
   m_Layer: 5
   m_Name: PlayerLabel
   m_TagString: Untagged
@@ -655,6 +656,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 105243117}
   m_CullTransparentMesh: 1
+--- !u!114 &105243121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105243117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8b99b97d94e5b42b4473bd63717351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 177
+  text: {fileID: 105243119}
 --- !u!1 &326631714
 GameObject:
   m_ObjectHideFlags: 0
@@ -2153,6 +2168,7 @@ GameObject:
   - component: {fileID: 1219944887}
   - component: {fileID: 1219944889}
   - component: {fileID: 1219944888}
+  - component: {fileID: 1219944890}
   m_Layer: 5
   m_Name: ScoreLabel
   m_TagString: Untagged
@@ -2276,6 +2292,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1219944886}
   m_CullTransparentMesh: 1
+--- !u!114 &1219944890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1219944886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8b99b97d94e5b42b4473bd63717351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 178
+  text: {fileID: 1219944888}
 --- !u!1 &1292138989
 GameObject:
   m_ObjectHideFlags: 0
@@ -3596,7 +3626,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 4.6304264e+27, y: 1.8017357e+25, z: 3.455822e+30, w: 6.7421e+22}
+  m_BoundingSphereOverride: {x: 6.08e-43, y: 9.4e-44, z: 0, w: 883.10986}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0

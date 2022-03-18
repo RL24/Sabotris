@@ -2056,6 +2056,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 5792942196348346672}
     m_Modifications:
     - target: {fileID: 2679539501238754884, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -5447137249150460136}
+    - target: {fileID: 2679539501238754884, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
       propertyPath: isSelected
       value: 1
       objectReference: {fileID: 0}
@@ -2091,6 +2095,14 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 49.2
       objectReference: {fileID: 0}
+    - target: {fileID: 3783316215129015495, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -5447137249150460136}
+    - target: {fileID: 7063066348095631039, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
+      propertyPath: menu
+      value: 
+      objectReference: {fileID: -5447137249150460136}
     - target: {fileID: 7888667336010401159, guid: 672fd64e0406ab94b98908deabf9338f, type: 3}
       propertyPath: m_text
       value: Language

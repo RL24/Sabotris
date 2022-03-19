@@ -1,5 +1,7 @@
 ﻿using System;
+using Audio;
 using Sabotris.IO;
+using Sabotris.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -71,11 +73,7 @@ namespace Sabotris.UI.Menu
                 return;
             
             if (menu.audioController != null)
-            {
-                menu.audioController.clickButton.volume = 0.5f * (GameSettings.Settings.MasterVolume * 0.01f);
-                menu.audioController.clickButton.pitch = Random.Range(1f, 1.2f);
-                menu.audioController.clickButton.Play();
-            }
+                menu.audioController.clickButton.PlayModifiedSound(AudioController.GetButtonClickVolume(), AudioController.GetButtonClickPitch());
             
             NavigateSelect();
         }

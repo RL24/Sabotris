@@ -80,5 +80,12 @@ namespace Sabotris.Util
         {
             return self.m_HSteamNetConnection == 0;
         }
+
+        public static void PlayModifiedSound(this AudioSource self, float? volume = null, float? pitch = null)
+        {
+            self.volume = volume ?? self.volume;
+            self.pitch = pitch ?? self.pitch;
+            self.Play();
+        }
     }
 }

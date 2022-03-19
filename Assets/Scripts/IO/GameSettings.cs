@@ -20,6 +20,9 @@ namespace Sabotris.IO
         
         // Audio menu
         public float MasterVolume { get; set; } = 75;
+        public float MusicVolume { get; set; } = 25;
+        public float UIVolume { get; set; } = 100;
+        public float GameVolume { get; set; } = 70;
         
         // Video menu
         public bool AmbientOcclusion { get; set; } = true;

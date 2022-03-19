@@ -184,12 +184,10 @@ namespace Sabotris.UI.Menu
                 {
                     buttons[SelectedButton].isSelected = true;
 
-                    if (audioController != null)
-                    {
-                        audioController.hoverButton.volume = 0.3f * (GameSettings.Settings.MasterVolume * 0.01f);
-                        audioController.hoverButton.pitch = Random.Range(1.4f, 1.8f);
-                        audioController.hoverButton.Play();
-                    }
+                    if (!audioController)
+                        return;
+                    
+                    audioController.hoverButton.PlayModifiedSound(AudioController.GetButtonHoverVolume(), AudioController.GetButtonHoverPitch());
                 }
             }
         }

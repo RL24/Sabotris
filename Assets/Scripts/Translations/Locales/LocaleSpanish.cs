@@ -72,6 +72,9 @@
 
             _translations.Add(TranslationKey.UiMenuTitleSettingsAudio, "Audio");
             _translations.Add(TranslationKey.UiMenuInputMasterVolume, "Volumen Principal");
+            _translations.Add(TranslationKey.UiMenuInputMusicVolume, "Volumen de la Música");
+            _translations.Add(TranslationKey.UiMenuInputUiVolume, "Volumen de UI");
+            _translations.Add(TranslationKey.UiMenuInputGameVolume, "Volumen de Juego");
 
             // Settings Controls	
 

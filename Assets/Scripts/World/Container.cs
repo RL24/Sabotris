@@ -141,8 +141,7 @@ namespace Sabotris
 
             if (!IsDemo())
             {
-                audioController.shapeLock.volume = 1f * (GameSettings.Settings.MasterVolume * 0.01f);
-                audioController.shapeLock.Play();
+                audioController.shapeLock.PlayModifiedSound(AudioController.GetGameVolume());
                 
                 networkController.Client.SendPacket(new PacketShapeLock
                 {
@@ -174,8 +173,7 @@ namespace Sabotris
 
                 if (!IsDemo())
                 {
-                    audioController.layerDelete.volume = 1f * (GameSettings.Settings.MasterVolume * 0.01f);
-                    audioController.layerDelete.Play();
+                    audioController.layerDelete.PlayModifiedSound(AudioController.GetGameVolume());
                     
                     networkController.Client.SendPacket(new PacketLayerMove
                     {

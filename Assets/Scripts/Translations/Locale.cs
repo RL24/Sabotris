@@ -64,6 +64,9 @@ namespace Translations
         SETTINGS_AUDIO = 0x60,
         UiMenuTitleSettingsAudio = 0x61,
         UiMenuInputMasterVolume = 0x62,
+        UiMenuInputMusicVolume = 0x63,
+        UiMenuInputUiVolume = 0x64,
+        UiMenuInputGameVolume = 0x65,
         
         SETTINGS_CONTROLS = 0x70,
         UiMenuTitleSettingsControls = 0x71,

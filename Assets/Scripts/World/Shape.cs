@@ -108,10 +108,7 @@ namespace Sabotris
                     if (!parentContainer.DoesCollide(offsets))
                     {
                         RawRotation = rotateActivator = roundedRotationActivator;
-                        
-                        audioController.shapeRotate.pitch = Random.Range(1.4f, 1.8f);
-                        audioController.shapeRotate.volume = 0.7f * (GameSettings.Settings.MasterVolume * 0.01f);
-                        audioController.shapeRotate.Play();
+                        audioController.shapeRotate.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetShapeRotatePitch());
                     }
                     else
                         rotateActivator = RawRotation;
@@ -270,11 +267,7 @@ namespace Sabotris
                 {
                     var sound = isDropping ? audioController.shapeDrop : audioController.shapeMove;
                     if (isDropping && doFastMoveDown && !sound.isPlaying || isDropping && !doFastMoveDown || !isDropping)
-                    {
-                        sound.pitch = Random.Range(1f, 1.4f);
-                        sound.volume = 0.7f * (GameSettings.Settings.MasterVolume * 0.01f);
-                        sound.Play();
-                    }
+                        sound.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetShapeMovePitch());
                 }
                 
                 RawPosition += roundedMoveVec;

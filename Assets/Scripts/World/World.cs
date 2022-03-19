@@ -105,8 +105,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.GameEnd, PacketDirection.Client)]
         public void OnGameEnd(PacketGameEnd packet)
         {
-            audioController.gameOver.volume = 1f * (GameSettings.Settings.MasterVolume * 0.01f);
-            audioController.gameOver.Play();
+            audioController.gameOver.PlayModifiedSound(AudioController.GetGameVolume());
             
             audioController.music.pitch = 1;
 
@@ -121,9 +120,7 @@ namespace Sabotris
 
             CreateContainer(packet.Player.Id, packet.Player.Name);
             
-            audioController.playerJoinLobby.volume = 0.7f * (GameSettings.Settings.MasterVolume * 0.01f);
-            audioController.playerJoinLobby.pitch = Random.Range(1f, 1.2f);
-            audioController.playerJoinLobby.Play();
+            audioController.playerJoinLobby.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetPlayerJoinLeavePitch());
         }
 
         [PacketListener(PacketTypeId.PlayerList, PacketDirection.Client)]
@@ -142,10 +139,7 @@ namespace Sabotris
         public void OnPlayerDisconnected(PacketPlayerDisconnected packet)
         {
             RemoveContainer(packet.Id);
-            
-            audioController.playerLeaveLobby.volume = 0.7f * (GameSettings.Settings.MasterVolume * 0.01f);
-            audioController.playerLeaveLobby.pitch = Random.Range(1f, 1.2f);
-            audioController.playerLeaveLobby.Play();
+            audioController.playerLeaveLobby.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetPlayerJoinLeavePitch());
         }
     }
 }

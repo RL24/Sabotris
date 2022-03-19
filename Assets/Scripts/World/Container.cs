@@ -18,7 +18,7 @@ namespace Sabotris
 {
     public class Container : MonoBehaviour
     {
-        private int Radius => networkController.Client?.LobbyData?.PlayFieldSize ?? 5;
+        private int Radius => IsDemo() ? 2 : networkController.Client?.LobbyData?.PlayFieldSize ?? 2;
         private Vector3Int BottomLeft => new Vector3Int(-Radius, 1, -Radius);
         private Vector3Int TopRight => new Vector3Int(Radius, 25, Radius);
 
@@ -406,7 +406,7 @@ namespace Sabotris
         
         public int DropSpeedMs
         {
-            get => _dropSpeedMs;
+            get => IsDemo() ? 1000 : _dropSpeedMs;
             private set
             {
                 if (_dropSpeedMs == value)

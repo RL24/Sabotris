@@ -21,22 +21,22 @@ namespace Audio
 
         private static float GetMasterVolume()
         {
-            return GameSettings.Settings.MasterVolume * 0.01f;
+            return GameSettings.Settings.masterVolume * 0.01f;
         }
 
         private static float GetMusicVolume()
         {
-            return GameSettings.Settings.MusicVolume * 0.01f * GetMasterVolume();
+            return GameSettings.Settings.musicVolume * 0.01f * GetMasterVolume();
         }
 
         private static float GetUIVolume()
         {
-            return GameSettings.Settings.UIVolume * 0.01f * GetMasterVolume();
+            return GameSettings.Settings.uiVolume * 0.01f * GetMasterVolume();
         }
 
         public static float GetGameVolume()
         {
-            return GameSettings.Settings.GameVolume * 0.01f * GetMasterVolume();
+            return GameSettings.Settings.gameVolume * 0.01f * GetMasterVolume();
         }
 
         public static float GetButtonClickVolume()

@@ -27,31 +27,31 @@ namespace Sabotris.UI.Menu.Menus
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
-            carouselLanguage.index = (int) GameSettings.Settings.Language;
+            carouselLanguage.index = (int) GameSettings.Settings.language;
             carouselLanguage.OnValueChanged += OnLanguageChanged;
             
             if (buttonGameTransitionSpeed is MenuSlider sgts)
             {
                 sgts.OnValueChanged += OnGameTransitionSpeedChanged;
-                sgts.SetValue(GameSettings.Settings.GameTransitionSpeed * 100);
+                sgts.SetValue(GameSettings.Settings.gameTransitionSpeed * 100);
             }
 
             if (buttonUIAnimationSpeed is MenuSlider suas)
             {
                 suas.OnValueChanged += OnUIAnimationSpeed;
-                suas.SetValue(GameSettings.Settings.UIAnimationSpeed * 100);
+                suas.SetValue(GameSettings.Settings.uiAnimationSpeed * 100);
             }
 
             if (buttonGameCameraSpeed is MenuSlider sgcs)
             {
                 sgcs.OnValueChanged += OnGameCameraSpeedChanged;
-                sgcs.SetValue(GameSettings.Settings.GameCameraSpeed * 100);
+                sgcs.SetValue(GameSettings.Settings.gameCameraSpeed * 100);
             }
 
             if (buttonMenuCameraSpeed is MenuSlider smcs)
             {
                 smcs.OnValueChanged += OnMenuCameraSpeedChanged;
-                smcs.SetValue(GameSettings.Settings.MenuCameraSpeed * 100);
+                smcs.SetValue(GameSettings.Settings.menuCameraSpeed * 100);
             }
         }
 
@@ -68,27 +68,27 @@ namespace Sabotris.UI.Menu.Menus
 
         private void OnLanguageChanged(object sender, int index)
         {
-            GameSettings.Settings.Language = (LocaleKey) index;
+            GameSettings.Settings.language = (LocaleKey) index;
         }
 
         private void OnGameTransitionSpeedChanged(object sender, float value)
         {
-            GameSettings.Settings.GameTransitionSpeed = value / 100f;
+            GameSettings.Settings.gameTransitionSpeed = value / 100f;
         }
 
         private void OnUIAnimationSpeed(object sender, float value)
         {
-            GameSettings.Settings.UIAnimationSpeed = value / 100f;
+            GameSettings.Settings.uiAnimationSpeed = value / 100f;
         }
 
         private void OnGameCameraSpeedChanged(object sender, float value)
         {
-            GameSettings.Settings.GameCameraSpeed = value / 100f;
+            GameSettings.Settings.gameCameraSpeed = value / 100f;
         }
 
         private void OnMenuCameraSpeedChanged(object sender, float value)
         {
-            GameSettings.Settings.MenuCameraSpeed = value / 100f;
+            GameSettings.Settings.menuCameraSpeed = value / 100f;
         }
 
         private void OnClickButton(object sender, EventArgs args)

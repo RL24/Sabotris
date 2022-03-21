@@ -64,10 +64,10 @@ namespace Sabotris
 
         private void UpdateFromSettings()
         {
-            _renderFeatureSsao.SetActive(GameSettings.Settings.AmbientOcclusion);
-            _dof.mode.value = GameSettings.Settings.MenuDofMode;
-            Screen.fullScreenMode = GameSettings.Settings.FullscreenMode;
-            Localization.CurrentLocale = GameSettings.Settings.Language;
+            _renderFeatureSsao.SetActive(GameSettings.Settings.ambientOcclusion);
+            _dof.mode.value = GameSettings.Settings.menuDofMode;
+            Screen.fullScreenMode = GameSettings.Settings.fullscreenMode;
+            Localization.CurrentLocale = GameSettings.Settings.language;
         }
     }
 }

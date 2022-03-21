@@ -91,24 +91,24 @@ namespace Sabotris.UI.Menu.Menus
             if (e == null)
                 return;
             
-            if (sender.Equals(kMoveLeft)) GameSettings.Input.KeyboardBinds.MoveLeft = e.keyCode;
-            else if (sender.Equals(kMoveRight)) GameSettings.Input.KeyboardBinds.MoveRight = e.keyCode;
-            else if (sender.Equals(kMoveForward)) GameSettings.Input.KeyboardBinds.MoveForward = e.keyCode;
-            else if (sender.Equals(kMoveBack)) GameSettings.Input.KeyboardBinds.MoveBack = e.keyCode;
+            if (sender.Equals(kMoveLeft)) GameSettings.Input.keyboardBinds.moveLeft = e.keyCode;
+            else if (sender.Equals(kMoveRight)) GameSettings.Input.keyboardBinds.moveRight = e.keyCode;
+            else if (sender.Equals(kMoveForward)) GameSettings.Input.keyboardBinds.moveForward = e.keyCode;
+            else if (sender.Equals(kMoveBack)) GameSettings.Input.keyboardBinds.moveBack = e.keyCode;
 
-            else if (sender.Equals(kRotateYawLeft)) GameSettings.Input.KeyboardBinds.RotateYawLeft = e.keyCode;
-            else if (sender.Equals(kRotateYawRight)) GameSettings.Input.KeyboardBinds.RotateYawRight = e.keyCode;
-            else if (sender.Equals(kRotatePitchUp)) GameSettings.Input.KeyboardBinds.RotatePitchUp = e.keyCode;
-            else if (sender.Equals(kRotatePitchDown)) GameSettings.Input.KeyboardBinds.RotatePitchDown = e.keyCode;
-            else if (sender.Equals(kRotateRollLeft)) GameSettings.Input.KeyboardBinds.RotateRollLeft = e.keyCode;
-            else if (sender.Equals(kRotateRollRight)) GameSettings.Input.KeyboardBinds.RotateRollRight = e.keyCode;
+            else if (sender.Equals(kRotateYawLeft)) GameSettings.Input.keyboardBinds.rotateYawLeft = e.keyCode;
+            else if (sender.Equals(kRotateYawRight)) GameSettings.Input.keyboardBinds.rotateYawRight = e.keyCode;
+            else if (sender.Equals(kRotatePitchUp)) GameSettings.Input.keyboardBinds.rotatePitchUp = e.keyCode;
+            else if (sender.Equals(kRotatePitchDown)) GameSettings.Input.keyboardBinds.rotatePitchDown = e.keyCode;
+            else if (sender.Equals(kRotateRollLeft)) GameSettings.Input.keyboardBinds.rotateRollLeft = e.keyCode;
+            else if (sender.Equals(kRotateRollRight)) GameSettings.Input.keyboardBinds.rotateRollRight = e.keyCode;
 
-            else if (sender.Equals(kNavigateLeft)) GameSettings.Input.KeyboardBinds.NavigateLeft = e.keyCode;
-            else if (sender.Equals(kNavigateRight)) GameSettings.Input.KeyboardBinds.NavigateRight = e.keyCode;
-            else if (sender.Equals(kNavigateUp)) GameSettings.Input.KeyboardBinds.NavigateUp = e.keyCode;
-            else if (sender.Equals(kNavigateDown)) GameSettings.Input.KeyboardBinds.NavigateDown = e.keyCode;
-            else if (sender.Equals(kNavigateEnter)) GameSettings.Input.KeyboardBinds.NavigateEnter = e.keyCode;
-            else if (sender.Equals(kNavigateBack)) GameSettings.Input.KeyboardBinds.NavigateBack = e.keyCode;
+            else if (sender.Equals(kNavigateLeft)) GameSettings.Input.keyboardBinds.navigateLeft = e.keyCode;
+            else if (sender.Equals(kNavigateRight)) GameSettings.Input.keyboardBinds.navigateRight = e.keyCode;
+            else if (sender.Equals(kNavigateUp)) GameSettings.Input.keyboardBinds.navigateUp = e.keyCode;
+            else if (sender.Equals(kNavigateDown)) GameSettings.Input.keyboardBinds.navigateDown = e.keyCode;
+            else if (sender.Equals(kNavigateEnter)) GameSettings.Input.keyboardBinds.navigateEnter = e.keyCode;
+            else if (sender.Equals(kNavigateBack)) GameSettings.Input.keyboardBinds.navigateBack = e.keyCode;
 
             ((MenuBind) sender).ValueText = e.displayName;
         }
@@ -123,22 +123,22 @@ namespace Sabotris.UI.Menu.Menus
             if (button == null)
                 return;
             
-            if (sender.Equals(gZoomIn)) GameSettings.Input.GamepadBinds.ZoomIn = button.Value;
-            else if (sender.Equals(gZoomOut)) GameSettings.Input.GamepadBinds.ZoomOut = button.Value;
+            if (sender.Equals(gZoomIn)) GameSettings.Input.gamepadBinds.zoomIn = button.Value;
+            else if (sender.Equals(gZoomOut)) GameSettings.Input.gamepadBinds.zoomOut = button.Value;
             
-            else if (sender.Equals(gRotateYawLeft)) GameSettings.Input.GamepadBinds.RotateYawLeft = button.Value;
-            else if (sender.Equals(gRotateYawRight)) GameSettings.Input.GamepadBinds.RotateYawRight = button.Value;
-            else if (sender.Equals(gRotatePitchUp)) GameSettings.Input.GamepadBinds.RotatePitchUp = button.Value;
-            else if (sender.Equals(gRotatePitchDown)) GameSettings.Input.GamepadBinds.RotatePitchDown = button.Value;
-            else if (sender.Equals(gRotateRollLeft)) GameSettings.Input.GamepadBinds.RotateRollLeft = button.Value;
-            else if (sender.Equals(gRotateRollRight)) GameSettings.Input.GamepadBinds.RotateRollRight = button.Value;
+            else if (sender.Equals(gRotateYawLeft)) GameSettings.Input.gamepadBinds.rotateYawLeft = button.Value;
+            else if (sender.Equals(gRotateYawRight)) GameSettings.Input.gamepadBinds.rotateYawRight = button.Value;
+            else if (sender.Equals(gRotatePitchUp)) GameSettings.Input.gamepadBinds.rotatePitchUp = button.Value;
+            else if (sender.Equals(gRotatePitchDown)) GameSettings.Input.gamepadBinds.rotatePitchDown = button.Value;
+            else if (sender.Equals(gRotateRollLeft)) GameSettings.Input.gamepadBinds.rotateRollLeft = button.Value;
+            else if (sender.Equals(gRotateRollRight)) GameSettings.Input.gamepadBinds.rotateRollRight = button.Value;
 
-            else if (sender.Equals(gNavigateLeft)) GameSettings.Input.GamepadBinds.NavigateLeft = button.Value;
-            else if (sender.Equals(gNavigateRight)) GameSettings.Input.GamepadBinds.NavigateRight = button.Value;
-            else if (sender.Equals(gNavigateUp)) GameSettings.Input.GamepadBinds.NavigateUp = button.Value;
-            else if (sender.Equals(gNavigateDown)) GameSettings.Input.GamepadBinds.NavigateDown = button.Value;
-            else if (sender.Equals(gNavigateEnter)) GameSettings.Input.GamepadBinds.NavigateEnter = button.Value;
-            else if (sender.Equals(gNavigateBack)) GameSettings.Input.GamepadBinds.NavigateBack = button.Value;
+            else if (sender.Equals(gNavigateLeft)) GameSettings.Input.gamepadBinds.navigateLeft = button.Value;
+            else if (sender.Equals(gNavigateRight)) GameSettings.Input.gamepadBinds.navigateRight = button.Value;
+            else if (sender.Equals(gNavigateUp)) GameSettings.Input.gamepadBinds.navigateUp = button.Value;
+            else if (sender.Equals(gNavigateDown)) GameSettings.Input.gamepadBinds.navigateDown = button.Value;
+            else if (sender.Equals(gNavigateEnter)) GameSettings.Input.gamepadBinds.navigateEnter = button.Value;
+            else if (sender.Equals(gNavigateBack)) GameSettings.Input.gamepadBinds.navigateBack = button.Value;
             
             ((MenuBind) sender).ValueText = e.displayName;
         }

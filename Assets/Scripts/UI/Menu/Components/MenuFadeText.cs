@@ -29,7 +29,7 @@ namespace Sabotris.UI.Menu
             var color = _isHovered
                 ? ColorHover
                 : _startColor;
-            text.color = Color.Lerp(text.color, color, GameSettings.Settings.UIAnimationSpeed);
+            text.color = Color.Lerp(text.color, color, GameSettings.Settings.uiAnimationSpeed);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

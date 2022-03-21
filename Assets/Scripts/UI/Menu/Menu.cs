@@ -114,7 +114,7 @@ namespace Sabotris.UI.Menu
                     buttons[SelectedButton].NavigateHorizontal(navigateHor);
             }
 
-            canvasGroup.alpha += canvasGroup.alpha.Lerp((!Closing).Int(), GameSettings.Settings.MenuCameraSpeed * 2);
+            canvasGroup.alpha += canvasGroup.alpha.Lerp((!Closing).Int(), GameSettings.Settings.menuCameraSpeed * 2);
 
             if (Interactable)
             {

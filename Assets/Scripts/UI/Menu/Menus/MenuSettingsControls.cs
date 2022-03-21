@@ -58,17 +58,17 @@ namespace Sabotris.UI.Menu.Menus
 
         private void OnGamepadCameraSensitivityChanged(object sender, float value)
         {
-            GameSettings.Input.GamepadRotateCameraSensitivity = value / 50f;
+            GameSettings.Input.gamepadRotateCameraSensitivity = value / 50f;
         }
 
         private void OnMouseCameraSensitivityChanged(object sender, float value)
         {
-            GameSettings.Input.MouseRotateCameraSensitivity = value / 50f;
+            GameSettings.Input.mouseRotateCameraSensitivity = value / 50f;
         }
 
         private void OnMouseRotateSensitivityChanged(object sender, float value)
         {
-            GameSettings.Input.MouseRotateBlockSensitivity = value / 10f;
+            GameSettings.Input.mouseRotateBlockSensitivity = value / 10f;
         }
 
         private void OnClickButton(object sender, EventArgs args)

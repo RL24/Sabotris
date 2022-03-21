@@ -12,85 +12,85 @@ namespace Sabotris.IO
     public class GameSettingsConfig
     {
         // Gameplay menu
-        public LocaleKey Language { get; set; } = LocaleKey.English;
-        public float GameTransitionSpeed { get; set; } = 0.4f;
-        public float UIAnimationSpeed { get; set; } = 0.2f;
-        public float GameCameraSpeed { get; set; } = 0.75f;
-        public float MenuCameraSpeed { get; set; } = 0.1f;
+        public LocaleKey language = LocaleKey.English;
+        public float gameTransitionSpeed = 0.4f;
+        public float uiAnimationSpeed = 0.2f;
+        public float gameCameraSpeed = 0.75f;
+        public float menuCameraSpeed = 0.1f;
         
         // Audio menu
-        public float MasterVolume { get; set; } = 75;
-        public float MusicVolume { get; set; } = 25;
-        public float UIVolume { get; set; } = 100;
-        public float GameVolume { get; set; } = 70;
+        public float masterVolume = 75;
+        public float musicVolume = 25;
+        public float uiVolume = 100;
+        public float gameVolume = 70;
         
         // Video menu
-        public bool AmbientOcclusion { get; set; } = true;
-        public DepthOfFieldMode MenuDofMode { get; set; } = DepthOfFieldMode.Bokeh;
-        public FullScreenMode FullscreenMode { get; set; } = FullScreenMode.ExclusiveFullScreen;
+        public bool ambientOcclusion = true;
+        public DepthOfFieldMode menuDofMode = DepthOfFieldMode.Bokeh;
+        public FullScreenMode fullscreenMode = FullScreenMode.ExclusiveFullScreen;
     }
 
     [Serializable]
     public class KeyboardBinds
     {
-        public Key MoveLeft { get; set; } = Key.A;
-        public Key MoveRight { get; set; } = Key.D;
-        public Key MoveForward { get; set; } = Key.W;
-        public Key MoveBack { get; set; } = Key.S;
-        public Key MoveDown { get; set; } = Key.Space;
-        public Key MoveAscend { get; set; } = Key.Space;
-        public Key MoveDescend { get; set; } = Key.LeftShift;
+        public Key moveLeft = Key.A;
+        public Key moveRight = Key.D;
+        public Key moveForward = Key.W;
+        public Key moveBack = Key.S;
+        public Key moveDown = Key.Space;
+        public Key moveAscend = Key.Space;
+        public Key moveDescend = Key.LeftShift;
 
-        public Key RotateYawLeft { get; set; } = Key.U;
-        public Key RotateYawRight { get; set; } = Key.O;
-        public Key RotatePitchUp { get; set; } = Key.I;
-        public Key RotatePitchDown { get; set; } = Key.K;
-        public Key RotateRollLeft { get; set; } = Key.J;
-        public Key RotateRollRight { get; set; } = Key.L;
+        public Key rotateYawLeft = Key.U;
+        public Key rotateYawRight = Key.O;
+        public Key rotatePitchUp = Key.I;
+        public Key rotatePitchDown = Key.K;
+        public Key rotateRollLeft = Key.J;
+        public Key rotateRollRight = Key.L;
 
-        public Key NavigateLeft { get; set; } = Key.LeftArrow;
-        public Key NavigateRight { get; set; } = Key.RightArrow;
-        public Key NavigateUp { get; set; } = Key.UpArrow;
-        public Key NavigateDown { get; set; } = Key.DownArrow;
-        public Key NavigateEnter { get; set; } = Key.Enter;
-        public Key NavigateBack { get; set; } = Key.Escape;
+        public Key navigateLeft = Key.LeftArrow;
+        public Key navigateRight = Key.RightArrow;
+        public Key navigateUp = Key.UpArrow;
+        public Key navigateDown = Key.DownArrow;
+        public Key navigateEnter = Key.Enter;
+        public Key navigateBack = Key.Escape;
 
     }
 
     [Serializable]
     public class GamepadBinds
     {
-        public GamepadButton MoveAscend { get; set; } = GamepadButton.RightShoulder;
-        public GamepadButton MoveDescend { get; set; } = GamepadButton.LeftShoulder;
+        public GamepadButton moveAscend = GamepadButton.RightShoulder;
+        public GamepadButton moveDescend = GamepadButton.LeftShoulder;
         
-        public GamepadButton ZoomIn { get; set; } = GamepadButton.LeftStick;
-        public GamepadButton ZoomOut { get; set; } = GamepadButton.RightStick;
+        public GamepadButton zoomIn = GamepadButton.LeftStick;
+        public GamepadButton zoomOut = GamepadButton.RightStick;
         
-        public GamepadButton RotateYawLeft { get; set; } = GamepadButton.LeftShoulder;
-        public GamepadButton RotateYawRight { get; set; } = GamepadButton.RightShoulder;
-        public GamepadButton RotatePitchUp { get; set; } = GamepadButton.North;
-        public GamepadButton RotatePitchDown { get; set; } = GamepadButton.South;
-        public GamepadButton RotateRollLeft { get; set; } = GamepadButton.West;
-        public GamepadButton RotateRollRight { get; set; } = GamepadButton.East;
+        public GamepadButton rotateYawLeft = GamepadButton.LeftShoulder;
+        public GamepadButton rotateYawRight = GamepadButton.RightShoulder;
+        public GamepadButton rotatePitchUp = GamepadButton.North;
+        public GamepadButton rotatePitchDown = GamepadButton.South;
+        public GamepadButton rotateRollLeft = GamepadButton.West;
+        public GamepadButton rotateRollRight = GamepadButton.East;
 
-        public GamepadButton NavigateLeft { get; set; } = GamepadButton.DpadLeft;
-        public GamepadButton NavigateRight { get; set; } = GamepadButton.DpadRight;
-        public GamepadButton NavigateUp { get; set; } = GamepadButton.DpadUp;
-        public GamepadButton NavigateDown { get; set; } = GamepadButton.DpadDown;
-        public GamepadButton NavigateEnter { get; set; } = GamepadButton.South;
-        public GamepadButton NavigateBack { get; set; } = GamepadButton.East;
+        public GamepadButton navigateLeft = GamepadButton.DpadLeft;
+        public GamepadButton navigateRight = GamepadButton.DpadRight;
+        public GamepadButton navigateUp = GamepadButton.DpadUp;
+        public GamepadButton navigateDown = GamepadButton.DpadDown;
+        public GamepadButton navigateEnter = GamepadButton.South;
+        public GamepadButton navigateBack = GamepadButton.East;
     }
 
     [Serializable]
     public class GameInputConfig
     {
-        public float MouseRotateCameraSensitivity { get; set; } = 1;
-        public float MouseRotateBlockSensitivity { get; set; } = 5;
+        public float mouseRotateCameraSensitivity = 1;
+        public float mouseRotateBlockSensitivity = 5;
 
-        public float GamepadRotateCameraSensitivity { get; set; } = 1;
+        public float gamepadRotateCameraSensitivity = 1;
 
-        public KeyboardBinds KeyboardBinds { get; set; } = new KeyboardBinds();
-        public GamepadBinds GamepadBinds { get; set; } = new GamepadBinds();
+        public KeyboardBinds keyboardBinds = new KeyboardBinds();
+        public GamepadBinds gamepadBinds = new GamepadBinds();
     }
 
     public static class GameSettings

@@ -47,13 +47,13 @@ namespace Sabotris.UI.Menu
                 : isHovered || isSelected
                     ? ColorActive
                     : _startColor;
-            text.color = Color.Lerp(text.color, color, GameSettings.Settings.UIAnimationSpeed);
+            text.color = Color.Lerp(text.color, color, GameSettings.Settings.uiAnimationSpeed);
         }
 
         private void FixedUpdate()
         {
             if (rectTransform)
-                rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, (isHovered || isSelected) && !isDisabled ? HoverPosition + _startPosition : _startPosition, GameSettings.Settings.UIAnimationSpeed);
+                rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, (isHovered || isSelected) && !isDisabled ? HoverPosition + _startPosition : _startPosition, GameSettings.Settings.uiAnimationSpeed);
         }
 
         public virtual void NavigateSelect()

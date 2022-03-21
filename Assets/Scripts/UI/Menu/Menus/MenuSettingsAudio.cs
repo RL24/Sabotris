@@ -23,16 +23,16 @@ namespace Sabotris.UI.Menu.Menus
                 menuButton.OnClick += OnClickButton;
 
             sliderMasterVolume.OnValueChanged += OnMasterVolumeChanged;
-            sliderMasterVolume.SetValue(GameSettings.Settings.MasterVolume);
+            sliderMasterVolume.SetValue(GameSettings.Settings.masterVolume);
             
             sliderMusicVolume.OnValueChanged += OnMusicVolumeChanged;
-            sliderMusicVolume.SetValue(GameSettings.Settings.MusicVolume);
+            sliderMusicVolume.SetValue(GameSettings.Settings.musicVolume);
             
             sliderUIVolume.OnValueChanged += OnUIVolumeChanged;
-            sliderUIVolume.SetValue(GameSettings.Settings.UIVolume);
+            sliderUIVolume.SetValue(GameSettings.Settings.uiVolume);
             
             sliderGameVolume.OnValueChanged += OnGameVolumeChanged;
-            sliderGameVolume.SetValue(GameSettings.Settings.GameVolume);
+            sliderGameVolume.SetValue(GameSettings.Settings.gameVolume);
         }
 
         protected override void OnDestroy()
@@ -47,22 +47,22 @@ namespace Sabotris.UI.Menu.Menus
 
         private void OnMasterVolumeChanged(object sender, float value)
         {
-            GameSettings.Settings.MasterVolume = value;
+            GameSettings.Settings.masterVolume = value;
         }
 
         private void OnMusicVolumeChanged(object sender, float value)
         {
-            GameSettings.Settings.MusicVolume = value;
+            GameSettings.Settings.musicVolume = value;
         }
 
         private void OnUIVolumeChanged(object sender, float value)
         {
-            GameSettings.Settings.UIVolume = value;
+            GameSettings.Settings.uiVolume = value;
         }
 
         private void OnGameVolumeChanged(object sender, float value)
         {
-            GameSettings.Settings.GameVolume = value;
+            GameSettings.Settings.gameVolume = value;
         }
 
         private void OnClickButton(object sender, EventArgs args)

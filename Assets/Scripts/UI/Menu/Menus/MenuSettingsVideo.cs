@@ -27,13 +27,13 @@ namespace Sabotris.UI.Menu.Menus
 
             if (buttonSsao is MenuToggle toggleSsao)
             {
-                toggleSsao.isToggledOn = GameSettings.Settings.AmbientOcclusion;
+                toggleSsao.isToggledOn = GameSettings.Settings.ambientOcclusion;
                 toggleSsao.OnValueChanged += OnSsaoToggled;
             }
             
             if (buttonMenuDof is MenuCarousel carouselMenuDof)
             {
-                carouselMenuDof.index = GameSettings.Settings.MenuDofMode switch
+                carouselMenuDof.index = GameSettings.Settings.menuDofMode switch
                 {
                     DepthOfFieldMode.Off => 0,
                     DepthOfFieldMode.Gaussian => 1,
@@ -46,7 +46,7 @@ namespace Sabotris.UI.Menu.Menus
 
             if (buttonFullscreen is MenuCarousel carouselFullscreen)
             {
-                carouselFullscreen.index = GameSettings.Settings.FullscreenMode switch
+                carouselFullscreen.index = GameSettings.Settings.fullscreenMode switch
                 {
                     FullScreenMode.FullScreenWindow => 0,
                     FullScreenMode.ExclusiveFullScreen => 1,
@@ -78,28 +78,28 @@ namespace Sabotris.UI.Menu.Menus
 
         private void OnSsaoToggled(object sender, bool active)
         {
-            GameSettings.Settings.AmbientOcclusion = active;
+            GameSettings.Settings.ambientOcclusion = active;
         }
 
         private void OnMenuDofModeChanged(object sender, int index)
         {
-            GameSettings.Settings.MenuDofMode = index switch
+            GameSettings.Settings.menuDofMode = index switch
             {
                 0 => DepthOfFieldMode.Off,
                 1 => DepthOfFieldMode.Gaussian,
                 2 => DepthOfFieldMode.Bokeh,
-                _ => GameSettings.Settings.MenuDofMode
+                _ => GameSettings.Settings.menuDofMode
             };
         }
 
         private void OnFullscreenModeChanged(object sender, int index)
         {
-            GameSettings.Settings.FullscreenMode = index switch
+            GameSettings.Settings.fullscreenMode = index switch
             {
                 0 => FullScreenMode.FullScreenWindow,
                 1 => FullScreenMode.ExclusiveFullScreen,
                 2 => FullScreenMode.Windowed,
-                _ => GameSettings.Settings.FullscreenMode
+                _ => GameSettings.Settings.fullscreenMode
             };
         }
 

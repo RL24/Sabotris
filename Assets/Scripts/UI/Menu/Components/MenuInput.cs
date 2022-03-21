@@ -44,7 +44,7 @@ namespace Sabotris.UI.Menu
             isSelected = inputField.isFocused;
 
             Value = inputField.text;
-            background.color = Color.Lerp(background.color, inputField.isFocused ? SelectedColor : _startBackgroundColor, GameSettings.Settings.UIAnimationSpeed);
+            background.color = Color.Lerp(background.color, inputField.isFocused ? SelectedColor : _startBackgroundColor, GameSettings.Settings.uiAnimationSpeed);
         }
 
         public override void NavigateSelect()

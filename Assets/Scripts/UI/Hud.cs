@@ -43,7 +43,7 @@ namespace Sabotris.UI
 
         private void Update()
         {
-            canvasGroup.alpha += canvasGroup.alpha.Lerp((_playerScoreCache.Any() && (!menuController.IsInMenu || menuController.currentMenu is MenuGameOver)).Int(), GameSettings.Settings.UIAnimationSpeed);
+            canvasGroup.alpha += canvasGroup.alpha.Lerp((_playerScoreCache.Any() && (!menuController.IsInMenu || menuController.currentMenu is MenuGameOver)).Int(), GameSettings.Settings.uiAnimationSpeed);
         }
 
         private void AddEntry(Player player)

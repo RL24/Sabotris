@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System;
+using System.IO;
 using Sabotris.IO;
 using UnityEngine;
 
@@ -7,35 +7,62 @@ namespace Sabotris.Util
 {
     public static class FileUtil
     {
-        private const string GameSettingsFilename = "/sabotris_settings.cfg";
-        private const string GameInputFilename = "/sabotris_input.cfg";
+        private const string GameSettingsFilename = "/sabotris_settings.json";
+        private const string GameInputFilename = "/sabotris_input.json";
+
+        private static string GetFilePath(string filename) => $"{Application.persistentDataPath}{filename}";
+
+        private static string ReadJson(string filename)
+        {
+            try
+            {
+                var reader = new StreamReader(GetFilePath(filename));
+                var json = reader.ReadToEnd();
+                reader.Close();
+                return json;
+            }
+            catch (SystemException e)
+            {
+                Debug.LogError(e.Message);
+            }
+
+            return null;
+        }
+
+        private static void WriteJson(string filename, string json)
+        {
+            try
+            {
+                var writer = new StreamWriter(GetFilePath(filename));
+                writer.Write(json);
+                writer.Close();
+            }
+            catch (SystemException e)
+            {
+                Debug.LogError(e.Message);
+            }
+        }
         
         private static void Save(string filename, object obj)
         {
-            var formatter = new BinaryFormatter();
-            var stream = new FileStream(Application.persistentDataPath + filename, FileMode.Create);
+            if (obj == null)
+                return;
             
-            formatter.Serialize(stream, obj);
-            
-            stream.Close();
+            var json = JsonUtility.ToJson(obj, true);
+            WriteJson(filename, json);
         }
 
-        private static T Load<T>(string path) where T : class
+        private static T Load<T>(string filename) where T : class, new()
         {
-            if (File.Exists(Application.persistentDataPath + path))
+            var type = new T();
+            if (File.Exists(GetFilePath(filename)))
             {
-                var formatter = new BinaryFormatter();
-                var stream = new FileStream(Application.persistentDataPath + path, FileMode.Open);
-
-                var content = formatter.Deserialize(stream) as T;
-                
-                stream.Close();
-
-                return content;
-            }
-
-            Logging.Error(false, "Failed to load file {0}, not found", path);
-            return null;
+                var json = ReadJson(filename);
+                if (json != null)
+                    JsonUtility.FromJsonOverwrite(json, type);
+            } else
+                Logging.Error(false, "Failed to load file {0}, not found", filename);
+            return type;
         }
 
         public static void SaveGameSettings(GameSettingsConfig config)

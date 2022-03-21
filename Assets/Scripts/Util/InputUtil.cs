@@ -13,30 +13,30 @@ namespace Sabotris.Util
 
         private static KeyControl KeyPause => Keyboard.current?.escapeKey;
         
-        private static KeyControl KeyLeft => Tern(GameSettings.Input.KeyboardBinds.MoveLeft);
-        private static KeyControl KeyRight => Tern(GameSettings.Input.KeyboardBinds.MoveRight);
-        private static KeyControl KeyForward => Tern(GameSettings.Input.KeyboardBinds.MoveForward);
-        private static KeyControl KeyBackward => Tern(GameSettings.Input.KeyboardBinds.MoveBack);
-        private static KeyControl KeyAscend => Tern(GameSettings.Input.KeyboardBinds.MoveAscend);
-        private static KeyControl KeyDescend => Tern(GameSettings.Input.KeyboardBinds.MoveDescend);
+        private static KeyControl KeyLeft => Tern(GameSettings.Input.keyboardBinds.moveLeft);
+        private static KeyControl KeyRight => Tern(GameSettings.Input.keyboardBinds.moveRight);
+        private static KeyControl KeyForward => Tern(GameSettings.Input.keyboardBinds.moveForward);
+        private static KeyControl KeyBackward => Tern(GameSettings.Input.keyboardBinds.moveBack);
+        private static KeyControl KeyAscend => Tern(GameSettings.Input.keyboardBinds.moveAscend);
+        private static KeyControl KeyDescend => Tern(GameSettings.Input.keyboardBinds.moveDescend);
         
-        private static KeyControl KeyMoveDown => Tern(GameSettings.Input.KeyboardBinds.MoveDown);
+        private static KeyControl KeyMoveDown => Tern(GameSettings.Input.keyboardBinds.moveDown);
 
-        private static KeyControl KeyRotateYawLeft => Tern(GameSettings.Input.KeyboardBinds.RotateYawLeft);
-        private static KeyControl KeyRotateYawRight => Tern(GameSettings.Input.KeyboardBinds.RotateYawRight);
-        private static KeyControl KeyRotatePitchUp => Tern(GameSettings.Input.KeyboardBinds.RotatePitchUp);
-        private static KeyControl KeyRotatePitchDown => Tern(GameSettings.Input.KeyboardBinds.RotatePitchDown);
-        private static KeyControl KeyRotateRollLeft => Tern(GameSettings.Input.KeyboardBinds.RotateRollLeft);
-        private static KeyControl KeyRotateRollRight => Tern(GameSettings.Input.KeyboardBinds.RotateRollRight);
+        private static KeyControl KeyRotateYawLeft => Tern(GameSettings.Input.keyboardBinds.rotateYawLeft);
+        private static KeyControl KeyRotateYawRight => Tern(GameSettings.Input.keyboardBinds.rotateYawRight);
+        private static KeyControl KeyRotatePitchUp => Tern(GameSettings.Input.keyboardBinds.rotatePitchUp);
+        private static KeyControl KeyRotatePitchDown => Tern(GameSettings.Input.keyboardBinds.rotatePitchDown);
+        private static KeyControl KeyRotateRollLeft => Tern(GameSettings.Input.keyboardBinds.rotateRollLeft);
+        private static KeyControl KeyRotateRollRight => Tern(GameSettings.Input.keyboardBinds.rotateRollRight);
 
         #region UI
 
-        private static KeyControl KeyNavigateLeft => Tern(GameSettings.Input.KeyboardBinds.NavigateLeft);
-        private static KeyControl KeyNavigateRight => Tern(GameSettings.Input.KeyboardBinds.NavigateRight);
-        private static KeyControl KeyNavigateUp => Tern(GameSettings.Input.KeyboardBinds.NavigateUp);
-        private static KeyControl KeyNavigateDown => Tern(GameSettings.Input.KeyboardBinds.NavigateDown);
-        private static KeyControl KeyNavigateEnter => Tern(GameSettings.Input.KeyboardBinds.NavigateEnter);
-        private static KeyControl KeyNavigateBack => Tern(GameSettings.Input.KeyboardBinds.NavigateBack);
+        private static KeyControl KeyNavigateLeft => Tern(GameSettings.Input.keyboardBinds.navigateLeft);
+        private static KeyControl KeyNavigateRight => Tern(GameSettings.Input.keyboardBinds.navigateRight);
+        private static KeyControl KeyNavigateUp => Tern(GameSettings.Input.keyboardBinds.navigateUp);
+        private static KeyControl KeyNavigateDown => Tern(GameSettings.Input.keyboardBinds.navigateDown);
+        private static KeyControl KeyNavigateEnter => Tern(GameSettings.Input.keyboardBinds.navigateEnter);
+        private static KeyControl KeyNavigateBack => Tern(GameSettings.Input.keyboardBinds.navigateBack);
 
         #endregion
 
@@ -44,8 +44,8 @@ namespace Sabotris.Util
 
         #region Mouse
 
-        public static float MouseCameraSensitivity => GameSettings.Input.MouseRotateCameraSensitivity; // * 50
-        public static float MouseRotateSensitivity => GameSettings.Input.MouseRotateBlockSensitivity; // * 10
+        public static float MouseCameraSensitivity => GameSettings.Input.mouseRotateCameraSensitivity; // * 50
+        public static float MouseRotateSensitivity => GameSettings.Input.mouseRotateBlockSensitivity; // * 10
 
         private static Vector2Control MouseDelta => Mouse.current?.delta;
         private static Vector2Control MouseScroll => Mouse.current?.scroll;
@@ -57,7 +57,7 @@ namespace Sabotris.Util
         #region Gamepad
 
         public const float GamepadRotateSensitivity = 90; // / 3.6
-        public static float GamepadCameraSensitivity => GameSettings.Input.GamepadRotateCameraSensitivity; // * 50
+        public static float GamepadCameraSensitivity => GameSettings.Input.gamepadRotateCameraSensitivity; // * 50
 
         private static ButtonControl GamepadPause => Gamepad.current?.startButton;
 
@@ -67,25 +67,25 @@ namespace Sabotris.Util
         private static ButtonControl GamepadLeftTrigger => Gamepad.current?.leftTrigger;
         private static ButtonControl GamepadRightTrigger => Gamepad.current?.rightTrigger;
 
-        private static ButtonControl GamepadAscend => Tern(GameSettings.Input.GamepadBinds.MoveAscend);
-        private static ButtonControl GamepadDescend => Tern(GameSettings.Input.GamepadBinds.MoveDescend);
+        private static ButtonControl GamepadAscend => Tern(GameSettings.Input.gamepadBinds.moveAscend);
+        private static ButtonControl GamepadDescend => Tern(GameSettings.Input.gamepadBinds.moveDescend);
         
-        private static ButtonControl GamepadRotateYawLeft => Tern(GameSettings.Input.GamepadBinds.RotateYawLeft);
-        private static ButtonControl GamepadRotateYawRight => Tern(GameSettings.Input.GamepadBinds.RotateYawRight);
-        private static ButtonControl GamepadRotatePitchUp => Tern(GameSettings.Input.GamepadBinds.RotatePitchUp);
-        private static ButtonControl GamepadRotatePitchDown => Tern(GameSettings.Input.GamepadBinds.RotatePitchDown);
-        private static ButtonControl GamepadRotateRollLeft => Tern(GameSettings.Input.GamepadBinds.RotateRollLeft);
-        private static ButtonControl GamepadRotateRollRight => Tern(GameSettings.Input.GamepadBinds.RotateRollRight);
+        private static ButtonControl GamepadRotateYawLeft => Tern(GameSettings.Input.gamepadBinds.rotateYawLeft);
+        private static ButtonControl GamepadRotateYawRight => Tern(GameSettings.Input.gamepadBinds.rotateYawRight);
+        private static ButtonControl GamepadRotatePitchUp => Tern(GameSettings.Input.gamepadBinds.rotatePitchUp);
+        private static ButtonControl GamepadRotatePitchDown => Tern(GameSettings.Input.gamepadBinds.rotatePitchDown);
+        private static ButtonControl GamepadRotateRollLeft => Tern(GameSettings.Input.gamepadBinds.rotateRollLeft);
+        private static ButtonControl GamepadRotateRollRight => Tern(GameSettings.Input.gamepadBinds.rotateRollRight);
         
-        private static ButtonControl GamepadButtonZoomIn => Tern(GameSettings.Input.GamepadBinds.ZoomIn);
-        private static ButtonControl GamepadButtonZoomOut => Tern(GameSettings.Input.GamepadBinds.ZoomOut);
+        private static ButtonControl GamepadButtonZoomIn => Tern(GameSettings.Input.gamepadBinds.zoomIn);
+        private static ButtonControl GamepadButtonZoomOut => Tern(GameSettings.Input.gamepadBinds.zoomOut);
         
-        private static ButtonControl GamepadNavigateLeft => Tern(GameSettings.Input.GamepadBinds.NavigateLeft);
-        private static ButtonControl GamepadNavigateRight => Tern(GameSettings.Input.GamepadBinds.NavigateRight);
-        private static ButtonControl GamepadNavigateUp => Tern(GameSettings.Input.GamepadBinds.NavigateUp);
-        private static ButtonControl GamepadNavigateDown => Tern(GameSettings.Input.GamepadBinds.NavigateDown);
-        private static ButtonControl GamepadNavigateEnter => Tern(GameSettings.Input.GamepadBinds.NavigateEnter);
-        private static ButtonControl GamepadNavigateBack => Tern(GameSettings.Input.GamepadBinds.NavigateBack);
+        private static ButtonControl GamepadNavigateLeft => Tern(GameSettings.Input.gamepadBinds.navigateLeft);
+        private static ButtonControl GamepadNavigateRight => Tern(GameSettings.Input.gamepadBinds.navigateRight);
+        private static ButtonControl GamepadNavigateUp => Tern(GameSettings.Input.gamepadBinds.navigateUp);
+        private static ButtonControl GamepadNavigateDown => Tern(GameSettings.Input.gamepadBinds.navigateDown);
+        private static ButtonControl GamepadNavigateEnter => Tern(GameSettings.Input.gamepadBinds.navigateEnter);
+        private static ButtonControl GamepadNavigateBack => Tern(GameSettings.Input.gamepadBinds.navigateBack);
 
         #endregion
 

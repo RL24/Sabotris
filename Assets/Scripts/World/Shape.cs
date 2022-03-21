@@ -115,9 +115,9 @@ namespace Sabotris
                 }
             }
 
-            transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.Settings.GameTransitionSpeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.Settings.GameTransitionSpeed);
-            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.Settings.GameTransitionSpeed);
+            transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.Settings.gameTransitionSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.Settings.gameTransitionSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.Settings.gameTransitionSpeed);
 
             // if (_previewShape)
             // {

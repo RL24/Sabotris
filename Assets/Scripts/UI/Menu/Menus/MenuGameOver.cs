@@ -49,7 +49,7 @@ namespace Sabotris.UI.Menu.Menus
 
         public override Vector3 GetCameraPosition()
         {
-            var containers = world.Containers.Values;
+            var containers = world.Containers;
             var center = containers.Average((container) => container.transform.position.x);
             return new Vector3(center, _cameraPosition.y, _cameraPosition.z);
         }

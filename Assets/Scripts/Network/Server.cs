@@ -237,7 +237,11 @@ namespace Sabotris.UI.Menu.Menus
         {
             SendPacketToAll(packet, packet.SenderId);
 
-            if (_playerConnections.Any((entry) => _world.Containers.TryGetValue(entry.Key, out var deadContainer) && !deadContainer.dead))
+            if (_playerConnections.Any((entry) =>
+            {
+                var existing = _world.Containers.Find((container) => container.id == entry.Key);
+                return existing && !existing.dead;
+            }))
                 return;
 
             SendPacketToAll(new PacketGameEnd());

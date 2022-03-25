@@ -2,15 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Audio;
+using Sabotris.Audio;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Powers;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using TMPro;
-using Translations;
+using Sabotris.Translations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -48,6 +49,7 @@ namespace Sabotris
         public bool dead;
 
         public Shape controllingShape;
+        public List<PowerUp> PowerUps = new List<PowerUp>();
 
         private readonly Dictionary<Guid, Shape> _shapes = new Dictionary<Guid, Shape>();
         private readonly Dictionary<Guid, Block> _blocks = new Dictionary<Guid, Block>();
@@ -103,10 +105,10 @@ namespace Sabotris
                     networkController.Client.SendPacket(new PacketShapeCreate
                     {
                         ContainerId = id,
-                        Id = shape.id,
+                        Id = shape.ID,
                         Position = DropPosition,
                         Offsets = shape.Offsets,
-                        Color = shape.color ?? Color.white
+                        Color = shape.BaseColor ?? Color.white
                     });
             }
             else
@@ -145,7 +147,7 @@ namespace Sabotris
                 
                 networkController.Client.SendPacket(new PacketShapeLock
                 {
-                    Id = shape.id,
+                    Id = shape.ID,
                     Offsets = addedBlocks
                 });
             }
@@ -193,9 +195,10 @@ namespace Sabotris
             var shape = Instantiate(shapeTemplate, position, Quaternion.identity);
             shape.name = $"Shape-{shapeId}";
 
-            shape.id = shapeId;
+            shape.ID = shapeId;
             shape.Offsets = offsets;
-            shape.color = color;
+            shape.BaseColor = color;
+            shape.PowerUp = new PowerUp();
 
             shape.gameController = gameController;
             shape.menuController = menuController;
@@ -247,6 +250,11 @@ namespace Sabotris
         {
             StartCoroutine(block.Remove(index, max));
             _blocks.Remove(block.id);
+            if (block.parentShape is {PowerUp: { }} ps)
+            {
+                PowerUps.Add(ps.PowerUp);
+                ps.PowerUp = null;
+            }
         }
 
         public bool DoesCollide(Vector3Int[] absolutePositions)

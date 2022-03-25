@@ -2,7 +2,7 @@ using System;
 using Sabotris.IO;
 using Sabotris.UI.Menu;
 using Steamworks;
-using Translations;
+using Sabotris.Translations;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;

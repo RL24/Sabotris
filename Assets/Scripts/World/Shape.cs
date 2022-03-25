@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Audio;
+using Sabotris.Audio;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Powers;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using UnityEngine;
@@ -16,6 +17,8 @@ namespace Sabotris
 {
     public class Shape : MonoBehaviour
     {
+        private static readonly Color PowerUpColor = Color.HSVToRGB(0, 0, 0.2f);
+        
         public Block blockTemplate;
 
         public GameController gameController;
@@ -25,9 +28,11 @@ namespace Sabotris
         public AudioController audioController;
         public Container parentContainer;
 
-        public Guid id;
+        public Guid ID;
         public (Guid, Vector3Int)[] Offsets { get; set; }
-        public Color? color = Color.white;
+        public Color? BaseColor = Color.white;
+        public bool locked;
+        private PowerUp _powerUp;
 
         [SerializeField] private Vector3Int rawPosition;
         [SerializeField] private Quaternion rawRotation;
@@ -45,8 +50,6 @@ namespace Sabotris
 
         public readonly Dictionary<Guid, Block> Blocks = new Dictionary<Guid, Block>();
 
-        // private GameObject _previewShape;
-
         private void Start()
         {
             RawPosition = Vector3Int.RoundToInt(transform.position - parentContainer.transform.position);
@@ -54,23 +57,12 @@ namespace Sabotris
 
             transform.localScale = Vector3.zero;
 
-            // if (!parentContainer.IsDemo())
-            // {
-            //     _previewShape = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
-            //     _previewShape.transform.localScale = Vector3.one * 0.9f;
-            //     
-            //     _previewShape.transform.SetParent(parentContainer.transform, false);
-            // }
-
             foreach (var (blockId, blockPos) in Offsets)
-            {
                 CreateBlock(blockId, blockPos);
-                // if (_previewShape)
-                //     CreatePreviewBlock(blockId, blockPos);
-            }
 
+            var color = PowerUp == null ? (BaseColor ?? Color.white) : PowerUpColor;
             foreach (var ren in GetComponentsInChildren<Renderer>())
-                ren.material.color = color ?? Color.white;
+                ren.material.color = color;
 
             networkController.Client.RegisterListener(this);
         }
@@ -90,6 +82,10 @@ namespace Sabotris
             if (inputRotateYaw.Same(0, 1f)) inputRotateYaw = InputUtil.GetRotateYaw();
             if (inputRotatePitch.Same(0, 1f)) inputRotatePitch = InputUtil.GetRotatePitch();
             if (inputRotateRoll.Same(0, 1f)) inputRotateRoll = InputUtil.GetRotateRoll();
+            
+            var color = PowerUp == null ? (BaseColor ?? Color.white) : PowerUpColor;
+            foreach (var ren in GetComponentsInChildren<Renderer>())
+                ren.material.color = Color.Lerp(ren.material.color, color, Time.deltaTime);
         }
 
         private void FixedUpdate()
@@ -118,31 +114,15 @@ namespace Sabotris
             transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.Settings.gameTransitionSpeed);
             transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.Settings.gameTransitionSpeed);
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.Settings.gameTransitionSpeed);
-
-            // if (_previewShape)
-            // {
-            //     _previewShape.transform.position = transform.position;
-            //     _previewShape.transform.rotation = rotateActivator;
-            // }
         }
-
-        // private void CreatePreviewBlock(Guid blockId, Vector3Int offset)
-        // {
-        //     var block = Instantiate(blockTemplate, offset, Quaternion.identity);
-        //     block.name = $"Preview-Block-{blockId}";
-        //
-        //     block.id = blockId;
-        //
-        //     block.transform.SetParent(_previewShape.transform, false);
-        //
-        //     block.color = Color.gray;
-        // }
 
         private void CreateBlock(Guid blockId, Vector3Int offset)
         {
             var block = Instantiate(blockTemplate, offset, Quaternion.identity);
             block.name = $"Block-{blockId}";
-            
+
+            block.parentContainer = parentContainer;
+            block.parentShape = this;
             block.id = blockId;
 
             block.transform.SetParent(transform, false);
@@ -166,6 +146,7 @@ namespace Sabotris
 
         private void StopDropping()
         {
+            locked = true;
             _dropTimer.Reset();
             parentContainer.LockShape(this, Offsets.Select((offset) => RawPosition + offset.Item2).ToArray());
         }
@@ -314,7 +295,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.ShapeMove, PacketDirection.Client)]
         public void OnShapeMove(PacketShapeMove packet)
         {
-            if (packet.Id != id)
+            if (packet.Id != ID)
                 return;
 
             RawPosition = packet.Position;
@@ -323,7 +304,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.ShapeRotate, PacketDirection.Client)]
         public void OnShapeRotate(PacketShapeRotate packet)
         {
-            if (packet.Id != id)
+            if (packet.Id != ID)
                 return;
 
             RawRotation = packet.Rotation;
@@ -332,9 +313,10 @@ namespace Sabotris
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Client)]
         public void OnShapeLock(PacketShapeLock packet)
         {
-            if (packet.Id != id)
+            if (packet.Id != ID)
                 return;
 
+            locked = true;
             parentContainer.LockShape(this, packet.Offsets.ToArray());
         }
         
@@ -354,7 +336,7 @@ namespace Sabotris
                     {
                         networkController.Client.SendPacket(new PacketShapeMove
                         {
-                            Id = id,
+                            Id = ID,
                             Position = RawPosition
                         });
                     }
@@ -378,9 +360,21 @@ namespace Sabotris
                 if (IsControlling())
                     networkController.Client.SendPacket(new PacketShapeRotate
                     {
-                        Id = id,
+                        Id = ID,
                         Rotation = RawRotation
                     });
+            }
+        }
+
+        public PowerUp PowerUp
+        {
+            get => _powerUp;
+            set
+            {
+                if (value == PowerUp)
+                    return;
+
+                _powerUp = value;
             }
         }
     }

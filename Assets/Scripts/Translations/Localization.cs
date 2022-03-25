@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Translations.Locales;
+using Sabotris.Translations.Locales;
 
-namespace Translations
+namespace Sabotris.Translations
 {
     public enum LocaleKey
     {

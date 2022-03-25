@@ -1,7 +1,7 @@
 ﻿using Sabotris.IO;
 using UnityEngine;
 
-namespace Audio
+namespace Sabotris.Audio
 {
     public class AudioController : MonoBehaviour
     {

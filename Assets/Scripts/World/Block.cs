@@ -9,8 +9,8 @@ namespace Sabotris
 {
     public class Block : MonoBehaviour
     {
-        private Container _parentContainer;
-
+        public Container parentContainer;
+        public Shape parentShape;
         public Guid id;
         public Color? color;
 
@@ -18,10 +18,16 @@ namespace Sabotris
         public bool doRemove;
         [SerializeField] private Vector3Int rawPosition = ShapeUtil.NullVector3Int;
 
+        private int _index;
+        private float _poweredBubbleSpeed;
+        private float _poweredBubbleAmount;
+        
         private void Start()
         {
-            _parentContainer = GetComponentInParent<Container>();
-
+            _index = Random.Range(0, 100);
+            _poweredBubbleSpeed = Random.Range(2f, 4f);
+            _poweredBubbleAmount = Random.Range(0.05f, 0.15f);
+            
             if (color != null)
             {
                 foreach (var ren in GetComponentsInChildren<Renderer>())
@@ -35,9 +41,13 @@ namespace Sabotris
         private void FixedUpdate()
         {
             if (rawPosition != ShapeUtil.NullVector3Int && shifted)
-                transform.position = Vector3.Lerp(transform.position, _parentContainer.transform.position + rawPosition, GameSettings.Settings.gameTransitionSpeed);
+                transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + rawPosition, GameSettings.Settings.gameTransitionSpeed);
 
-            transform.localScale = Vector3.Lerp(transform.localScale, doRemove ? Vector3.zero : Vector3.one, GameSettings.Settings.gameTransitionSpeed);
+            var bubble = parentShape && parentShape.PowerUp != null && !parentShape.locked;
+            var targetScale = Vector3.one * (!doRemove).Int();
+            if (bubble && !doRemove)
+                targetScale += Vector3.one * (Mathf.Sin((Time.time + _index) * _poweredBubbleSpeed) * _poweredBubbleAmount + _poweredBubbleAmount);
+            transform.localScale = Vector3.Lerp(transform.localScale, targetScale, GameSettings.Settings.gameTransitionSpeed);
 
             if (doRemove && transform.localScale.GetMinValue() < 0.01)
                 Destroy(gameObject);
@@ -53,13 +63,13 @@ namespace Sabotris
         public Vector3Int RawPosition
         {
             get => rawPosition == ShapeUtil.NullVector3Int
-                ? Vector3Int.RoundToInt(transform.position - _parentContainer.transform.position)
+                ? Vector3Int.RoundToInt(transform.position - parentContainer.transform.position)
                 : rawPosition;
             set
             {
                 if (rawPosition == value)
                     return;
-                _parentContainer = GetComponentInParent<Container>();
+                parentContainer = GetComponentInParent<Container>();
                 rawPosition = value;
             }
         }

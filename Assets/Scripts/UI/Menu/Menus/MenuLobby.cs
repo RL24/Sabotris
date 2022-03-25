@@ -5,7 +5,7 @@ using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using Steamworks;
 using TMPro;
-using Translations;
+using Sabotris.Translations;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus

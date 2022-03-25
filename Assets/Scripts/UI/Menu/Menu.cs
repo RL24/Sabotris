@@ -167,7 +167,7 @@ namespace Sabotris.UI.Menu
         public abstract Vector3 GetCameraPosition();
         public abstract Quaternion GetCameraRotation();
 
-        private int SelectedButton
+        protected int SelectedButton
         {
             get => _selectedButton;
             set

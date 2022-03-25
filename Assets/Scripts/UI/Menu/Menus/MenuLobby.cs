@@ -35,9 +35,13 @@ namespace Sabotris.UI.Menu.Menus
                 menuButton.OnClick += OnClickButton;
 
             inputChatMessage.OnSubmitEvent += OnSubmitChatMessage;
-            
+
             if (!networkController.Server.Running)
+            {
+                SelectedButton = -1;
+                buttons.Remove(buttonStartGame);
                 Destroy(buttonStartGame.gameObject);
+            }
 
             networkController.Client.RegisterListener(this);
 

@@ -39,6 +39,7 @@ namespace Sabotris
         public CameraController cameraController;
         public AudioController audioController;
 
+        public Vector3 Position { get; set; }
         public GameObject floor;
         public TMP_Text nameText, dropSpeedText;
 
@@ -84,6 +85,8 @@ namespace Sabotris
         {
             if (dropSpeedText)
                 dropSpeedText.text = Localization.Translate(TranslationKey.GameContainerDropSpeed, Math.Round((DropSpeedMs == 0 ? 100 : 1000f / DropSpeedMs) * 10) / 10);
+
+            transform.position = Vector3.Lerp(transform.position, Position, GameSettings.Settings.gameTransitionSpeed * 0.5f);
         }
 
         public void StartDropping((Guid, Vector3Int)[] offsets = null)

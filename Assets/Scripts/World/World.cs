@@ -40,10 +40,6 @@ namespace Sabotris
         {
             if (InputUtil.ShouldPause() && !menuController.IsInMenu && networkController.Client is {IsConnected: true})
                 menuController.OpenMenu(menuPause);
-
-            var i = 0;
-            foreach (var container in Containers)
-                container.transform.position = Vector3.Lerp(container.transform.position, GetContainerPosition(i++), GameSettings.Settings.gameTransitionSpeed * 0.5f);   
         }
 
         private void ConnectedToServerEvent(object sender, HSteamNetConnection? connection)
@@ -85,6 +81,8 @@ namespace Sabotris
             container.cameraController = cameraController;
             container.audioController = audioController;
 
+            container.Position = container.transform.position;
+
             container.transform.SetParent(transform, false);
 
             Containers.Add(container);
@@ -103,6 +101,10 @@ namespace Sabotris
         {
             Destroy(container.gameObject);
             Containers.Remove(container);
+            
+            var i = 0;
+            foreach (var c in Containers)
+                c.Position = GetContainerPosition(i++);
         }
 
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]

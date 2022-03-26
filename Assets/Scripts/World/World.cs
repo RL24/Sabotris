@@ -26,7 +26,7 @@ namespace Sabotris
         public DemoContainer demoContainer;
         public Menu menuMain, menuPause, menuGameOver;
 
-        public readonly Dictionary<ulong, Container> Containers = new Dictionary<ulong, Container>();
+        public readonly List<Container> Containers = new List<Container>();
 
         private void Start()
         {
@@ -55,8 +55,8 @@ namespace Sabotris
         private void DisconnectedFromServerEvent(object sender, DisconnectReason disconnectReason)
         {
             gameController.ControllingContainer = null;
-            foreach (var id in Containers.Keys.ToArray())
-                RemoveContainer(id);
+            foreach (var container in Containers.ToArray())
+                RemoveContainer(container);
             demoContainer.gameObject.SetActive(true);
 
             menuController.OpenMenu(menuMain);
@@ -64,10 +64,11 @@ namespace Sabotris
 
         private Container CreateContainer(ulong id, string playerName)
         {
-            if (Containers.ContainsKey(id))
-                return Containers[id];
+            var existingContainer = Containers.Find((c) => c.id == id);
+            if (existingContainer)
+                return existingContainer;
 
-            var container = Instantiate(containerTemplate, Vector3.right * (Containers.Count * ((networkController.Client?.LobbyData?.PlayFieldSize ?? 5) * 2 + 4)), Quaternion.identity);
+            var container = Instantiate(containerTemplate, GetContainerPosition(Containers.Count), Quaternion.identity);
             container.name = $"Container-{playerName}-{id}";
 
             container.id = id;
@@ -80,19 +81,30 @@ namespace Sabotris
             container.cameraController = cameraController;
             container.audioController = audioController;
 
+            container.Position = container.transform.position;
+
             container.transform.SetParent(transform, false);
 
-            Containers.Add(id, container);
+            Containers.Add(container);
 
             return container;
         }
 
         private void RemoveContainer(ulong id)
         {
-            if (Containers.TryGetValue(id, out var container))
-                Destroy(container.gameObject);
+            var containers = Containers.FindAll((c) => c.id == id);
+            foreach (var container in containers)
+                RemoveContainer(container);
+        }
 
-            Containers.Remove(id);
+        private void RemoveContainer(Container container)
+        {
+            Destroy(container.gameObject);
+            Containers.Remove(container);
+            
+            var i = 0;
+            foreach (var c in Containers)
+                c.Position = GetContainerPosition(i++);
         }
 
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]
@@ -141,5 +153,7 @@ namespace Sabotris
             RemoveContainer(packet.Id);
             audioController.playerLeaveLobby.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetPlayerJoinLeavePitch());
         }
+
+        private Vector3 GetContainerPosition(int index) => Vector3.right * (index * ((networkController.Client?.LobbyData?.PlayFieldSize ?? 5) * 2 + 4));
     }
 }

@@ -24,7 +24,7 @@ namespace Sabotris.UI.Menu
 
         protected override void Update()
         {
-            _isToggledOnLerp += _isToggledOnLerp.Lerp(isToggledOn.Int(), GameSettings.Settings.uiAnimationSpeed);
+            _isToggledOnLerp += _isToggledOnLerp.Lerp(isToggledOn.Int(), GameSettings.Settings.uiAnimationSpeed.Delta());
             checkbox.color = new Color(checkbox.color.r, checkbox.color.g, checkbox.color.b, _isToggledOnLerp);
 
             base.Update();

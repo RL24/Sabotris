@@ -11,6 +11,7 @@ using Sabotris.Powers;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
 namespace Sabotris
@@ -32,7 +33,7 @@ namespace Sabotris
         public (Guid, Vector3Int)[] Offsets { get; set; }
         public Color? BaseColor = Color.white;
         public bool locked;
-        private PowerUp _powerUp;
+        public PowerUp PowerUp;
 
         [SerializeField] private Vector3Int rawPosition;
         [SerializeField] private Quaternion rawRotation;
@@ -74,6 +75,10 @@ namespace Sabotris
 
         private void Update()
         {
+            var color = PowerUp == null ? (BaseColor ?? Color.white) : PowerUpColor;
+            foreach (var ren in GetComponentsInChildren<Renderer>())
+                ren.material.color = Color.Lerp(ren.material.color, color, GameSettings.Settings.gameTransitionSpeed.Delta());
+            
             if (!IsControlling())
                 return;
 
@@ -82,10 +87,6 @@ namespace Sabotris
             if (inputRotateYaw.Same(0, 1f)) inputRotateYaw = InputUtil.GetRotateYaw();
             if (inputRotatePitch.Same(0, 1f)) inputRotatePitch = InputUtil.GetRotatePitch();
             if (inputRotateRoll.Same(0, 1f)) inputRotateRoll = InputUtil.GetRotateRoll();
-            
-            var color = PowerUp == null ? (BaseColor ?? Color.white) : PowerUpColor;
-            foreach (var ren in GetComponentsInChildren<Renderer>())
-                ren.material.color = Color.Lerp(ren.material.color, color, Time.deltaTime);
         }
 
         private void FixedUpdate()
@@ -111,9 +112,9 @@ namespace Sabotris
                 }
             }
 
-            transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.Settings.gameTransitionSpeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.Settings.gameTransitionSpeed);
-            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.Settings.gameTransitionSpeed);
+            transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
+            transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
         }
 
         private void CreateBlock(Guid blockId, Vector3Int offset)
@@ -363,18 +364,6 @@ namespace Sabotris
                         Id = ID,
                         Rotation = RawRotation
                     });
-            }
-        }
-
-        public PowerUp PowerUp
-        {
-            get => _powerUp;
-            set
-            {
-                if (value == PowerUp)
-                    return;
-
-                _powerUp = value;
             }
         }
     }

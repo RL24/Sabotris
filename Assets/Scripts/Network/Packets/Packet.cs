@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sabotris.Powers;
 using Sabotris.Util;
 using Steamworks;
 using UnityEngine;
@@ -74,6 +75,7 @@ namespace Sabotris.Network.Packets
             if (type == typeof(Player)) return new Player(incoming.ReadUInt64(), incoming.ReadString());
             if (type == typeof(PlayerScore)) return new PlayerScore(incoming.ReadInt32(), incoming.ReadInt32());
             if (type == typeof(Color)) return new Color(incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat());
+            if (type == typeof(Power)) return (Power) incoming.ReadInt16();
 
             if (type == typeof(bool[])) return ReadArray<bool>(incoming, type.GetElementType());
             if (type == typeof(byte[])) return ReadArray<byte>(incoming, type.GetElementType());
@@ -97,6 +99,7 @@ namespace Sabotris.Network.Packets
             if (type == typeof(Player[])) return ReadArray<Player>(incoming, type.GetElementType());
             if (type == typeof(PlayerScore[])) return ReadArray<PlayerScore>(incoming, type.GetElementType());
             if (type == typeof(Color[])) return ReadArray<Color>(incoming, type.GetElementType());
+            if (type == typeof(Power[])) return ReadArray<Power>(incoming, type.GetElementType());
 
             if (type == typeof(Dictionary<long, PlayerScore>)) return ReadDictionary<long, PlayerScore>(incoming, type.GetGenericArguments());
 
@@ -216,6 +219,12 @@ namespace Sabotris.Network.Packets
                     break;
                 }
 
+                case Power parsed:
+                {
+                    outgoing.Write((int) parsed);
+                    break;
+                }
+
                 case IEnumerable<bool> parsed:
                     WriteArray(outgoing, parsed);
                     break;
@@ -277,6 +286,9 @@ namespace Sabotris.Network.Packets
                     WriteArray(outgoing, parsed);
                     break;
                 case IEnumerable<Color> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<Power> parsed:
                     WriteArray(outgoing, parsed);
                     break;
 

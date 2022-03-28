@@ -1,4 +1,5 @@
 ﻿using System;
+using Sabotris.Powers;
 using UnityEngine;
 
 namespace Sabotris.Network.Packets.Game
@@ -12,5 +13,6 @@ namespace Sabotris.Network.Packets.Game
         public Vector3Int Position { get; set; }
         public (Guid, Vector3Int)[] Offsets { get; set; }
         public Color Color { get; set; }
+        public Power Power { get; set; }
     }
 }

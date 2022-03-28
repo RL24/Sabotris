@@ -111,14 +111,14 @@ namespace Sabotris
 
             var toPosition = cameraPosition;
             var toRotation = cameraRotation;
-            var animationTime = GameSettings.Settings.gameCameraSpeed;
+            var animationTime = GameSettings.Settings.gameCameraSpeed.FixedDelta();
 
             if (menuController.IsInMenu)
             {
                 var targetMenu = menuController.GetTargetMenu();
                 toPosition = targetMenu.GetCameraPosition();
                 toRotation = targetMenu.GetCameraRotation();
-                animationTime = GameSettings.Settings.menuCameraSpeed;
+                animationTime = GameSettings.Settings.menuCameraSpeed.FixedDelta();
             }
 
             if (IsSpectating)

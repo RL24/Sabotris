@@ -87,5 +87,15 @@ namespace Sabotris.Util
             self.pitch = pitch ?? self.pitch;
             self.Play();
         }
+
+        public static float Delta(this float self)
+        {
+            return self * (Time.deltaTime * 50);
+        }
+
+        public static float FixedDelta(this float self)
+        {
+            return self * (Time.fixedDeltaTime * 50);
+        }
     }
 }

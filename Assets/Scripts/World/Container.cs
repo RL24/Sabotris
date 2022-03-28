@@ -87,8 +87,11 @@ namespace Sabotris
         {
             if (dropSpeedText)
                 dropSpeedText.text = Localization.Translate(TranslationKey.GameContainerDropSpeed, Math.Round((DropSpeedMs == 0 ? 100 : 1000f / DropSpeedMs) * 10) / 10);
+        }
 
-            transform.position = Vector3.Lerp(transform.position, Position, GameSettings.Settings.gameTransitionSpeed * 0.5f);
+        private void FixedUpdate()
+        {
+            transform.position = Vector3.Lerp(transform.position, Position, GameSettings.Settings.gameTransitionSpeed.FixedDelta() * 0.5f);
         }
 
         public void StartDropping((Guid, Vector3Int)[] offsets = null)
@@ -100,7 +103,11 @@ namespace Sabotris
 
             if (!DoesCollide(offsets.Select((offset) => offset.Item2 + DropPosition).ToArray()))
             {
-                var shape = CreateShape(Guid.NewGuid(), DropPosition, offsets, Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1));
+                var power = Power.None;
+                if (Random.Range(0f, 1f) > 0.5f)
+                    power = (Power) Random.Range(0, (int) Power.Count);
+                
+                var shape = CreateShape(Guid.NewGuid(), DropPosition, offsets, Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1), power);
                 shape.StartDropping();
                 controllingShape = shape;
 
@@ -111,7 +118,8 @@ namespace Sabotris
                         Id = shape.ID,
                         Position = DropPosition,
                         Offsets = shape.Offsets,
-                        Color = shape.BaseColor ?? Color.white
+                        Color = shape.BaseColor ?? Color.white,
+                        Power = power
                     });
             }
             else
@@ -193,7 +201,7 @@ namespace Sabotris
             StartDropping(IsDemo() ? (this as DemoContainer)?.GetNextOffsets() : null);
         }
 
-        private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null)
+        private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null, Power power = Power.None)
         {
             var shape = Instantiate(shapeTemplate, position, Quaternion.identity);
             shape.name = $"Shape-{shapeId}";
@@ -201,7 +209,8 @@ namespace Sabotris
             shape.ID = shapeId;
             shape.Offsets = offsets;
             shape.BaseColor = color;
-            shape.PowerUp = new PowerUp();
+            if (power != Power.None)
+                shape.PowerUp = new PowerUp(power);
 
             shape.gameController = gameController;
             shape.menuController = menuController;
@@ -253,11 +262,12 @@ namespace Sabotris
         {
             StartCoroutine(block.Remove(index, max));
             _blocks.Remove(block.id);
-            if (block.parentShape is {PowerUp: { }} ps)
-            {
-                PowerUps.Add(ps.PowerUp);
-                ps.PowerUp = null;
-            }
+            if (!(block.parentShape is {PowerUp: { }} ps))
+                return;
+            
+            Debug.Log("Has parent and power");
+            PowerUps.Add(ps.PowerUp);
+            ps.PowerUp = null;
         }
 
         public bool DoesCollide(Vector3Int[] absolutePositions)
@@ -306,7 +316,7 @@ namespace Sabotris
                     networkController.Client.SendPacket(new PacketPlayerScore
                     {
                         Id = id,
-                        Score = new PlayerScore(_score.Score + (deletedBlocks.Count * clearingLayers.Count), _score.ClearedLayers)
+                        Score = new PlayerScore(_score.Score + (deletedBlocks.Count * clearingLayers.Count), _score.ClearedLayers),
                     });
             }
 
@@ -347,7 +357,7 @@ namespace Sabotris
             if (packet.ContainerId != id)
                 return;
 
-            CreateShape(packet.Id, packet.Position, packet.Offsets, packet.Color);
+            CreateShape(packet.Id, packet.Position, packet.Offsets, packet.Color, packet.Power);
         }
 
         [PacketListener(PacketTypeId.LayerMove, PacketDirection.Client)]

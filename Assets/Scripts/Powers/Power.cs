@@ -2,12 +2,14 @@
 {
     public enum Power
     {
+        None,
         RandomBlock,
         ClearLayer,
         AddLayer,
         AdjacentExplode,
         XExplode,
         YExplode,
-        ZExplode
+        ZExplode,
+        Count
     }
 }

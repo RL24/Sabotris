@@ -41,13 +41,13 @@ namespace Sabotris
         private void FixedUpdate()
         {
             if (rawPosition != ShapeUtil.NullVector3Int && shifted)
-                transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + rawPosition, GameSettings.Settings.gameTransitionSpeed);
+                transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + rawPosition, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
 
             var bubble = parentShape && parentShape.PowerUp != null && !parentShape.locked;
             var targetScale = Vector3.one * (!doRemove).Int();
             if (bubble && !doRemove)
                 targetScale += Vector3.one * (Mathf.Sin((Time.time + _index) * _poweredBubbleSpeed) * _poweredBubbleAmount + _poweredBubbleAmount);
-            transform.localScale = Vector3.Lerp(transform.localScale, targetScale, GameSettings.Settings.gameTransitionSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, targetScale, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
 
             if (doRemove && transform.localScale.GetMinValue() < 0.01)
                 Destroy(gameObject);

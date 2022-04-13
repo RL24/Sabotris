@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Numerics;
 using Sabotris.IO;
 using Sabotris.UI.Menu;
@@ -14,6 +17,7 @@ namespace Sabotris
     {
         public GameController gameController;
         public MenuController menuController;
+        public ContainerSelectorController containerSelector;
 
         public new Camera camera;
         private Vector3 _defaultPosition;
@@ -112,7 +116,14 @@ namespace Sabotris
             var toPosition = cameraPosition;
             var toRotation = cameraRotation;
             var animationTime = GameSettings.Settings.gameCameraSpeed.FixedDelta();
-
+            
+            if (containerSelector.Active)
+            {
+                toPosition = containerSelector.position;
+                toRotation = containerSelector.rotation;
+                animationTime = GameSettings.Settings.menuCameraSpeed.FixedDelta();
+            }
+            
             if (menuController.IsInMenu)
             {
                 var targetMenu = menuController.GetTargetMenu();
@@ -120,12 +131,30 @@ namespace Sabotris
                 toRotation = targetMenu.GetCameraRotation();
                 animationTime = GameSettings.Settings.menuCameraSpeed.FixedDelta();
             }
-
+            
             if (IsSpectating)
                 animationTime *= 0.5f;
             
             cameraTransform.position = Vector3.Lerp(cameraTransformPosition, toPosition, animationTime);
             cameraTransform.rotation = Quaternion.Lerp(cameraTransformRotation, toRotation, animationTime);
+        }
+
+        public void SetSelectingContainer(Func<Container, Container, IEnumerator> selectedContainerFunc, Container activatingContainer, Container[] exclusions = null)
+        {
+            containerSelector.activatingContainer = activatingContainer;
+            containerSelector.exclusions = exclusions;
+            containerSelector.SelectedContainerFunc = (selectedContainer) =>
+            {
+                StartCoroutine(OnSelectedContainer(selectedContainerFunc, activatingContainer, selectedContainer));
+            };
+            containerSelector.Active = true;
+        }
+
+        private IEnumerator OnSelectedContainer(Func<Container, Container, IEnumerator> selectedContainerFunc, Container activatingContainer, Container selectedContainer)
+        {
+            yield return selectedContainerFunc?.Invoke(activatingContainer, selectedContainer);
+            containerSelector.Active = false;
+            activatingContainer.StartDropping();
         }
 
         public void ResetCamera()

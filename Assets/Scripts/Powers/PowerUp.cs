@@ -1,19 +1,9 @@
-﻿using UnityEngine;
-
-namespace Sabotris.Powers
+﻿namespace Sabotris.Powers
 {
-    public class PowerUp
+    public abstract class PowerUp
     {
-        public Power Power { get; set; }
-
-        public PowerUp()
-        {
-            Power = (Power) Random.Range(0, 5);
-        }
+        public abstract Power GetPower();
         
-        public PowerUp(Power power)
-        {
-            Power = power;
-        }
+        public abstract void Use(Container activatingContainer);
     }
 }

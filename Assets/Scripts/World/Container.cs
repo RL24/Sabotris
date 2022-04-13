@@ -13,6 +13,7 @@ using Sabotris.Util;
 using TMPro;
 using Sabotris.Translations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 namespace Sabotris
@@ -32,6 +33,7 @@ namespace Sabotris
 
         public Shape shapeTemplate;
         public Block blockTemplate;
+        public FallingBlock fallingBlockTemplate;
 
         public World world;
         public GameController gameController;
@@ -94,7 +96,30 @@ namespace Sabotris
             transform.position = Vector3.Lerp(transform.position, Position, GameSettings.Settings.gameTransitionSpeed.FixedDelta() * 0.5f);
         }
 
-        public void StartDropping((Guid, Vector3Int)[] offsets = null)
+        public Vector3Int GetRandomStartingPosition()
+        {
+            var x = Random.Range(-Radius, Radius);
+            var z = Random.Range(-Radius, Radius);
+            return DropPosition + new Vector3Int(x, 0, z);
+        }
+        
+        public void StartDropping()
+        {
+            if (!IsDemo() && PowerUps.Count > 0)
+            {
+                var powerUp = PowerUps.LastOrDefault();
+                if (powerUp != null)
+                {
+                    PowerUps.Remove(powerUp);
+                    powerUp.Use(this);
+                    return;
+                }
+            }
+            
+            StartDropping(IsDemo() ? (this as DemoContainer)?.GetNextOffsets() : null);
+        }
+
+        public void StartDropping((Guid, Vector3Int)[] offsets)
         {
             if ((gameController.ControllingContainer != this && !IsDemo()) || dead)
                 return;
@@ -103,11 +128,7 @@ namespace Sabotris
 
             if (!DoesCollide(offsets.Select((offset) => offset.Item2 + DropPosition).ToArray()))
             {
-                var power = Power.None;
-                if (Random.Range(0f, 1f) > 0.5f)
-                    power = (Power) Random.Range(0, (int) Power.Count);
-                
-                var shape = CreateShape(Guid.NewGuid(), DropPosition, offsets, Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1), power);
+                var shape = CreateShape(Guid.NewGuid(), DropPosition, offsets, ColorUtil.GenerateColor());
                 shape.StartDropping();
                 controllingShape = shape;
 
@@ -119,7 +140,7 @@ namespace Sabotris
                         Position = DropPosition,
                         Offsets = shape.Offsets,
                         Color = shape.BaseColor ?? Color.white,
-                        Power = power
+                        Power = shape.PowerUp?.GetPower() ?? Power.None
                     });
             }
             else
@@ -132,10 +153,7 @@ namespace Sabotris
                 dead = true;
 
                 if (!IsDemo())
-                    networkController.Client.SendPacket(new PacketPlayerDead
-                    {
-                        Id = id
-                    });
+                    networkController.Client.SendPacket(new PacketPlayerDead {Id = id});
             }
         }
 
@@ -166,122 +184,22 @@ namespace Sabotris
             StartCoroutine(StartClearingLayers(addedBlocks));
         }
 
-        private IEnumerator StartClearingLayers(Vector3Int[] addedBlocks)
+        private IEnumerator StartClearingLayers(Vector3Int[] addedBlocks, bool ignoreEmptySpaces = false)
         {
             yield return new WaitForSeconds(ClearLayerSpeed);
 
-            var clearedLayers = ClearLayers(addedBlocks);
+            var clearedLayers = ClearLayers(addedBlocks, ignoreEmptySpaces);
 
             if (clearedLayers.Count > 0)
-            {
-                yield return new WaitForSeconds(ClearedLayerDropSpeed);
-
-                clearedLayers.Sort((a, b) => b.CompareTo(a));
-                foreach (var layer in clearedLayers)
-                    foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
-                    {
-                        block.RawPosition += Vector3Int.down;
-                        block.shifted = true;
-                    }
-
-                if (!IsDemo())
-                {
-                    audioController.layerDelete.PlayModifiedSound(AudioController.GetGameVolume());
-                    
-                    networkController.Client.SendPacket(new PacketLayerMove
-                    {
-                        ContainerId = id,
-                        Layers = clearedLayers.ToArray()
-                    });
-                }
-            }
+                yield return DropLayers(clearedLayers);
 
             yield return new WaitForSeconds(DropNewShapeSpeed);
 
-            StartDropping(IsDemo() ? (this as DemoContainer)?.GetNextOffsets() : null);
+            if (!ignoreEmptySpaces)
+                StartDropping();
         }
-
-        private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null, Power power = Power.None)
-        {
-            var shape = Instantiate(shapeTemplate, position, Quaternion.identity);
-            shape.name = $"Shape-{shapeId}";
-
-            shape.ID = shapeId;
-            shape.Offsets = offsets;
-            shape.BaseColor = color;
-            if (power != Power.None)
-                shape.PowerUp = new PowerUp(power);
-
-            shape.gameController = gameController;
-            shape.menuController = menuController;
-            shape.networkController = networkController;
-            shape.cameraController = cameraController;
-            shape.audioController = audioController;
-            shape.parentContainer = this;
-
-            shape.transform.SetParent(transform, false);
-
-            _shapes.Add(shapeId, shape);
-
-            return shape;
-        }
-
-        public void RemoveShape(Guid shapeId)
-        {
-            if (!_shapes.TryGetValue(shapeId, out var shape))
-                return;
-
-            Destroy(shape.gameObject);
-            _shapes.Remove(shapeId);
-        }
-
-        private void CreateBlock(Vector3Int position, Color color)
-        {
-            var blockId = Guid.NewGuid();
-            var block = Instantiate(blockTemplate, position, Quaternion.identity);
-            block.name = $"Block-{blockId}";
-            block.RawPosition = position;
-            block.color = color;
-
-            block.id = blockId;
-
-            block.transform.SetParent(transform, false);
-
-            _blocks.Add(blockId, block);
-        }
-
-        private void RemoveBlock(Guid blockId, int index = -1, int max = -1)
-        {
-            if (!_blocks.TryGetValue(blockId, out var block))
-                return;
-
-            RemoveBlock(block, index, max);
-        }
-
-        private void RemoveBlock(Block block, int index = -1, int max = -1)
-        {
-            StartCoroutine(block.Remove(index, max));
-            _blocks.Remove(block.id);
-            if (!(block.parentShape is {PowerUp: { }} ps))
-                return;
-            
-            Debug.Log("Has parent and power");
-            PowerUps.Add(ps.PowerUp);
-            ps.PowerUp = null;
-        }
-
-        public bool DoesCollide(Vector3Int[] absolutePositions)
-        {
-            if (absolutePositions.Any((pos) => pos.IsOutside(BottomLeft, TopRight)))
-                return true;
-            foreach (var block in _blocks.Values)
-                foreach (var pos in absolutePositions)
-                    if (pos.Equals(block.RawPosition))
-                        return true;
-            return false;
-        }
-
-        private List<int> ClearLayers(IEnumerable<Vector3Int> addedBlocks)
+        
+        private List<int> ClearLayers(IEnumerable<Vector3Int> addedBlocks, bool ignoreEmptySpaces = false)
         {
             var distinctLayers = addedBlocks.Select((vec) => vec.y).Distinct().ToArray();
             var clearingLayers = new List<int>();
@@ -290,7 +208,7 @@ namespace Sabotris
             {
                 var blocksInLayer = _blocks.Count((block) => block.Value.RawPosition.y == layer);
                 var minBlockCountToClear = Math.Pow(Radius * 2 + 1, 2);
-                if (blocksInLayer < minBlockCountToClear)
+                if (blocksInLayer < minBlockCountToClear && !ignoreEmptySpaces)
                     continue;
 
                 var blocksToRemove = _blocks.Where((block) => block.Value.RawPosition.y == layer).Select((block) => block.Value).ToArray();
@@ -323,6 +241,126 @@ namespace Sabotris
             return clearingLayers;
         }
 
+        private IEnumerator DropLayers(List<int> clearedLayers)
+        {
+            yield return new WaitForSeconds(ClearedLayerDropSpeed);
+
+            clearedLayers.Sort((a, b) => b.CompareTo(a));
+            foreach (var layer in clearedLayers)
+            foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
+            {
+                block.RawPosition += Vector3Int.down;
+                block.shifted = true;
+            }
+
+            if (!IsDemo())
+            {
+                audioController.layerDelete.PlayModifiedSound(AudioController.GetGameVolume());
+                    
+                networkController.Client.SendPacket(new PacketLayerMove
+                {
+                    ContainerId = id,
+                    Layers = clearedLayers.ToArray()
+                });
+            }
+        }
+
+        private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null, Power power = Power.None)
+        {
+            var shape = Instantiate(shapeTemplate, position, Quaternion.identity);
+            shape.name = $"Shape-{shapeId}";
+
+            shape.ID = shapeId;
+            shape.Offsets = offsets;
+            shape.BaseColor = color;
+            if (!IsDemo())
+                shape.PowerUp = PowerUpFactory.CreatePowerUp(power);
+
+            shape.gameController = gameController;
+            shape.menuController = menuController;
+            shape.networkController = networkController;
+            shape.cameraController = cameraController;
+            shape.audioController = audioController;
+            shape.parentContainer = this;
+
+            shape.transform.SetParent(transform, false);
+
+            _shapes.Add(shapeId, shape);
+
+            return shape;
+        }
+
+        public void RemoveShape(Guid shapeId)
+        {
+            if (!_shapes.TryGetValue(shapeId, out var shape))
+                return;
+
+            Destroy(shape.gameObject);
+            _shapes.Remove(shapeId);
+        }
+
+        private void CreateBlock(Vector3Int position, Color color)
+        {
+            var blockId = Guid.NewGuid();
+            var block = Instantiate(blockTemplate, position, Quaternion.identity);
+            block.name = $"Block-{blockId}";
+            block.RawPosition = position;
+            block.color = color;
+            block.parentContainer = this;
+
+            block.id = blockId;
+
+            block.transform.SetParent(transform, false);
+
+            _blocks.Add(blockId, block);
+        }
+
+        private void RemoveBlock(Guid blockId, int index = -1, int max = -1)
+        {
+            if (!_blocks.TryGetValue(blockId, out var block))
+                return;
+
+            RemoveBlock(block, index, max);
+        }
+
+        public FallingBlock CreateFallingBlock(Guid blockId, Vector3Int position, Color color)
+        {
+            var block = Instantiate(fallingBlockTemplate, position, Quaternion.identity);
+            block.name = $"FallingBlock-{blockId}";
+            block.position = position;
+            block.color = color;
+            block.parentContainer = this;
+
+            block.id = blockId;
+
+            block.transform.SetParent(transform, false);
+            
+            return block;
+        }
+
+        private void RemoveBlock(Block block, int index = -1, int max = -1)
+        {
+            StartCoroutine(block.Remove(index, max));
+            _blocks.Remove(block.id);
+            if (!(block.parentShape is {PowerUp: { }} ps))
+                return;
+
+            if (!IsDemo() && gameController.ControllingContainer == this)
+                PowerUps.Add(ps.PowerUp);
+            ps.PowerUp = null;
+        }
+
+        public bool DoesCollide(Vector3Int[] absolutePositions)
+        {
+            if (absolutePositions.Any((pos) => pos.IsOutside(BottomLeft, TopRight)))
+                return true;
+            foreach (var block in _blocks.Values)
+                foreach (var pos in absolutePositions)
+                    if (pos.Equals(block.RawPosition))
+                        return true;
+            return false;
+        }
+
         private IEnumerator CreateEndBlocksForScore()
         {
             var score = _score.Score;
@@ -335,13 +373,25 @@ namespace Sabotris
             for (var x = min.x; x <= max.x && score > 0; x++)
             {
                 var pos = new Vector3Int(x * (Mathf.Repeat(y, 2) == 0 ? -1 : 1) * (Mathf.Repeat(z, 2) == 0 ? 1 : -1), y, z);
-                var color = Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1);
+                var color = ColorUtil.GenerateColor();
 
                 CreateBlock(pos, color);
                 score--;
 
                 yield return new WaitForSeconds(0.075f);
             }
+        }
+
+        public Vector3Int GetDropToPosition(Vector3Int from)
+        {
+            var to = new Vector3Int(from.x, from.y, from.z);
+            while (to.y > 1)
+            {
+                if (DoesCollide(new[] {to}))
+                    break;
+                to += Vector3Int.down;
+            }
+            return to;
         }
 
         [PacketListener(PacketTypeId.GameEnd, PacketDirection.Client)]
@@ -374,6 +424,15 @@ namespace Sabotris
                 }
         }
 
+        [PacketListener(PacketTypeId.LayerClear, PacketDirection.Client)]
+        public void OnLayerClear(PacketLayerClear packet)
+        {
+            if (packet.ContainerId != id)
+                return;
+
+            StartCoroutine(StartClearingLayers(new[] {new Vector3Int(0, packet.Layer, 0)}, true));
+        }
+
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Client)]
         public void OnBlockBulkRemove(PacketBlockBulkRemove packet)
         {
@@ -382,6 +441,15 @@ namespace Sabotris
 
             foreach (var blockId in packet.Ids)
                 RemoveBlock(blockId);
+        }
+
+        [PacketListener(PacketTypeId.FallingBlockCreate, PacketDirection.Client)]
+        public void OnFallingBlockCreate(PacketFallingBlockCreate packet)
+        {
+            if (packet.ContainerId != id)
+                return;
+            
+            CreateFallingBlock(packet.Id, packet.Position, packet.Color);
         }
 
         [PacketListener(PacketTypeId.PlayerDead, PacketDirection.Client)]

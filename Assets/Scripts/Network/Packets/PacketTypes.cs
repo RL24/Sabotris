@@ -17,8 +17,11 @@ namespace Sabotris.Network.Packets
         ShapeLock = 0x23,
 
         BlockBulkRemove = 0x31,
+        FallingBlockCreate = 0x32,
 
         LayerMove = 0x40,
+        LayerClear = 0x41,
+        LayerAdd = 0x42,
 
         PlayerConnected = 0x90,
         PlayerDisconnected = 0x91,
@@ -55,8 +58,11 @@ namespace Sabotris.Network.Packets
         public static readonly PacketType ShapeLock = new PacketType(PacketTypeId.ShapeLock, () => new PacketShapeLock());
 
         public static readonly PacketType BlockBulkRemove = new PacketType(PacketTypeId.BlockBulkRemove, () => new PacketBlockBulkRemove());
+        public static readonly PacketType FallingBlockCreate = new PacketType(PacketTypeId.FallingBlockCreate, () => new PacketFallingBlockCreate());
 
         public static readonly PacketType LayerMove = new PacketType(PacketTypeId.LayerMove, () => new PacketLayerMove());
+        public static readonly PacketType LayerClear  = new PacketType(PacketTypeId.LayerClear, () => new PacketLayerClear());
+        public static readonly PacketType LayerAdd  = new PacketType(PacketTypeId.LayerAdd, () => new PacketLayerClear());
 
         public static readonly PacketType PlayerConnected = new PacketType(PacketTypeId.PlayerConnected, () => new PacketPlayerConnected());
         public static readonly PacketType PlayerDisconnected = new PacketType(PacketTypeId.PlayerDisconnected, () => new PacketPlayerDisconnected());
@@ -69,7 +75,7 @@ namespace Sabotris.Network.Packets
 
         public static PacketType GetPacketType(PacketTypeId packetTypeId)
         {
-            return new[] {GameStart, GameEnd, ChatMessage, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkRemove, LayerMove, PlayerConnected, PlayerDisconnected, PlayerList, RetrievePlayerList, PlayerDead, PlayerScore, ServerShutdown}
+            return new[] {GameStart, GameEnd, ChatMessage, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkRemove, FallingBlockCreate, LayerMove, LayerClear, LayerAdd, PlayerConnected, PlayerDisconnected, PlayerList, RetrievePlayerList, PlayerDead, PlayerScore, ServerShutdown}
                 .First((packetType) => packetType.Id == packetTypeId);
         }
     }

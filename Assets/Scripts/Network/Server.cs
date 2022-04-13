@@ -227,6 +227,9 @@ namespace Sabotris.UI.Menu.Menus
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.LayerMove, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.LayerClear, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.LayerAdd, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.FallingBlockCreate, PacketDirection.Server)]
         public void OnPacketForwardExclude(Packet packet)
         {
             SendPacketToAll(packet, packet.SenderId);

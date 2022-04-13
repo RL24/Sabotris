@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.00076393643, g: 0.08896938, b: 0.23966053, a: 1}
+  m_IndirectSpecularColor: {r: 0.0012238, g: 0.14253026, b: 0.38395244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2773,6 +2773,7 @@ GameObject:
   - component: {fileID: 1687258582}
   - component: {fileID: 1687258586}
   - component: {fileID: 1687258583}
+  - component: {fileID: 1687258587}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2802,6 +2803,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameController: {fileID: 858393424}
   menuController: {fileID: 1370561258}
+  containerSelector: {fileID: 1687258587}
   camera: {fileID: 1687258584}
   cameraPosition: {x: 0, y: 0, z: 0}
   cameraRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2895,6 +2897,23 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &1687258587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687258581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0839b880db24264e8b5563867dae45a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraController: {fileID: 1687258583}
+  activatingContainer: {fileID: 0}
+  exclusions: []
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &1717942782
 GameObject:
   m_ObjectHideFlags: 0
@@ -3008,6 +3027,11 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &1801772343 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5185334002143873886, guid: 57946a97612f65247ba2c718c5f50d03, type: 3}
+  m_PrefabInstance: {fileID: 1813493981}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1813493981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3098,13 +3122,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shapeTemplate: {fileID: 6628176699013324170, guid: 40610ab6bfc61f845ae4d7effa4d5ede, type: 3}
   blockTemplate: {fileID: 771673464604701970, guid: 6649352b212ec1640bae16559d3fb9c0, type: 3}
-  world: {fileID: 0}
+  fallingBlockTemplate: {fileID: 8363237768256764044, guid: ec8fb200c45026442a20bd1d2cd87239, type: 3}
+  world: {fileID: 2032613557}
   gameController: {fileID: 858393424}
-  menuController: {fileID: 0}
+  menuController: {fileID: 1370561258}
   networkController: {fileID: 858393423}
   cameraController: {fileID: 1687258583}
   audioController: {fileID: 441727066}
-  floor: {fileID: 0}
+  floor: {fileID: 1801772343}
   nameText: {fileID: 1867771294}
   dropSpeedText: {fileID: 0}
   id: 18446744073709551615

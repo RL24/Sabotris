@@ -18,7 +18,7 @@ namespace Sabotris
 {
     public class Shape : MonoBehaviour
     {
-        private static readonly Color PowerUpColor = Color.HSVToRGB(0, 0, 0.2f);
+        private static readonly Color PowerUpColor = ColorUtil.GeneratePoweredColor();
         
         public Block blockTemplate;
 

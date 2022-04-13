@@ -111,7 +111,7 @@ namespace Sabotris
         public void OnGameStart(PacketGameStart packet)
         {
             if (gameController.ControllingContainer)
-                gameController.ControllingContainer.StartDropping();
+                gameController.ControllingContainer.StartDropping(null);
         }
 
         [PacketListener(PacketTypeId.GameEnd, PacketDirection.Client)]

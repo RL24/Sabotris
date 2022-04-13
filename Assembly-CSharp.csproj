@@ -59,11 +59,14 @@
      <Compile Include="Assets\Scripts\Powers\Power.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SimpleScript.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerConnected.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpAdjacentExplode.cs" />
      <Compile Include="Assets\Scripts\Util\ShapeUtil.cs" />
      <Compile Include="Assets\Scripts\Util\Logging.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsVideo.cs" />
      <Compile Include="Assets\Scripts\Network\NetworkController.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpXExplode.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettings.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpYExplode.cs" />
      <Compile Include="Assets\Scripts\Translations\Locales\LocaleItalian.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeRotate.cs" />
      <Compile Include="Assets\Scripts\Network\LobbyData.cs" />
@@ -83,6 +86,7 @@
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerDead.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\SmoothScrollRect.cs" />
      <Compile Include="Assets\Scripts\Util\ClassUtil.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUpFactory.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Packet.cs" />
@@ -95,9 +99,11 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuToggle.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuInput.cs" />
+     <Compile Include="Assets\Scripts\Util\ColorUtil.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\MenuController.cs" />
      <Compile Include="Assets\Scripts\Powers\PowerUp.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpZExplode.cs" />
      <Compile Include="Assets\Scripts\Game\CameraController.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Block\PacketBlockBulkRemove.cs" />
      <Compile Include="Assets\Scripts\Audio\AudioController.cs" />
@@ -114,9 +120,11 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuButton.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
+     <Compile Include="Assets\Scripts\World\FallingBlock.cs" />
      <Compile Include="Assets\Scripts\World\Block.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Block\PacketFallingBlockCreate.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuHostGame.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
      <Compile Include="Assets\Scripts\UI\Hud.cs" />
@@ -131,6 +139,7 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
      <Compile Include="Assets\Scripts\Game\GameController.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuBind.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Layer\PacketLayerClear.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsControls.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeMove.cs" />
@@ -141,6 +150,7 @@
      <Compile Include="Assets\Scripts\Network\Handler\PacketHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
      <Compile Include="Assets\Scripts\World\Container.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpAddLayer.cs" />
      <Compile Include="Assets\Scripts\Translations\Locale.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerScore.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
@@ -151,7 +161,9 @@
      <Compile Include="Assets\Scripts\Steamworks.NET\SteamManager.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuGameOver.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuFadeText.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpRandomBlock.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuChatHistoryItem.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpClearLayer.cs" />
      <Compile Include="Assets\Scripts\Translations\Locales\LocaleFrench.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeCreate.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
@@ -164,6 +176,7 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menu.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsInputBindings.cs" />
+     <Compile Include="Assets\Scripts\Game\ContainerSelectorController.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />

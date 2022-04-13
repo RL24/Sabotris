@@ -28,6 +28,14 @@ namespace Sabotris.Util
         private static KeyControl KeyRotatePitchDown => Tern(GameSettings.Input.keyboardBinds.rotatePitchDown);
         private static KeyControl KeyRotateRollLeft => Tern(GameSettings.Input.keyboardBinds.rotateRollLeft);
         private static KeyControl KeyRotateRollRight => Tern(GameSettings.Input.keyboardBinds.rotateRollRight);
+        
+        #region Sabotage
+
+        private static KeyControl KeyPreviousContainer => Tern(GameSettings.Input.keyboardBinds.previousContainer);
+        private static KeyControl KeyNextContainer => Tern(GameSettings.Input.keyboardBinds.nextContainer);
+        private static KeyControl KeySelectContainer => Tern(GameSettings.Input.keyboardBinds.selectContainer);
+        
+        #endregion
 
         #region UI
 
@@ -80,12 +88,24 @@ namespace Sabotris.Util
         private static ButtonControl GamepadButtonZoomIn => Tern(GameSettings.Input.gamepadBinds.zoomIn);
         private static ButtonControl GamepadButtonZoomOut => Tern(GameSettings.Input.gamepadBinds.zoomOut);
         
+        #region Sabotage
+
+        private static ButtonControl GamepadPreviousContainer => Tern(GameSettings.Input.gamepadBinds.previousContainer);
+        private static ButtonControl GamepadNextContainer => Tern(GameSettings.Input.gamepadBinds.nextContainer);
+        private static ButtonControl GamepadSelectContainer => Tern(GameSettings.Input.gamepadBinds.selectContainer);
+        
+        #endregion
+        
+        #region UI
+        
         private static ButtonControl GamepadNavigateLeft => Tern(GameSettings.Input.gamepadBinds.navigateLeft);
         private static ButtonControl GamepadNavigateRight => Tern(GameSettings.Input.gamepadBinds.navigateRight);
         private static ButtonControl GamepadNavigateUp => Tern(GameSettings.Input.gamepadBinds.navigateUp);
         private static ButtonControl GamepadNavigateDown => Tern(GameSettings.Input.gamepadBinds.navigateDown);
         private static ButtonControl GamepadNavigateEnter => Tern(GameSettings.Input.gamepadBinds.navigateEnter);
         private static ButtonControl GamepadNavigateBack => Tern(GameSettings.Input.gamepadBinds.navigateBack);
+        
+        #endregion
 
         #endregion
 
@@ -126,14 +146,14 @@ namespace Sabotris.Util
         public static float GetMoveStrafe()
         {
             var keyboardValue = IsPressed(KeyRight).Int() - IsPressed(KeyLeft).Int();
-            var gamepadValue = GamepadLeftStick?.x.ReadValue() + (IsPressed(GamepadNavigateRight).Int() - IsPressed(GamepadNavigateLeft).Int()) ?? 0;
+            var gamepadValue = (GamepadLeftStick?.x.ReadValue() ?? 0) + (IsPressed(GamepadNavigateRight).Int() - IsPressed(GamepadNavigateLeft).Int());
             return Mathf.Clamp(keyboardValue + gamepadValue, -1, 1);
         }
 
         public static float GetMoveAdvance()
         {
             var keyboardValue = IsPressed(KeyBackward).Int() - IsPressed(KeyForward).Int();
-            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadNavigateUp).Int() - IsPressed(GamepadNavigateDown).Int()) ?? 0;
+            var gamepadValue = (GamepadLeftStick?.y.ReadValue() ?? 0) + (IsPressed(GamepadNavigateUp).Int() - IsPressed(GamepadNavigateDown).Int());
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
 
@@ -147,6 +167,18 @@ namespace Sabotris.Util
         public static bool GetMoveDown()
         {
             return IsPressed(MouseLeftButton) || IsPressed(KeyMoveDown) || IsPressed(GamepadRightTrigger) || IsPressed(GamepadLeftTrigger);
+        }
+
+        public static int GetChangeContainerSelection()
+        {
+            var keyboardValue = IsPressed(KeyNextContainer).Int() - IsPressed(KeyPreviousContainer).Int();
+            var gamepadValue = (GamepadLeftStick?.x.ReadValue() ?? 0) + IsPressed(GamepadPreviousContainer).Int() - IsPressed(GamepadNextContainer).Int();
+            return (int) Math.Round(Mathf.Clamp(keyboardValue - gamepadValue, -1, 1));
+        }
+
+        public static bool GetSelectContainer()
+        {
+            return IsPressed(KeySelectContainer) || IsPressed(GamepadSelectContainer);
         }
 
         public static float GetMoveUINavigateVertical()

@@ -48,6 +48,10 @@ namespace Sabotris.IO
         public Key rotateRollLeft = Key.J;
         public Key rotateRollRight = Key.L;
 
+        public Key previousContainer = Key.A;
+        public Key nextContainer = Key.D;
+        public Key selectContainer = Key.Space;
+
         public Key navigateLeft = Key.LeftArrow;
         public Key navigateRight = Key.RightArrow;
         public Key navigateUp = Key.UpArrow;
@@ -72,6 +76,10 @@ namespace Sabotris.IO
         public GamepadButton rotatePitchDown = GamepadButton.South;
         public GamepadButton rotateRollLeft = GamepadButton.West;
         public GamepadButton rotateRollRight = GamepadButton.East;
+
+        public GamepadButton previousContainer = GamepadButton.DpadLeft;
+        public GamepadButton nextContainer = GamepadButton.DpadRight;
+        public GamepadButton selectContainer = GamepadButton.South;
 
         public GamepadButton navigateLeft = GamepadButton.DpadLeft;
         public GamepadButton navigateRight = GamepadButton.DpadRight;

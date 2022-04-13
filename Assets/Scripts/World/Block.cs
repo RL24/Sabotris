@@ -21,7 +21,7 @@ namespace Sabotris
         private int _index;
         private float _poweredBubbleSpeed;
         private float _poweredBubbleAmount;
-        
+
         private void Start()
         {
             _index = Random.Range(0, 100);
@@ -29,10 +29,8 @@ namespace Sabotris
             _poweredBubbleAmount = Random.Range(0.05f, 0.15f);
             
             if (color != null)
-            {
                 foreach (var ren in GetComponentsInChildren<Renderer>())
                     ren.material.color = color ?? Color.white;
-            }
 
             if (rawPosition != ShapeUtil.NullVector3Int)
                 transform.localScale = Vector3.zero;

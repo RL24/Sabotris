@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shapeTemplate: {fileID: 6628176699013324170, guid: 40610ab6bfc61f845ae4d7effa4d5ede, type: 3}
   blockTemplate: {fileID: 771673464604701970, guid: 6649352b212ec1640bae16559d3fb9c0, type: 3}
+  fallingBlockTemplate: {fileID: 8363237768256764044, guid: ec8fb200c45026442a20bd1d2cd87239, type: 3}
   world: {fileID: 0}
   gameController: {fileID: 0}
   menuController: {fileID: 0}

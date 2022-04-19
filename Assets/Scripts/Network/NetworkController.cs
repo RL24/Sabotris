@@ -1,4 +1,5 @@
-﻿using Sabotris.UI.Menu.Menus;
+﻿using JetBrains.Annotations;
+using Sabotris.UI.Menu.Menus;
 using UnityEngine;
 
 namespace Sabotris.Network
@@ -7,7 +8,7 @@ namespace Sabotris.Network
     {
         public World world;
 
-        public Client Client { get; private set; }
+        [CanBeNull] public Client Client { get; private set; }
         public Server Server { get; private set; }
 
         private void Start()

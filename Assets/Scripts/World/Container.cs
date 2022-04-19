@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Audio;
+using JetBrains.Annotations;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
@@ -16,9 +17,18 @@ using Random = UnityEngine.Random;
 
 namespace Sabotris
 {
+    public enum Movement
+    {
+        X,
+        Z,
+        RotateX,
+        RotateY,
+        RotateZ
+    }
+    
     public class Container : MonoBehaviour
     {
-        private int Radius => IsDemo() ? 2 : networkController.Client?.LobbyData?.PlayFieldSize ?? 2;
+        protected int Radius => (networkController ? networkController.Client?.LobbyData?.PlayFieldSize : null) ?? 2;
         private Vector3Int BottomLeft => new Vector3Int(-Radius, 1, -Radius);
         private Vector3Int TopRight => new Vector3Int(Radius, 25, Radius);
 
@@ -39,7 +49,7 @@ namespace Sabotris
         public CameraController cameraController;
         public AudioController audioController;
 
-        public Vector3 Position { get; set; }
+        public Vector3 rawPosition;
         public GameObject floor;
         public TMP_Text nameText, dropSpeedText;
 
@@ -48,14 +58,14 @@ namespace Sabotris
         private PlayerScore _score = new PlayerScore(0, 0);
         public bool dead;
 
-        public Shape controllingShape;
+        private Shape _controllingShape;
 
         private readonly Dictionary<Guid, Shape> _shapes = new Dictionary<Guid, Shape>();
-        private readonly Dictionary<Guid, Block> _blocks = new Dictionary<Guid, Block>();
+        protected readonly Dictionary<Guid, Block> _blocks = new Dictionary<Guid, Block>();
 
         public Vector3Int DropPosition { get; protected set; } = new Vector3Int(0, 20, 0);
 
-        private int _dropSpeedMs = 1000;
+        protected int _dropSpeedMs = 1000;
         public const int DropSpeedFastMs = 10;
         private int DropSpeedIncrementMs => Math.Max(5, 40 / (world == null ? 1 : world.Containers.Count));
 
@@ -66,7 +76,8 @@ namespace Sabotris
 
         protected virtual void Start()
         {
-            networkController.Client.RegisterListener(this);
+            if (networkController)
+                networkController.Client?.RegisterListener(this);
 
             if (floor)
                 floor.transform.localScale = new Vector3(Radius * 2 + 1, 1, Radius * 2 + 1);
@@ -78,32 +89,36 @@ namespace Sabotris
 
         private void OnDestroy()
         {
-            networkController.Client.DeregisterListener(this);
+            if (networkController)
+                networkController.Client?.DeregisterListener(this);
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (dropSpeedText)
                 dropSpeedText.text = Localization.Translate(TranslationKey.GameContainerDropSpeed, Math.Round((DropSpeedMs == 0 ? 100 : 1000f / DropSpeedMs) * 10) / 10);
 
-            transform.position = Vector3.Lerp(transform.position, Position, GameSettings.Settings.gameTransitionSpeed * 0.5f);
+            transform.position = Vector3.Lerp(transform.position, rawPosition, GameSettings.Settings.gameTransitionSpeed * 0.5f);
         }
 
         public void StartDropping((Guid, Vector3Int)[] offsets = null)
         {
-            if ((gameController.ControllingContainer != this && !IsDemo()) || dead)
+            if (dead)
                 return;
 
-            offsets ??= ShapeUtil.Generate(networkController.Client.LobbyData.BlocksPerShape, networkController.Client.LobbyData.GenerateVerticalBlocks, GenerateBottomLeft, GenerateTopRight);
+            var blocksPerShape = (networkController ? networkController.Client?.LobbyData.BlocksPerShape : null) ?? 4;
+            var generateVerticalBlocks = (networkController ? networkController.Client?.LobbyData.GenerateVerticalBlocks : null) ?? false;
+            
+            offsets ??= ShapeUtil.Generate(blocksPerShape, generateVerticalBlocks, GenerateBottomLeft, GenerateTopRight);
 
             if (!DoesCollide(offsets.Select((offset) => offset.Item2 + DropPosition).ToArray()))
             {
                 var shape = CreateShape(Guid.NewGuid(), DropPosition, offsets, Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1));
                 shape.StartDropping();
-                controllingShape = shape;
+                ControllingShape = shape;
 
-                if (!IsDemo())
-                    networkController.Client.SendPacket(new PacketShapeCreate
+                if (networkController)
+                    networkController.Client?.SendPacket(new PacketShapeCreate
                     {
                         ContainerId = id,
                         Id = shape.id,
@@ -121,8 +136,8 @@ namespace Sabotris
 
                 dead = true;
 
-                if (!IsDemo())
-                    networkController.Client.SendPacket(new PacketPlayerDead
+                if (networkController)
+                    networkController.Client?.SendPacket(new PacketPlayerDead
                     {
                         Id = id
                     });
@@ -131,7 +146,7 @@ namespace Sabotris
 
         public void LockShape(Shape shape, Vector3Int[] addedBlocks)
         {
-            controllingShape = null;
+            ControllingShape = null;
 
             foreach (var block in shape.Blocks)
             {
@@ -139,19 +154,17 @@ namespace Sabotris
                 block.Value.RawPosition = shape.RawPosition + shape.Offsets.First((pair) => pair.Item1 == block.Key).Item2;
             }
 
-            if (gameController.ControllingContainer != this && !IsDemo())
+            if (gameController.ControllingContainer != this && !(this is BotContainer || this is DemoContainer))
                 return;
 
-            if (!IsDemo())
-            {
+            if (audioController)
                 audioController.shapeLock.PlayModifiedSound(AudioController.GetGameVolume());
-                
-                networkController.Client.SendPacket(new PacketShapeLock
+            if (networkController)
+                networkController.Client?.SendPacket(new PacketShapeLock
                 {
                     Id = shape.id,
                     Offsets = addedBlocks
                 });
-            }
 
             StartCoroutine(StartClearingLayers(addedBlocks));
         }
@@ -173,22 +186,20 @@ namespace Sabotris
                         block.RawPosition += Vector3Int.down;
                         block.shifted = true;
                     }
-
-                if (!IsDemo())
-                {
+                
+                if (audioController)
                     audioController.layerDelete.PlayModifiedSound(AudioController.GetGameVolume());
-                    
-                    networkController.Client.SendPacket(new PacketLayerMove
+                if (networkController)
+                    networkController.Client?.SendPacket(new PacketLayerMove
                     {
                         ContainerId = id,
                         Layers = clearedLayers.ToArray()
                     });
-                }
             }
 
             yield return new WaitForSeconds(DropNewShapeSpeed);
 
-            StartDropping(IsDemo() ? (this as DemoContainer)?.GetNextOffsets() : null);
+            StartDropping();
         }
 
         private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null)
@@ -285,17 +296,17 @@ namespace Sabotris
                 clearingLayers.Add(layer);
             }
 
-            if (!IsDemo())
+            if (networkController)
             {
                 if (deletedBlocks.Any())
-                    networkController.Client.SendPacket(new PacketBlockBulkRemove
+                    networkController.Client?.SendPacket(new PacketBlockBulkRemove
                     {
                         ContainerId = id,
                         Ids = deletedBlocks.ToArray()
                     });
 
                 if (clearingLayers.Any())
-                    networkController.Client.SendPacket(new PacketPlayerScore
+                    networkController.Client?.SendPacket(new PacketPlayerScore
                     {
                         Id = id,
                         Score = new PlayerScore(_score.Score + (deletedBlocks.Count * clearingLayers.Count), _score.ClearedLayers)
@@ -329,7 +340,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.GameEnd, PacketDirection.Client)]
         public void OnGameEnd(PacketGameEnd packet)
         {
-            if (!IsDemo())
+            if (!(this is DemoContainer))
                 StartCoroutine(CreateEndBlocksForScore());
         }
 
@@ -391,7 +402,48 @@ namespace Sabotris
             _score = packet.Score;
         }
 
-        public bool IsDemo() => this is DemoContainer;
+        public virtual (float, float) GetMovement()
+        {
+            return gameController.ControllingContainer == this ? (InputUtil.GetMoveAdvance(), InputUtil.GetMoveStrafe()) : (0, 0);
+        }
+
+        public virtual bool DoFastDrop()
+        {
+            return gameController.ControllingContainer == this && InputUtil.GetMoveDown() && !menuController.IsInMenu;
+        }
+
+        public virtual bool IsControllingShape(Shape shape, bool notInMenu = false)
+        {
+            return ControllingShape == shape && (!notInMenu || !menuController.IsInMenu);
+        }
+
+        public virtual bool ShouldRotateShape()
+        {
+            return InputUtil.ShouldRotateShape();
+        }
+
+        protected virtual void OnControllingShapeCreated(Shape shape)
+        {
+        }
+
+        protected virtual int GetDropSpeed()
+        {
+            return _dropSpeedMs;
+        }
+
+        public Shape ControllingShape
+        {
+            get => _controllingShape;
+            set
+            {
+                if (_controllingShape == value)
+                    return;
+                
+                _controllingShape = value;
+                
+                OnControllingShapeCreated(value);
+            }
+        }
 
         public string ContainerName
         {
@@ -409,7 +461,7 @@ namespace Sabotris
         
         public int DropSpeedMs
         {
-            get => IsDemo() ? 1000 : _dropSpeedMs;
+            get => GetDropSpeed();
             private set
             {
                 if (_dropSpeedMs == value)
@@ -417,7 +469,8 @@ namespace Sabotris
                 
                 _dropSpeedMs = value;
 
-                audioController.music.pitch = Mathf.Min(audioController.music.pitch + 0.01f, 2);
+                if (audioController)
+                    audioController.music.pitch = Mathf.Min(audioController.music.pitch + 0.01f, 2);
             }
         }
     }

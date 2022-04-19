@@ -71,7 +71,8 @@ namespace Sabotris.UI.Menu.Menus
 
             _lobbyData.Store(LobbyId);
 
-            NetworkController.Client.LobbyData = _lobbyData;
+            if (NetworkController.Client != null)
+                NetworkController.Client.LobbyData = _lobbyData;
 
             CreateListenerSocket();
         }
@@ -171,7 +172,7 @@ namespace Sabotris.UI.Menu.Menus
         {
             if (connection.IsLocalClient())
             {
-                NetworkController.Client.PacketHandler.Process(packet);
+                NetworkController.Client?.PacketHandler.Process(packet);
                 return;
             }
 

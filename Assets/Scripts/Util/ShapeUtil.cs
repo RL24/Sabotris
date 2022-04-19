@@ -23,8 +23,22 @@ namespace Sabotris.Util
                 while (offsets.Count < offsetCount)
                 {
                     var free = new List<Vector3Int>();
-                    foreach (var adjacent in from offset in offsets let directionals = vertical ? OmniDirections : HorizontalDirections from direction in directionals select offset + direction into adjacent where !offsets.Contains(adjacent) && !free.Contains(adjacent) && (bottomLeft == NullVector3Int || topRight == NullVector3Int || !adjacent.IsOutside(bottomLeft, topRight)) select adjacent)
+                    var offsets1 = offsets;
+                    foreach (var adjacent in
+                        from offset in offsets
+                        let directionals = vertical
+                            ? OmniDirections
+                            : HorizontalDirections
+                        from direction in directionals
+                        select offset + direction
+                        into adjacent
+                        where !offsets1.Contains(adjacent)
+                              && !free.Contains(adjacent)
+                              && (bottomLeft == NullVector3Int || topRight == NullVector3Int || !adjacent.IsOutside(bottomLeft, topRight))
+                        select adjacent)
+                    {
                         free.Add(adjacent);
+                    }
 
                     if (!free.Any()) break;
 

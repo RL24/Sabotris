@@ -10,7 +10,6 @@ using Sabotris.Network.Packets.Game;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Sabotris
 {
@@ -31,11 +30,13 @@ namespace Sabotris
 
         [SerializeField] private Vector3Int rawPosition;
         [SerializeField] private Quaternion rawRotation;
-        [SerializeField] private Quaternion rotateActivator;
+        [SerializeField] public Quaternion rotateActivator;
 
-        private readonly Stopwatch _dropTimer = new Stopwatch(),
-            _moveTimer = new Stopwatch(),
+        public readonly Stopwatch DropTimer = new Stopwatch();
+        private readonly Stopwatch _moveTimer = new Stopwatch(),
             _moveResetTimer = new Stopwatch();
+
+        public bool permaDrop;
 
         private float _prevAdvance, _prevStrafe;
 
@@ -66,18 +67,20 @@ namespace Sabotris
             {
                 CreateBlock(blockId, blockPos);
                 // if (_previewShape)
-                //     CreatePreviewBlock(blockId, blockPos);
+                    // CreatePreviewBlock(blockId, blockPos);
             }
 
             foreach (var ren in GetComponentsInChildren<Renderer>())
                 ren.material.color = color ?? Color.white;
 
-            networkController.Client.RegisterListener(this);
+            if (networkController)
+                networkController.Client?.RegisterListener(this);
         }
 
         private void OnDestroy()
         {
-            networkController.Client.DeregisterListener(this);
+            if (networkController)
+                networkController.Client?.DeregisterListener(this);
         }
 
         private void Update()
@@ -94,9 +97,9 @@ namespace Sabotris
 
         private void FixedUpdate()
         {
-            if (IsControlling() && !parentContainer.IsDemo() && !menuController.IsInMenu)
+            if (parentContainer.IsControllingShape(this, true))
             {
-                if (!InputUtil.ShouldRotateShape())
+                if (!parentContainer.ShouldRotateShape())
                     rotateActivator = RawRotation;
 
                 DoRotate();
@@ -108,7 +111,8 @@ namespace Sabotris
                     if (!parentContainer.DoesCollide(offsets))
                     {
                         RawRotation = rotateActivator = roundedRotationActivator;
-                        audioController.shapeRotate.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetShapeRotatePitch());
+                        if (audioController)
+                            audioController.shapeRotate.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetShapeRotatePitch());
                     }
                     else
                         rotateActivator = RawRotation;
@@ -159,14 +163,14 @@ namespace Sabotris
 
         public void StartDropping()
         {
-            if (!_dropTimer.IsRunning)
-                _dropTimer.Start();
-            else _dropTimer.Restart();
+            if (!DropTimer.IsRunning)
+                DropTimer.Start();
+            else DropTimer.Restart();
         }
 
         private void StopDropping()
         {
-            _dropTimer.Reset();
+            DropTimer.Reset();
             parentContainer.LockShape(this, Offsets.Select((offset) => RawPosition + offset.Item2).ToArray());
         }
 
@@ -198,18 +202,16 @@ namespace Sabotris
         {
             var moveVec = Vector3.zero;
 
-            var doFastMoveDown = InputUtil.GetMoveDown();
+            var doFastMoveDown = parentContainer.DoFastDrop() || permaDrop;
             var isDropping = false;
-            if (_dropTimer.ElapsedMilliseconds > (doFastMoveDown && !parentContainer.IsDemo() && !menuController.IsInMenu ? Container.DropSpeedFastMs : parentContainer.DropSpeedMs))
+            if (DropTimer.ElapsedMilliseconds > (doFastMoveDown ? Container.DropSpeedFastMs : parentContainer.DropSpeedMs))
             {
-                _dropTimer.Restart();
-                isDropping = !networkController.Client.LobbyData.PracticeMode || doFastMoveDown || parentContainer.IsDemo();
+                DropTimer.Restart();
+                isDropping = !((networkController ? networkController.Client?.LobbyData.PracticeMode : null) ?? false) || doFastMoveDown;
             }
 
-            var advance = InputUtil.GetMoveAdvance();
-            var strafe = InputUtil.GetMoveStrafe();
-
-            if (parentContainer.IsDemo() || menuController.IsInMenu)
+            var (advance, strafe) = parentContainer.GetMovement();
+            if (menuController.IsInMenu)
                 advance = strafe = 0;
 
             if (((advance == 0 && strafe == 0) || !_prevAdvance.Same(advance, 0.5f) || !_prevStrafe.Same(strafe, 0.5f) ||
@@ -263,7 +265,7 @@ namespace Sabotris
                 StopDropping();
             else if (roundedMoveVec != Vector3Int.zero)
             {
-                if (IsControlling() && !parentContainer.IsDemo())
+                if (parentContainer.IsControllingShape(this) && audioController)
                 {
                     var sound = isDropping ? audioController.shapeDrop : audioController.shapeMove;
                     if (isDropping && doFastMoveDown && !sound.isPlaying || isDropping && !doFastMoveDown || !isDropping)
@@ -338,31 +340,29 @@ namespace Sabotris
             parentContainer.LockShape(this, packet.Offsets.ToArray());
         }
         
-        private bool IsControlling() => parentContainer.controllingShape == this;
+        private bool IsControlling() => parentContainer.ControllingShape == this;
 
         public Vector3Int RawPosition
         {
             get => rawPosition;
-            private set
+            set
             {
                 if (RawPosition == value) return;
 
                 if (!parentContainer.DoesCollide(Offsets.Select((offset) => offset.Item2 + value).ToArray()))
                 {
                     rawPosition = value;
-                    if (IsControlling())
-                    {
-                        networkController.Client.SendPacket(new PacketShapeMove
+                    if (IsControlling() && networkController)
+                        networkController.Client?.SendPacket(new PacketShapeMove
                         {
                             Id = id,
                             Position = RawPosition
                         });
-                    }
                 }
             }
         }
 
-        private Quaternion RawRotation
+        public Quaternion RawRotation
         {
             get => rawRotation;
             set
@@ -375,8 +375,8 @@ namespace Sabotris
                 if (offsets != null)
                     Offsets = offsets;
 
-                if (IsControlling())
-                    networkController.Client.SendPacket(new PacketShapeRotate
+                if (IsControlling() && networkController)
+                    networkController.Client?.SendPacket(new PacketShapeRotate
                     {
                         Id = id,
                         Rotation = RawRotation

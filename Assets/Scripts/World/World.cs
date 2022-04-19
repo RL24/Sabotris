@@ -1,7 +1,6 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using Audio;
-using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
@@ -16,6 +15,7 @@ namespace Sabotris
     public class World : MonoBehaviour
     {
         public Container containerTemplate;
+        public BotContainer botContainerTemplate;
 
         public GameController gameController;
         public MenuController menuController;
@@ -30,10 +30,13 @@ namespace Sabotris
 
         private void Start()
         {
-            networkController.Client.OnConnectedToServerEvent += ConnectedToServerEvent;
-            networkController.Client.OnDisconnectedFromServerEvent += DisconnectedFromServerEvent;
+            if (networkController.Client != null)
+            {
+                networkController.Client.OnConnectedToServerEvent += ConnectedToServerEvent;
+                networkController.Client.OnDisconnectedFromServerEvent += DisconnectedFromServerEvent;
+            }
 
-            networkController.Client.RegisterListener(this);
+            networkController.Client?.RegisterListener(this);
         }
 
         private void Update()
@@ -81,7 +84,7 @@ namespace Sabotris
             container.cameraController = cameraController;
             container.audioController = audioController;
 
-            container.Position = container.transform.position;
+            container.rawPosition = container.transform.position;
 
             container.transform.SetParent(transform, false);
 
@@ -104,7 +107,26 @@ namespace Sabotris
             
             var i = 0;
             foreach (var c in Containers)
-                c.Position = GetContainerPosition(i++);
+                c.rawPosition = GetContainerPosition(i++);
+        }
+
+        private void CreateBot()
+        {
+            var container = Instantiate(botContainerTemplate, GetContainerPosition(Containers.Count), Quaternion.identity);
+            container.name = $"Container-Bot";
+
+            container.ContainerName = "Bot";
+
+            container.world = this;
+            container.gameController = gameController;
+            container.menuController = menuController;
+            container.cameraController = cameraController;
+
+            container.rawPosition = container.transform.position;
+
+            container.transform.SetParent(transform, false);
+
+            Containers.Add(container);
         }
 
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]

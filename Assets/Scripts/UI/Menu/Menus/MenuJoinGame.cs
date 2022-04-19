@@ -41,7 +41,8 @@ namespace Sabotris.UI.Menu.Menus
         {
             base.Start();
 
-            networkController.Client.OnLobbiesFetchedEvent += OnLobbiesFetched;
+            if (networkController.Client != null)
+                networkController.Client.OnLobbiesFetchedEvent += OnLobbiesFetched;
 
             RefreshLobbies();
 
@@ -58,7 +59,8 @@ namespace Sabotris.UI.Menu.Menus
 
             _lobbies.Clear();
 
-            networkController.Client.OnLobbiesFetchedEvent -= OnLobbiesFetched;
+            if (networkController.Client != null)
+                networkController.Client.OnLobbiesFetchedEvent -= OnLobbiesFetched;
         }
 
         private void OnClickButton(object sender, EventArgs args)
@@ -167,8 +169,9 @@ namespace Sabotris.UI.Menu.Menus
                     SetButtonsDisabled(false);
             }
 
-            networkController.Client.OnConnectedToServerEvent += ConnectedToServer;
-            networkController.Client.JoinLobby(lobbyId.ToSteamID());
+            if (networkController.Client != null)
+                networkController.Client.OnConnectedToServerEvent += ConnectedToServer;
+            networkController.Client?.JoinLobby(lobbyId.ToSteamID());
         }
 
         protected override Menu GetBackMenu()

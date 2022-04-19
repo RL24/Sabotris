@@ -60,8 +60,8 @@ namespace Sabotris
                 _targetContainer = container;
             }
 
-            if (container.controllingShape)
-                _targetShapePosition = container.controllingShape.transform.position;
+            if (container.ControllingShape)
+                _targetShapePosition = container.ControllingShape.transform.position;
 
             var shapePosition = _targetShapePosition;
             var containerPosition = container.transform.position;

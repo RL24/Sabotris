@@ -36,7 +36,7 @@ namespace Sabotris.UI.Menu.Menus
 
             if (sender.Equals(buttonDisconnect))
             {
-                networkController.Client.DisconnectSocket(DisconnectReason.ClientDisconnected);
+                networkController.Client?.DisconnectSocket(DisconnectReason.ClientDisconnected);
                 networkController.Server.DisconnectSockets(DisconnectReason.ServerClosed);
                 menuController.OpenMenu(menuMain);
             }

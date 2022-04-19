@@ -43,9 +43,9 @@ namespace Sabotris.UI.Menu.Menus
                 Destroy(buttonStartGame.gameObject);
             }
 
-            networkController.Client.RegisterListener(this);
+            networkController.Client?.RegisterListener(this);
 
-            var data = networkController.Client.LobbyData;
+            var data = networkController.Client?.LobbyData;
             if (playFieldSizeText)
                 playFieldSizeText.text = Localization.Translate(TranslationKey.UiMenuDisplayPlayFieldSize, data.PlayFieldSize * 2 + 1);
 
@@ -71,7 +71,7 @@ namespace Sabotris.UI.Menu.Menus
             
             inputChatMessage.OnSubmitEvent -= OnSubmitChatMessage;
 
-            networkController.Client.DeregisterListener(this);
+            networkController.Client?.DeregisterListener(this);
         }
 
         private void OnClickButton(object sender, EventArgs args)
@@ -90,7 +90,7 @@ namespace Sabotris.UI.Menu.Menus
             if (message.Length == 0)
                 return;
 
-            networkController.Client.SendPacket(new PacketChatMessage
+            networkController.Client?.SendPacket(new PacketChatMessage
             {
                 Id = Guid.NewGuid(),
                 Author = Client.UserId.m_SteamID,
@@ -103,7 +103,7 @@ namespace Sabotris.UI.Menu.Menus
         protected override void GoBack()
         {
             base.GoBack();
-            networkController.Client.DisconnectSocket(DisconnectReason.ClientDisconnected);
+            networkController.Client?.DisconnectSocket(DisconnectReason.ClientDisconnected);
             networkController.Server.DisconnectSockets(DisconnectReason.ServerClosed);
         }
 

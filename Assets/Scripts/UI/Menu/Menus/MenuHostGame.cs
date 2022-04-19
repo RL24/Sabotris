@@ -59,7 +59,7 @@ namespace Sabotris.UI.Menu.Menus
                     return;
                 }
 
-                networkController.Client.JoinLobby(networkController.Server.LobbyId.Value);
+                networkController.Client?.JoinLobby(networkController.Server.LobbyId.Value);
                 menuController.OpenMenu(menuLobby);
             }
 

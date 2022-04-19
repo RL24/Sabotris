@@ -53,39 +53,53 @@ namespace Sabotris.Util
 
             return allMatches;
         }
+
+        public static Vector3 Horizontal(this Vector3 self) => new Vector3(self.x, 0, self.z);
+        
+        public static Vector3Int Horizontal(this Vector3Int self) => new Vector3Int(self.x, 0, self.z);
+        
+        public static Vector3Int Copy(this Vector3Int self) => new Vector3Int(self.x, self.y, self.z);
         
         public static float GetMinValue(this Vector3 self) => Mathf.Min(Math.Abs(self.x), Math.Abs(self.y), Math.Abs(self.z));
 
-        public static double Lerp(this double self, double target, double time)
-        {
-            return (target - self) * time;
-        }
+        public static double Lerp(this double self, double target, double time) => (target - self) * time;
 
-        public static float Lerp(this float self, float target, float time)
-        {
-            return (target - self) * time;
-        }
+        public static float Lerp(this float self, float target, float time) => (target - self) * time;
 
-        public static int Int(this bool self)
-        {
-            return self ? 1 : 0;
-        }
+        public static int Int(this bool self) => self ? 1 : 0;
 
-        public static CSteamID ToSteamID(this ulong self)
-        {
-            return new CSteamID(self);
-        }
+        public static CSteamID ToSteamID(this ulong self) => new CSteamID(self);
 
-        public static bool IsLocalClient(this HSteamNetConnection self)
-        {
-            return self.m_HSteamNetConnection == 0;
-        }
+        public static bool IsLocalClient(this HSteamNetConnection self) => self.m_HSteamNetConnection == 0;
 
         public static void PlayModifiedSound(this AudioSource self, float? volume = null, float? pitch = null)
         {
             self.volume = volume ?? self.volume;
             self.pitch = pitch ?? self.pitch;
             self.Play();
+        }
+
+        public static Vector3Int[] RelativeTo(this Vector3Int[] self, Vector3Int absolute)
+        {
+            var relative = new Vector3Int[self.Length];
+            for (var i = 0; i < self.Length; i++)
+                relative[i] = self[i] + absolute;
+            return relative;
+        }
+
+        public static Vector3Int Size(this Vector3Int[] self)
+        {
+            var lowest = self[0];
+            var highest = self[0];
+            foreach (var vec in self)
+            {
+                if (vec.y < lowest.y)
+                    lowest = vec;
+                if (vec.y > highest.y)
+                    highest = vec;
+            }
+
+            return highest - lowest;
         }
     }
 }

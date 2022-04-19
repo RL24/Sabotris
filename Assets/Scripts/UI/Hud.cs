@@ -30,15 +30,16 @@ namespace Sabotris.UI
             for (var i = 0; i < scoreList.transform.childCount; i++)
                 Destroy(scoreList.transform.GetChild(i));
 
-            networkController.Client.RegisterListener(this);
-            networkController.Client.OnDisconnectedFromServerEvent += DisconnectedFromServerEvent;
+            networkController.Client?.RegisterListener(this);
+            if (networkController.Client != null)
+                networkController.Client.OnDisconnectedFromServerEvent += DisconnectedFromServerEvent;
 
             canvasGroup.alpha = 0;
         }
 
         private void OnDestroy()
         {
-            networkController.Client.DeregisterListener(this);
+            networkController.Client?.DeregisterListener(this);
         }
 
         private void Update()

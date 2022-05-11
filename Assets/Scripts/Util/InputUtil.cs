@@ -126,14 +126,14 @@ namespace Sabotris.Util
         public static float GetMoveStrafe()
         {
             var keyboardValue = IsPressed(KeyRight).Int() - IsPressed(KeyLeft).Int();
-            var gamepadValue = GamepadLeftStick?.x.ReadValue() + (IsPressed(GamepadNavigateRight).Int() - IsPressed(GamepadNavigateLeft).Int()) ?? 0;
+            var gamepadValue = (GamepadLeftStick?.x.ReadValue() ?? 0) + (IsPressed(GamepadNavigateRight).Int() - IsPressed(GamepadNavigateLeft).Int());
             return Mathf.Clamp(keyboardValue + gamepadValue, -1, 1);
         }
 
         public static float GetMoveAdvance()
         {
             var keyboardValue = IsPressed(KeyBackward).Int() - IsPressed(KeyForward).Int();
-            var gamepadValue = GamepadLeftStick?.y.ReadValue() + (IsPressed(GamepadNavigateUp).Int() - IsPressed(GamepadNavigateDown).Int()) ?? 0;
+            var gamepadValue = (GamepadLeftStick?.y.ReadValue() ?? 0) + (IsPressed(GamepadNavigateUp).Int() - IsPressed(GamepadNavigateDown).Int());
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
         }
 

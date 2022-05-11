@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Translations
+namespace Sabotris.Translations
 {
     public enum TranslationKey
     {

@@ -35,9 +35,9 @@ namespace Sabotris
         private void FixedUpdate()
         {
             if (rawPosition != ShapeUtil.NullVector3Int && shifted)
-                transform.position = Vector3.Lerp(transform.position, _parentContainer.transform.position + rawPosition, GameSettings.Settings.gameTransitionSpeed);
+                transform.position = Vector3.Lerp(transform.position, _parentContainer.transform.position + rawPosition, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
 
-            transform.localScale = Vector3.Lerp(transform.localScale, doRemove ? Vector3.zero : Vector3.one, GameSettings.Settings.gameTransitionSpeed);
+            transform.localScale = Vector3.Lerp(transform.localScale, doRemove ? Vector3.zero : Vector3.one, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
 
             if (doRemove && transform.localScale.GetMinValue() < 0.01)
                 Destroy(gameObject);

@@ -1,4 +1,5 @@
 ﻿using Sabotris.IO;
+using Sabotris.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -29,7 +30,7 @@ namespace Sabotris.UI.Menu
             var color = _isHovered
                 ? ColorHover
                 : _startColor;
-            text.color = Color.Lerp(text.color, color, GameSettings.Settings.uiAnimationSpeed);
+            text.color = Color.Lerp(text.color, color, GameSettings.Settings.uiAnimationSpeed.Delta());
         }
 
         public void OnPointerEnter(PointerEventData eventData)

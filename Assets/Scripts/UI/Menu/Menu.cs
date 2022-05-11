@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Audio;
+using Sabotris.Audio;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Util;
@@ -114,7 +114,7 @@ namespace Sabotris.UI.Menu
                     buttons[SelectedButton].NavigateHorizontal(navigateHor);
             }
 
-            canvasGroup.alpha += canvasGroup.alpha.Lerp((!Closing).Int(), GameSettings.Settings.menuCameraSpeed * 2);
+            canvasGroup.alpha += canvasGroup.alpha.Lerp((!Closing).Int(), GameSettings.Settings.menuCameraSpeed.Delta() * 2);
 
             if (Interactable)
             {

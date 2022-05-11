@@ -119,5 +119,9 @@ namespace Sabotris.Util
 
             return highest - lowest;
         }
+
+        public static float Delta(this float self) => self * (Time.deltaTime * 50);
+
+        public static float FixedDelta(this float self) => self * (Time.fixedDeltaTime * 50);
     }
 }

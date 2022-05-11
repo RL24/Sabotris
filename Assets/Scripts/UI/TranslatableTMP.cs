@@ -1,5 +1,5 @@
 ﻿using TMPro;
-using Translations;
+using Sabotris.Translations;
 using UnityEngine;
 
 namespace Sabotris.UI

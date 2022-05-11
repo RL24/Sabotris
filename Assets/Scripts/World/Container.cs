@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Audio;
+using Sabotris.Audio;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
@@ -10,7 +10,7 @@ using Sabotris.Network.Packets.Game;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using TMPro;
-using Translations;
+using Sabotris.Translations;
 using UnityEngine;
 using Random = Sabotris.Util.Random;
 
@@ -97,8 +97,11 @@ namespace Sabotris
         {
             if (dropSpeedText)
                 dropSpeedText.text = Localization.Translate(TranslationKey.GameContainerDropSpeed, Math.Round((DropSpeedMs == 0 ? 100 : 1000f / DropSpeedMs) * 10) / 10);
-
-            transform.position = Vector3.Lerp(transform.position, rawPosition, GameSettings.Settings.gameTransitionSpeed * 0.5f);
+        }
+        
+        private void FixedUpdate()
+        {
+            transform.position = Vector3.Lerp(transform.position, rawPosition, GameSettings.Settings.gameTransitionSpeed.FixedDelta() * 0.5f);
         }
 
         public void StartDropping((Guid, Vector3Int)[] offsets = null)

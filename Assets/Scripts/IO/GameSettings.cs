@@ -1,6 +1,6 @@
 ﻿using System;
 using Sabotris.Util;
-using Translations;
+using Sabotris.Translations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;

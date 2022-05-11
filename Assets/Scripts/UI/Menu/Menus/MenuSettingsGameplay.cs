@@ -1,6 +1,6 @@
 ﻿using System;
 using Sabotris.IO;
-using Translations;
+using Sabotris.Translations;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus

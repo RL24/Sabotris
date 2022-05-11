@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Sabotris.Network;
 using Sabotris.Util;
 using Steamworks;
-using Translations;
+using Sabotris.Translations;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus

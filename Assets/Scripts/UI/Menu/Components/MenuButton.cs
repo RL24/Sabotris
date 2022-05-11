@@ -1,5 +1,5 @@
 ﻿using System;
-using Audio;
+using Sabotris.Audio;
 using Sabotris.IO;
 using Sabotris.Util;
 using TMPro;
@@ -47,13 +47,13 @@ namespace Sabotris.UI.Menu
                 : isHovered || isSelected
                     ? ColorActive
                     : _startColor;
-            text.color = Color.Lerp(text.color, color, GameSettings.Settings.uiAnimationSpeed);
+            text.color = Color.Lerp(text.color, color, GameSettings.Settings.uiAnimationSpeed.Delta());
         }
 
         private void FixedUpdate()
         {
             if (rectTransform)
-                rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, (isHovered || isSelected) && !isDisabled ? HoverPosition + _startPosition : _startPosition, GameSettings.Settings.uiAnimationSpeed);
+                rectTransform.localPosition = Vector3.Lerp(rectTransform.localPosition, (isHovered || isSelected) && !isDisabled ? HoverPosition + _startPosition : _startPosition, GameSettings.Settings.uiAnimationSpeed.FixedDelta());
         }
 
         public virtual void NavigateSelect()

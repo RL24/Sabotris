@@ -1,4 +1,4 @@
-﻿namespace Translations.Locales
+﻿namespace Sabotris.Translations.Locales
 {
     public class LocaleEnglish : Locale
     {

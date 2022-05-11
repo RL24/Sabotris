@@ -1,21 +1,21 @@
 using System;
 using Sabotris.IO;
+using Sabotris.Translations;
 using Sabotris.UI.Menu;
 using Steamworks;
-using Sabotris.Translations;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace Sabotris
+namespace Sabotris.Game
 {
     public class GameController : MonoBehaviour
     {
         public MenuController menuController;
-        
+
         public ForwardRendererData forwardRendererData;
         public Volume renderVolume;
-        
+
         private ScriptableRendererFeature _renderFeatureSsao;
         private DepthOfField _dof;
 
@@ -24,15 +24,15 @@ namespace Sabotris
         private void Start()
         {
             // Util.Random.SetSeed(0); // DEBUG ONLY
-            
+
             _renderFeatureSsao = forwardRendererData.rendererFeatures.Find((feature) => feature.name.Equals("NewScreenSpaceAmbientOcclusion"));
             renderVolume.profile.TryGet(out _dof);
-            
+
             SteamNetworkingUtils.InitRelayNetworkAccess();
 
             GameSettings.OnBeforeSaveEvent += OnBeforeSave;
             GameSettings.OnAfterLoadEvent += OnAfterLoad;
-            
+
             GameSettings.Load();
             GameSettings.Save();
         }

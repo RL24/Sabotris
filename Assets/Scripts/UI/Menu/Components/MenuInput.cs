@@ -26,7 +26,7 @@ namespace Sabotris.UI.Menu
 
             if (background)
                 _startBackgroundColor = background.color;
-            
+
             inputField.onSubmit.AddListener((str) =>
             {
                 if (!menu.Interactable)

@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Sabotris.Audio;
+using Sabotris.Game;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Translations;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using TMPro;
-using Sabotris.Translations;
 using UnityEngine;
 using Random = Sabotris.Util.Random;
 
@@ -24,7 +25,7 @@ namespace Sabotris
         RotateY,
         RotateZ
     }
-    
+
     public class Container : MonoBehaviour
     {
         protected int Radius => (networkController ? networkController.Client?.LobbyData?.PlayFieldSize : null) ?? 2;
@@ -98,7 +99,7 @@ namespace Sabotris
             if (dropSpeedText)
                 dropSpeedText.text = Localization.Translate(TranslationKey.GameContainerDropSpeed, Math.Round((DropSpeedMs == 0 ? 100 : 1000f / DropSpeedMs) * 10) / 10);
         }
-        
+
         private void FixedUpdate()
         {
             transform.position = Vector3.Lerp(transform.position, rawPosition, GameSettings.Settings.gameTransitionSpeed.FixedDelta() * 0.5f);
@@ -111,7 +112,7 @@ namespace Sabotris
 
             var blocksPerShape = (networkController ? networkController.Client?.LobbyData.BlocksPerShape : null) ?? 4;
             var generateVerticalBlocks = (networkController ? networkController.Client?.LobbyData.GenerateVerticalBlocks : null) ?? false;
-            
+
             offsets ??= ShapeUtil.Generate(blocksPerShape, generateVerticalBlocks, GenerateBottomLeft, GenerateTopRight);
 
             if (!DoesCollide(offsets.Select((offset) => offset.Item2 + DropPosition).ToArray()))
@@ -186,12 +187,12 @@ namespace Sabotris
 
                 clearedLayers.Sort((a, b) => b.CompareTo(a));
                 foreach (var layer in clearedLayers)
-                    foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
-                    {
-                        block.RawPosition += Vector3Int.down;
-                        block.shifted = true;
-                    }
-                
+                foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
+                {
+                    block.RawPosition += Vector3Int.down;
+                    block.shifted = true;
+                }
+
                 if (audioController)
                     audioController.layerDelete.PlayModifiedSound(AudioController.GetGameVolume());
                 if (networkController)
@@ -273,9 +274,9 @@ namespace Sabotris
             if (absolutePositions.Any((pos) => pos.IsOutside(BottomLeft, TopRight)))
                 return true;
             foreach (var block in _blocks.Values)
-                foreach (var pos in absolutePositions)
-                    if (pos.Equals(block.RawPosition))
-                        return true;
+            foreach (var pos in absolutePositions)
+                if (pos.Equals(block.RawPosition))
+                    return true;
             return false;
         }
 
@@ -365,11 +366,11 @@ namespace Sabotris
                 return;
 
             foreach (var layer in packet.Layers)
-                foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
-                {
-                    block.RawPosition += Vector3Int.down;
-                    block.shifted = true;
-                }
+            foreach (var block in _blocks.Values.Where((block) => block.RawPosition.y > layer))
+            {
+                block.RawPosition += Vector3Int.down;
+                block.shifted = true;
+            }
         }
 
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Client)]
@@ -448,9 +449,9 @@ namespace Sabotris
             {
                 if (_controllingShape == value)
                     return;
-                
+
                 _controllingShape = value;
-                
+
                 OnControllingShapeCreated(value);
             }
         }
@@ -468,7 +469,7 @@ namespace Sabotris
                 nameText.text = value;
             }
         }
-        
+
         public int DropSpeedMs
         {
             get => GetDropSpeed();
@@ -476,7 +477,7 @@ namespace Sabotris
             {
                 if (_dropSpeedMs == value)
                     return;
-                
+
                 _dropSpeedMs = value;
 
                 if (audioController)

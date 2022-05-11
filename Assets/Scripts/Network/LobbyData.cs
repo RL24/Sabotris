@@ -8,7 +8,7 @@ namespace Sabotris.Network
         private const string HostIdKey = "HostId";
         private const string LobbyNameKey = "LobbyName";
         private const string LobbyPlayerCountKey = "PlayerCount";
-        
+
         private const string BotCountKey = "BotCount";
         private const string BotDifficultyKey = "BotDifficulty";
         private const string PlayFieldSizeKey = "PlayFieldSize";
@@ -79,7 +79,7 @@ namespace Sabotris.Network
         {
             if (lobbyId == null)
                 return;
-            
+
             SteamMatchmaking.SetLobbyData(lobbyId.Value, HostIdKey, Client.SteamId.m_SteamID.ToString());
             SteamMatchmaking.SetLobbyData(lobbyId.Value, LobbyNameKey, LobbyName);
             SteamMatchmaking.SetLobbyData(lobbyId.Value, LobbyPlayerCountKey, PlayerCount.ToString());
@@ -96,7 +96,7 @@ namespace Sabotris.Network
         {
             if (lobbyId == null)
                 return;
-            
+
             ParseHostId(SteamMatchmaking.GetLobbyData(lobbyId.Value, HostIdKey));
             LobbyName = SteamMatchmaking.GetLobbyData(lobbyId.Value, LobbyNameKey);
             ParsePlayerCount(SteamMatchmaking.GetLobbyData(lobbyId.Value, LobbyPlayerCountKey));

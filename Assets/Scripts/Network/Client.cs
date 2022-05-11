@@ -114,7 +114,7 @@ namespace Sabotris.UI.Menu.Menus
         {
             LobbyData = new LobbyData();
             LobbyData.Retrieve(lobbyId);
-            
+
             if (LobbyData.HostId == null)
             {
                 // This should never happen, but in the off chance it does

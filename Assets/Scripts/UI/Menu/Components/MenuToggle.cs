@@ -18,7 +18,7 @@ namespace Sabotris.UI.Menu
         protected override void Start()
         {
             base.Start();
-            
+
             checkbox.color = new Color(checkbox.color.r, checkbox.color.g, checkbox.color.b, isToggledOn.Int());
         }
 

@@ -8,7 +8,7 @@ namespace Sabotris
         private const float MaxDifficulty = 10;
 
         private float ClampDifficulty => MaxDifficulty - Mathf.Clamp(networkController.Client?.LobbyData?.BotDifficulty ?? 5, MinDifficulty, MaxDifficulty);
-        
+
         protected override float GetScanDelay()
         {
             return ClampDifficulty * 0.1f;

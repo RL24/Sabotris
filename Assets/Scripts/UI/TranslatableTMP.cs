@@ -1,5 +1,5 @@
-﻿using TMPro;
-using Sabotris.Translations;
+﻿using Sabotris.Translations;
+using TMPro;
 using UnityEngine;
 
 namespace Sabotris.UI
@@ -8,7 +8,7 @@ namespace Sabotris.UI
     {
         public TranslationKey key;
         public TMP_Text text;
-        
+
         private void Start()
         {
             text.text = Localization.Translate(key);

@@ -2,10 +2,8 @@
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
-using Sabotris.Util;
-using Steamworks;
-using TMPro;
 using Sabotris.Translations;
+using TMPro;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus
@@ -21,9 +19,14 @@ namespace Sabotris.UI.Menu.Menus
         public RectTransform chatHistory;
         public MenuInput inputChatMessage;
         public MenuButton buttonStartGame, buttonBack;
-        
-        public TMP_Text botCountText, botDifficultyText, playFieldSizeText, maxPlayersText, blocksPerShapeText, 
-            generateVerticalBlocksText, practiceModeText;
+
+        public TMP_Text botCountText,
+            botDifficultyText,
+            playFieldSizeText,
+            maxPlayersText,
+            blocksPerShapeText,
+            generateVerticalBlocksText,
+            practiceModeText;
 
         public Menu menuHost, menuJoin;
 
@@ -51,10 +54,10 @@ namespace Sabotris.UI.Menu.Menus
 
             if (botCountText)
                 botCountText.text = Localization.Translate(TranslationKey.UiMenuDisplayBotCount, data.BotCount);
-            
+
             if (botDifficultyText)
                 botDifficultyText.text = Localization.Translate(TranslationKey.UiMenuDisplayBotDifficulty, data.BotDifficulty);
-            
+
             if (playFieldSizeText)
                 playFieldSizeText.text = Localization.Translate(TranslationKey.UiMenuDisplayPlayFieldSize, data.PlayFieldSize * 2 + 1);
 
@@ -77,7 +80,7 @@ namespace Sabotris.UI.Menu.Menus
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
-            
+
             inputChatMessage.OnSubmitEvent -= OnSubmitChatMessage;
 
             networkController.Client?.DeregisterListener(this);
@@ -145,7 +148,7 @@ namespace Sabotris.UI.Menu.Menus
             chatMessage.menu = this;
             chatMessage.Author = packet.AuthorName;
             chatMessage.Message = packet.Message;
-            
+
             chatHistory.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Math.Max(500, chatHistory.childCount * 40));
             chatHistoryScrollBox.content.anchoredPosition = new Vector2(0, Math.Max(500, chatHistory.childCount * 40) - 500);
         }

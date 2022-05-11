@@ -1,4 +1,5 @@
 ﻿using Sabotris.Audio;
+using Sabotris.Game;
 using Sabotris.Network;
 using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
@@ -18,7 +19,7 @@ namespace Sabotris.UI.Menu
 
         public Volume volume;
         public RawImage background;
-        
+
         public Menu currentMenu,
             nextMenu;
 
@@ -30,7 +31,7 @@ namespace Sabotris.UI.Menu
         {
             volume.profile.TryGet(out dof);
         }
-        
+
         private void Update()
         {
             if (currentMenu && currentMenu.Closing && currentMenu.canvasGroup.alpha.Same(0))
@@ -78,7 +79,7 @@ namespace Sabotris.UI.Menu
 
         public void PreventInteractions(bool prevent)
         {
-            interactionBlocker.SetActive(prevent);    
+            interactionBlocker.SetActive(prevent);
         }
 
         public bool IsInMenu => currentMenu;

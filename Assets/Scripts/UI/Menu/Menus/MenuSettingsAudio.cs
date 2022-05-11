@@ -10,6 +10,7 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
         public MenuSlider sliderMasterVolume, sliderMusicVolume, sliderUIVolume, sliderGameVolume;
+
         public MenuButton buttonApply,
             buttonBack;
 
@@ -24,13 +25,13 @@ namespace Sabotris.UI.Menu.Menus
 
             sliderMasterVolume.OnValueChanged += OnMasterVolumeChanged;
             sliderMasterVolume.SetValue(GameSettings.Settings.masterVolume);
-            
+
             sliderMusicVolume.OnValueChanged += OnMusicVolumeChanged;
             sliderMusicVolume.SetValue(GameSettings.Settings.musicVolume);
-            
+
             sliderUIVolume.OnValueChanged += OnUIVolumeChanged;
             sliderUIVolume.SetValue(GameSettings.Settings.uiVolume);
-            
+
             sliderGameVolume.OnValueChanged += OnGameVolumeChanged;
             sliderGameVolume.SetValue(GameSettings.Settings.gameVolume);
         }
@@ -69,7 +70,7 @@ namespace Sabotris.UI.Menu.Menus
         {
             if (!Open)
                 return;
-            
+
             if (sender.Equals(buttonApply))
                 Save();
             else if (sender.Equals(buttonBack))

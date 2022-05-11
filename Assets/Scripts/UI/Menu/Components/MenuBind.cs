@@ -19,6 +19,7 @@ namespace Sabotris.UI.Menu
         public string OriginalText { get; set; }
 
         private string _valueText;
+
         public string ValueText
         {
             get => _valueText;
@@ -26,7 +27,7 @@ namespace Sabotris.UI.Menu
             {
                 if (_valueText == value)
                     return;
-                
+
                 _valueText = value;
 
                 if (valueLabel)
@@ -45,7 +46,7 @@ namespace Sabotris.UI.Menu
         {
             if (!menu.Interactable)
                 return;
-            
+
             menu.Interactable = false;
             label.text = "Press [ANY] Key/Button";
 
@@ -53,19 +54,19 @@ namespace Sabotris.UI.Menu
                 .ForDevice<Keyboard>()
                 .Where((e) => e.HasButtonPress())
                 .CallOnce(OnKeyboardInputEvent);
-            
+
             if (isGamepad)
                 InputSystem.onEvent
                     .ForDevice<Gamepad>()
                     .Where((e) => e.HasButtonPress())
                     .CallOnce(OnGamepadInputEvent);
         }
-        
+
         private void OnKeyboardInputEvent(InputEventPtr eventPtr)
         {
             if (menu.Interactable)
                 return;
-            
+
             menu.Interactable = true;
             label.text = OriginalText;
 
@@ -88,12 +89,12 @@ namespace Sabotris.UI.Menu
 
             OnKeyBindChangedEvent?.Invoke(this, control);
         }
-        
+
         private void OnGamepadInputEvent(InputEventPtr eventPtr)
         {
             if (menu.Interactable)
                 return;
-            
+
             menu.Interactable = true;
             label.text = OriginalText;
 

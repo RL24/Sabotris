@@ -35,7 +35,7 @@ namespace Sabotris.Util
         public static bool Same(this float self, float compare, float tolerance = Tolerance) => Math.Abs(self - compare) <= tolerance;
 
         public static bool Same(this Vector3 self, Vector3 compare, float tolerance = Tolerance) => self.x.Same(compare.x) && self.y.Same(compare.y) && self.z.Same(compare.z);
-        
+
         public static bool Same(this Vector3Int self, Vector3Int compare) => self.x == compare.x && self.y == compare.y && self.z == compare.z;
 
         public static bool Same(this Vector3Int[] self, Vector3Int[] compare)
@@ -55,11 +55,11 @@ namespace Sabotris.Util
         }
 
         public static Vector3 Horizontal(this Vector3 self) => new Vector3(self.x, 0, self.z);
-        
+
         public static Vector3Int Horizontal(this Vector3Int self) => new Vector3Int(self.x, 0, self.z);
-        
+
         public static Vector3Int Copy(this Vector3Int self) => new Vector3Int(self.x, self.y, self.z);
-        
+
         public static float GetMinValue(this Vector3 self) => Mathf.Min(Math.Abs(self.x), Math.Abs(self.y), Math.Abs(self.z));
 
         public static double Lerp(this double self, double target, double time) => (target - self) * time;

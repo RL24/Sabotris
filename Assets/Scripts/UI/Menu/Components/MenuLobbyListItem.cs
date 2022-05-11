@@ -1,12 +1,12 @@
-﻿using TMPro;
-using Sabotris.Translations;
+﻿using Sabotris.Translations;
+using TMPro;
 
 namespace Sabotris.UI.Menu
 {
     public class MenuLobbyListItem : MenuButton
     {
         public TMP_Text playerCountText;
-        
+
         public ulong lobbyId;
         private string _lobbyName;
         private int? _lobbyPlayerCount;

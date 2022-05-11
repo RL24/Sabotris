@@ -12,14 +12,14 @@ namespace Sabotris.Util
         #region Keyboard
 
         private static KeyControl KeyPause => Keyboard.current?.escapeKey;
-        
+
         private static KeyControl KeyLeft => Tern(GameSettings.Input.keyboardBinds.moveLeft);
         private static KeyControl KeyRight => Tern(GameSettings.Input.keyboardBinds.moveRight);
         private static KeyControl KeyForward => Tern(GameSettings.Input.keyboardBinds.moveForward);
         private static KeyControl KeyBackward => Tern(GameSettings.Input.keyboardBinds.moveBack);
         private static KeyControl KeyAscend => Tern(GameSettings.Input.keyboardBinds.moveAscend);
         private static KeyControl KeyDescend => Tern(GameSettings.Input.keyboardBinds.moveDescend);
-        
+
         private static KeyControl KeyMoveDown => Tern(GameSettings.Input.keyboardBinds.moveDown);
 
         private static KeyControl KeyRotateYawLeft => Tern(GameSettings.Input.keyboardBinds.rotateYawLeft);
@@ -69,17 +69,17 @@ namespace Sabotris.Util
 
         private static ButtonControl GamepadAscend => Tern(GameSettings.Input.gamepadBinds.moveAscend);
         private static ButtonControl GamepadDescend => Tern(GameSettings.Input.gamepadBinds.moveDescend);
-        
+
         private static ButtonControl GamepadRotateYawLeft => Tern(GameSettings.Input.gamepadBinds.rotateYawLeft);
         private static ButtonControl GamepadRotateYawRight => Tern(GameSettings.Input.gamepadBinds.rotateYawRight);
         private static ButtonControl GamepadRotatePitchUp => Tern(GameSettings.Input.gamepadBinds.rotatePitchUp);
         private static ButtonControl GamepadRotatePitchDown => Tern(GameSettings.Input.gamepadBinds.rotatePitchDown);
         private static ButtonControl GamepadRotateRollLeft => Tern(GameSettings.Input.gamepadBinds.rotateRollLeft);
         private static ButtonControl GamepadRotateRollRight => Tern(GameSettings.Input.gamepadBinds.rotateRollRight);
-        
+
         private static ButtonControl GamepadButtonZoomIn => Tern(GameSettings.Input.gamepadBinds.zoomIn);
         private static ButtonControl GamepadButtonZoomOut => Tern(GameSettings.Input.gamepadBinds.zoomOut);
-        
+
         private static ButtonControl GamepadNavigateLeft => Tern(GameSettings.Input.gamepadBinds.navigateLeft);
         private static ButtonControl GamepadNavigateRight => Tern(GameSettings.Input.gamepadBinds.navigateRight);
         private static ButtonControl GamepadNavigateUp => Tern(GameSettings.Input.gamepadBinds.navigateUp);
@@ -93,7 +93,7 @@ namespace Sabotris.Util
         {
             if (key == Key.None)
                 return null;
-            
+
             try
             {
                 return Keyboard.current == null ? null : Keyboard.current[key];

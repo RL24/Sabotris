@@ -5,7 +5,6 @@ using Sabotris.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Random = UnityEngine.Random;
 
 namespace Sabotris.UI.Menu
 {
@@ -71,10 +70,10 @@ namespace Sabotris.UI.Menu
         {
             if (!menu.Interactable || isDisabled)
                 return;
-            
+
             if (menu.audioController != null)
                 menu.audioController.clickButton.PlayModifiedSound(AudioController.GetButtonClickVolume(), AudioController.GetButtonClickPitch());
-            
+
             NavigateSelect();
         }
 

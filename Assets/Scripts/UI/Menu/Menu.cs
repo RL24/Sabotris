@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Sabotris.Audio;
+using Sabotris.Game;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Util;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Sabotris.UI.Menu
 {
@@ -39,6 +39,7 @@ namespace Sabotris.UI.Menu
         public bool Closing { get; set; }
 
         private bool _interactable = true;
+
         public bool Interactable
         {
             get => _interactable;
@@ -46,7 +47,7 @@ namespace Sabotris.UI.Menu
             {
                 if (_interactable == value)
                     return;
-               
+
                 _interactable = value;
 
                 menuController.PreventInteractions(!Interactable);
@@ -134,7 +135,7 @@ namespace Sabotris.UI.Menu
         protected virtual void GoBack()
         {
             GameSettings.Load();
-            
+
             SetButtonsDisabled();
 
             menuController.OpenMenu(GetBackMenu());
@@ -158,7 +159,7 @@ namespace Sabotris.UI.Menu
         {
             if (!Open || !Interactable || SelectedButton < 0 || SelectedButton >= buttons.Count)
                 return;
-            
+
             var selectedButton = buttons[SelectedButton];
             selectedButton.isSelected = false;
             SelectedButton = -1;
@@ -186,7 +187,7 @@ namespace Sabotris.UI.Menu
 
                     if (!audioController)
                         return;
-                    
+
                     audioController.hoverButton.PlayModifiedSound(AudioController.GetButtonHoverVolume(), AudioController.GetButtonHoverPitch());
                 }
             }

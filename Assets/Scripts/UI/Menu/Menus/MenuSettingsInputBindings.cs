@@ -11,12 +11,37 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Vector3 _cameraPosition = new Vector3(3, 6, 8);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
-        public MenuBind kMoveLeft, kMoveRight, kMoveForward, kMoveBack,
-            kRotateYawLeft, kRotateYawRight, kRotatePitchUp, kRotatePitchDown, kRotateRollLeft, kRotateRollRight,
-            kNavigateLeft, kNavigateRight, kNavigateUp, kNavigateDown, kNavigateEnter, kNavigateBack;
-        public MenuBind gZoomIn, gZoomOut,
-            gRotateYawLeft, gRotateYawRight, gRotatePitchUp, gRotatePitchDown, gRotateRollLeft, gRotateRollRight,
-            gNavigateLeft, gNavigateRight, gNavigateUp, gNavigateDown, gNavigateEnter, gNavigateBack;
+        public MenuBind kMoveLeft,
+            kMoveRight,
+            kMoveForward,
+            kMoveBack,
+            kRotateYawLeft,
+            kRotateYawRight,
+            kRotatePitchUp,
+            kRotatePitchDown,
+            kRotateRollLeft,
+            kRotateRollRight,
+            kNavigateLeft,
+            kNavigateRight,
+            kNavigateUp,
+            kNavigateDown,
+            kNavigateEnter,
+            kNavigateBack;
+
+        public MenuBind gZoomIn,
+            gZoomOut,
+            gRotateYawLeft,
+            gRotateYawRight,
+            gRotatePitchUp,
+            gRotatePitchDown,
+            gRotateRollLeft,
+            gRotateRollRight,
+            gNavigateLeft,
+            gNavigateRight,
+            gNavigateUp,
+            gNavigateDown,
+            gNavigateEnter,
+            gNavigateBack;
 
         public MenuButton buttonApply, buttonBack;
 
@@ -29,14 +54,13 @@ namespace Sabotris.UI.Menu.Menus
             foreach (var menuButton in buttons)
             {
                 menuButton.OnClick += OnClickButton;
-                
+
                 if (!(menuButton is MenuBind mb))
                     continue;
-                
+
                 mb.OnKeyBindChangedEvent += OnKeyBindChanged;
                 mb.OnGamepadBindChangedEvent += OnGamepadBindChanged;
             }
-
         }
 
         protected override void OnDestroy()
@@ -46,10 +70,10 @@ namespace Sabotris.UI.Menu.Menus
             foreach (var menuButton in buttons)
             {
                 menuButton.OnClick -= OnClickButton;
-                
+
                 if (!(menuButton is MenuBind mb))
                     continue;
-                
+
                 mb.OnKeyBindChangedEvent -= OnKeyBindChanged;
                 mb.OnGamepadBindChangedEvent -= OnGamepadBindChanged;
             }
@@ -90,7 +114,7 @@ namespace Sabotris.UI.Menu.Menus
         {
             if (e == null)
                 return;
-            
+
             if (sender.Equals(kMoveLeft)) GameSettings.Input.keyboardBinds.moveLeft = e.keyCode;
             else if (sender.Equals(kMoveRight)) GameSettings.Input.keyboardBinds.moveRight = e.keyCode;
             else if (sender.Equals(kMoveForward)) GameSettings.Input.keyboardBinds.moveForward = e.keyCode;
@@ -117,15 +141,15 @@ namespace Sabotris.UI.Menu.Menus
         {
             if (e == null)
                 return;
-            
-            
+
+
             var button = GamepadUtil.GetGamepadButton(e);
             if (button == null)
                 return;
-            
+
             if (sender.Equals(gZoomIn)) GameSettings.Input.gamepadBinds.zoomIn = button.Value;
             else if (sender.Equals(gZoomOut)) GameSettings.Input.gamepadBinds.zoomOut = button.Value;
-            
+
             else if (sender.Equals(gRotateYawLeft)) GameSettings.Input.gamepadBinds.rotateYawLeft = button.Value;
             else if (sender.Equals(gRotateYawRight)) GameSettings.Input.gamepadBinds.rotateYawRight = button.Value;
             else if (sender.Equals(gRotatePitchUp)) GameSettings.Input.gamepadBinds.rotatePitchUp = button.Value;
@@ -139,7 +163,7 @@ namespace Sabotris.UI.Menu.Menus
             else if (sender.Equals(gNavigateDown)) GameSettings.Input.gamepadBinds.navigateDown = button.Value;
             else if (sender.Equals(gNavigateEnter)) GameSettings.Input.gamepadBinds.navigateEnter = button.Value;
             else if (sender.Equals(gNavigateBack)) GameSettings.Input.gamepadBinds.navigateBack = button.Value;
-            
+
             ((MenuBind) sender).ValueText = e.displayName;
         }
     }

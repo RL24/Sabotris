@@ -13,12 +13,13 @@ namespace Sabotris
     {
         private static readonly Quaternion[] Rotations = GenerateRotations();
 
-        private static Quaternion[] GenerateRotations() {
+        private static Quaternion[] GenerateRotations()
+        {
             var rotations = new List<Quaternion>();
             for (var i = 0; i <= 270; i += 90)
-                for (var j = 0; j <= 270; j += 90)
-                    for (var k = 0; k <= 270; k += 90)
-                        rotations.Add(Quaternion.Euler(i, j, k));
+            for (var j = 0; j <= 270; j += 90)
+            for (var k = 0; k <= 270; k += 90)
+                rotations.Add(Quaternion.Euler(i, j, k));
             return rotations.ToArray();
         }
 
@@ -44,6 +45,7 @@ namespace Sabotris
                     }
                 }
             }
+
             return emptySpaces.ToArray();
         }
 
@@ -52,17 +54,17 @@ namespace Sabotris
             var spaces = GetEmptySpaces();
             var availableSpaces = new List<(Vector3Int, Quaternion, Vector3Int[])>();
             foreach (var space in spaces)
-                foreach (var (offset, rotation) in _offsets)
-                    for (var y = 0; y <= (int) Math.Floor(offset.Size().y / 2f); y++)
+            foreach (var (offset, rotation) in _offsets)
+                for (var y = 0; y <= (int) Math.Floor(offset.Size().y / 2f); y++)
+                {
+                    var relativeOffset = offset.RelativeTo(space + (Vector3Int.up * y));
+                    if (!DoesCollide(relativeOffset) && !IsBlockingSpace(relativeOffset))
                     {
-                        var relativeOffset = offset.RelativeTo(space + (Vector3Int.up * y));
-                        if (!DoesCollide(relativeOffset) && !IsBlockingSpace(relativeOffset))
-                        {
-                            availableSpaces.Add((space, rotation, offset));
-                            break;
-                        }
+                        availableSpaces.Add((space, rotation, offset));
+                        break;
                     }
-            
+                }
+
             availableSpaces = availableSpaces.OrderBy((space) =>
             {
                 var shapeMin = space.Item3.Min((vec) => vec.y);
@@ -98,7 +100,7 @@ namespace Sabotris
         {
             yield return new WaitUntil(() => shape && shape.Blocks.Count > 0);
             yield return new WaitForSeconds(GetScanDelay());
-            
+
             _offsets = new List<(Vector3Int[], Quaternion)>();
             var prevRotation = shape.RawRotation;
             foreach (var rot in Rotations)
@@ -106,6 +108,7 @@ namespace Sabotris
                 shape.RawRotation = rot;
                 _offsets.Add((shape.Offsets.Select((offset) => offset.Item2.Copy()).ToArray(), rot));
             }
+
             shape.RawRotation = prevRotation;
 
             _destination = (null, Quaternion.identity);
@@ -116,22 +119,22 @@ namespace Sabotris
 
             var position = _destination.Item1;
             var rotation = _destination.Item2.eulerAngles;
-            
+
             if (position == null)
                 yield break;
 
             while (shape && !shape.locked
-                     && (shape.RawPosition.x != position.Value.x
-                     || shape.RawPosition.z != position.Value.z
-                     || !shape.RawRotation.eulerAngles.x.Same(rotation.x)
-                     || !shape.RawRotation.eulerAngles.y.Same(rotation.y)
-                     || !shape.RawRotation.eulerAngles.z.Same(rotation.z)))
+                         && (shape.RawPosition.x != position.Value.x
+                             || shape.RawPosition.z != position.Value.z
+                             || !shape.RawRotation.eulerAngles.x.Same(rotation.x)
+                             || !shape.RawRotation.eulerAngles.y.Same(rotation.y)
+                             || !shape.RawRotation.eulerAngles.z.Same(rotation.z)))
             {
                 yield return new WaitForSeconds(Random.Range(GetMinimumMoveDelay(), GetMaximumMoveDelay()));
 
                 if (!shape || shape.locked)
                     yield break;
-                
+
                 var choices = new List<Movement>();
                 if (!shape.RawRotation.eulerAngles.x.Same(rotation.x))
                     choices.Add(Movement.RotateX);
@@ -151,7 +154,7 @@ namespace Sabotris
                     break;
 
                 var positionDirection = Vector3.Normalize(position.Value - shape.RawPosition);
-         
+
                 switch (choices[Random.Range(0, choices.Count - 1)])
                 {
                     case Movement.X:
@@ -178,7 +181,7 @@ namespace Sabotris
                 shape.permaDrop = true;
             }
         }
-        
+
         public override (float, float) GetMovement()
         {
             return (0, 0);
@@ -198,15 +201,15 @@ namespace Sabotris
         {
             return base.ShouldSendPacket() && networkController.Server?.Running == true;
         }
-        
+
         protected override void OnControllingShapeCreated(Shape shape)
         {
             if (!shape || !ShouldSendPacket() && !(this is DemoContainer))
                 return;
-            
+
             shape.StartCoroutine(GoToDestination(shape));
         }
-        
+
         protected virtual float GetScanDelay()
         {
             return 0.5f;

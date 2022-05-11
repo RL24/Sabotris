@@ -1,4 +1,4 @@
-﻿namespace Sabotris
+﻿namespace Sabotris.Game
 {
     public class PlayerScore
     {

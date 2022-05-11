@@ -8,13 +8,13 @@
 
             OnEnable();
         }
-        
+
         protected void OnEnable()
         {
             if (!ControllingShape)
                 StartDropping();
         }
-        
+
         protected override int GetDropSpeed()
         {
             return 1000;

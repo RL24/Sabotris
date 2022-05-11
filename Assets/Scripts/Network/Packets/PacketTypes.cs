@@ -9,7 +9,7 @@ namespace Sabotris.Network.Packets
     {
         GameStart = 0x00,
         GameEnd = 0x01,
-        
+
         ChatMessage = 0x10,
 
         ShapeCreate = 0x20,
@@ -30,7 +30,7 @@ namespace Sabotris.Network.Packets
         RetrievePlayerId = 0x96,
 
         ServerShutdown = 0x1000,
-        
+
         BotConnected = 0x900,
         BotDisconnected = 0x901
     }
@@ -51,7 +51,7 @@ namespace Sabotris.Network.Packets
     {
         public static readonly PacketType GameStart = new PacketType(PacketTypeId.GameStart, () => new PacketGameStart());
         public static readonly PacketType GameEnd = new PacketType(PacketTypeId.GameEnd, () => new PacketGameEnd());
-        
+
         public static readonly PacketType ChatMessage = new PacketType(PacketTypeId.ChatMessage, () => new PacketChatMessage());
 
         public static readonly PacketType ShapeCreate = new PacketType(PacketTypeId.ShapeCreate, () => new PacketShapeCreate());

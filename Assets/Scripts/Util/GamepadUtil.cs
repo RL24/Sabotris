@@ -25,7 +25,7 @@ namespace Sabotris.Util
             {"leftTrigger", GamepadButton.LeftTrigger},
             {"rightTrigger", GamepadButton.RightTrigger},
         };
-        
+
         public static GamepadButton? GetGamepadButton(ButtonControl control)
         {
             if (!ButtonMap.TryGetValue(control.name, out var button))

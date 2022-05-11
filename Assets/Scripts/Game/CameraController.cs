@@ -1,14 +1,9 @@
-using System.Numerics;
 using Sabotris.IO;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using Quaternion = UnityEngine.Quaternion;
-using Vector3 = UnityEngine.Vector3;
 
-namespace Sabotris
+namespace Sabotris.Game
 {
     public class CameraController : MonoBehaviour
     {
@@ -123,7 +118,7 @@ namespace Sabotris
 
             if (IsSpectating)
                 animationTime *= 0.5f;
-            
+
             cameraTransform.position = Vector3.Lerp(cameraTransformPosition, toPosition, animationTime);
             cameraTransform.rotation = Quaternion.Lerp(cameraTransformRotation, toRotation, animationTime);
         }

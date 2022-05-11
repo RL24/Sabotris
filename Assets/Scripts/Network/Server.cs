@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Sabotris.Game;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Bot;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using Steamworks;
-using UnityEngine;
 using Random = Sabotris.Util.Random;
 
 namespace Sabotris.UI.Menu.Menus
@@ -104,7 +104,7 @@ namespace Sabotris.UI.Menu.Menus
 
             _steamConnections.TryGetValue(steamId.m_SteamID, out var player);
             player.Item1 ??= new Player(Guid.NewGuid(), SteamFriends.GetFriendPersonaName(steamId), steamId.m_SteamID);
-            
+
             switch (param.m_info.m_eState)
             {
                 case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_Connected:
@@ -128,9 +128,9 @@ namespace Sabotris.UI.Menu.Menus
                 case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_ClosedByPeer:
                     SteamNetworkingSockets.CloseConnection(param.m_hConn, 0, "", false);
                     _steamConnections.Remove(steamId.m_SteamID);
-                    
+
                     _lobbyData.UpdatePlayerCount(LobbyId, ConnectionCount);
-                    
+
                     SendPacketToAll(new PacketPlayerDisconnected
                     {
                         Id = player.Item1.Id
@@ -199,7 +199,7 @@ namespace Sabotris.UI.Menu.Menus
             var data = packet.Serialize().Bytes;
             var buffer = Marshal.PtrToStructure<SteamNetworkingMessage_t>(SteamNetworkingUtils.AllocateMessage(data.Length));
             Marshal.Copy(data, 0, buffer.m_pData, data.Length);
-            
+
             foreach (var entry in _steamConnections.Where((entry) => entry.Key != exclude))
                 SendPacket(packet, buffer, (uint) data.Length, entry.Value.Item2);
         }
@@ -239,7 +239,7 @@ namespace Sabotris.UI.Menu.Menus
 
             if (!_steamConnections.TryGetValue(packet.SteamId, out var player))
                 return;
-            
+
             player.Item1.Id = packet.Id;
             if (packet.IsNewConnection)
             {
@@ -290,7 +290,7 @@ namespace Sabotris.UI.Menu.Menus
         public void OnBotDisconnected(PacketBotDisconnected packet)
         {
             _bots.Remove(packet.BotId);
-            
+
             SendPacketToAll(new PacketBotDisconnected
             {
                 BotId = packet.BotId

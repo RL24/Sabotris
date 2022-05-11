@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sabotris
+namespace Sabotris.Game
 {
     public class Player
     {

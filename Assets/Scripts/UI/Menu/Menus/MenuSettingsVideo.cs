@@ -30,7 +30,7 @@ namespace Sabotris.UI.Menu.Menus
                 toggleSsao.isToggledOn = GameSettings.Settings.ambientOcclusion;
                 toggleSsao.OnValueChanged += OnSsaoToggled;
             }
-            
+
             if (buttonMenuDof is MenuCarousel carouselMenuDof)
             {
                 carouselMenuDof.index = GameSettings.Settings.menuDofMode switch

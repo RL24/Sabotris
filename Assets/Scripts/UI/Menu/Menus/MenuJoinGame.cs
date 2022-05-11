@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Sabotris.Network;
+using Sabotris.Translations;
 using Sabotris.Util;
 using Steamworks;
-using Sabotris.Translations;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus
@@ -21,6 +21,7 @@ namespace Sabotris.UI.Menu.Menus
         public Menu menuMain, menuLobby;
 
         private bool _requestingLobbies;
+
         private bool RequestingLobbies
         {
             get => _requestingLobbies;
@@ -28,13 +29,13 @@ namespace Sabotris.UI.Menu.Menus
             {
                 if (value == _requestingLobbies)
                     return;
-                
+
                 _requestingLobbies = value;
 
                 buttonRefresh.isDisabled = RequestingLobbies;
             }
         }
-        
+
         private readonly Dictionary<ulong, MenuLobbyListItem> _lobbies = new Dictionary<ulong, MenuLobbyListItem>();
 
         protected override void Start()
@@ -87,12 +88,12 @@ namespace Sabotris.UI.Menu.Menus
 
             audioController.refreshingLobbies.loop = true;
             audioController.refreshingLobbies.Play();
-            
+
             RequestingLobbies = true;
             foreach (var lobby in _lobbies.Values)
                 Destroy(lobby.gameObject);
             _lobbies.Clear();
-            
+
             AddNoticeMessage(Localization.Translate(TranslationKey.UiMenuNoticeRefreshing));
             Client.RequestLobbyList();
         }
@@ -100,7 +101,7 @@ namespace Sabotris.UI.Menu.Menus
         private void OnLobbiesFetched(object sender, uint lobbyCount)
         {
             audioController.refreshingLobbies.loop = false;
-            
+
             RequestingLobbies = false;
             foreach (var lobby in _lobbies.Values)
                 Destroy(lobby.gameObject);
@@ -122,7 +123,7 @@ namespace Sabotris.UI.Menu.Menus
                 if (!lobbyData.PracticeMode)
                     AddServerEntry(lobbyId.m_SteamID, lobbyData);
             }
-            
+
             if (_lobbies.Count == 0)
                 AddNoticeMessage(Localization.Translate(TranslationKey.UiMenuNoticeNoLobbies));
         }

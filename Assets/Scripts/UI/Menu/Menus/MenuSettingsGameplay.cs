@@ -11,6 +11,7 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
         public MenuCarousel carouselLanguage;
+
         public MenuButton buttonGameTransitionSpeed,
             buttonUIAnimationSpeed,
             buttonGameCameraSpeed,
@@ -29,7 +30,7 @@ namespace Sabotris.UI.Menu.Menus
 
             carouselLanguage.index = (int) GameSettings.Settings.language;
             carouselLanguage.OnValueChanged += OnLanguageChanged;
-            
+
             if (buttonGameTransitionSpeed is MenuSlider sgts)
             {
                 sgts.OnValueChanged += OnGameTransitionSpeedChanged;

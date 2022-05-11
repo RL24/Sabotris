@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sabotris.Audio;
+using Sabotris.Game;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Bot;
@@ -105,7 +106,7 @@ namespace Sabotris
         {
             Destroy(container.gameObject);
             Containers.Remove(container);
-            
+
             var i = 0;
             foreach (var c in Containers)
                 c.rawPosition = GetContainerPosition(i++);
@@ -146,7 +147,7 @@ namespace Sabotris
         public void OnGameEnd(PacketGameEnd packet)
         {
             audioController.gameOver.PlayModifiedSound(AudioController.GetGameVolume());
-            
+
             audioController.music.pitch = 1;
 
             menuController.OpenMenu(menuGameOver);
@@ -159,7 +160,7 @@ namespace Sabotris
                 return;
 
             CreateContainer(packet.Player.Id, packet.Player.Name);
-            
+
             audioController.playerJoinLobby.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetPlayerJoinLeavePitch());
         }
 

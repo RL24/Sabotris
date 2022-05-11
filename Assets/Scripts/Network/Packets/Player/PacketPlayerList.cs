@@ -1,4 +1,6 @@
-﻿namespace Sabotris.Network.Packets.Game
+﻿using Sabotris.Game;
+
+namespace Sabotris.Network.Packets.Game
 {
     public class PacketPlayerList : Packet
     {

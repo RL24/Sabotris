@@ -42,12 +42,12 @@ namespace Sabotris.Util
                 Debug.LogError(e.Message);
             }
         }
-        
+
         private static void Save(string filename, object obj)
         {
             if (obj == null)
                 return;
-            
+
             var json = JsonUtility.ToJson(obj, true);
             WriteJson(filename, json);
         }
@@ -60,8 +60,10 @@ namespace Sabotris.Util
                 var json = ReadJson(filename);
                 if (json != null)
                     JsonUtility.FromJsonOverwrite(json, type);
-            } else
+            }
+            else
                 Logging.Error(false, "Failed to load file {0}, not found", filename);
+
             return type;
         }
 

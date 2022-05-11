@@ -1,4 +1,5 @@
 ﻿using System;
+using Sabotris.Game;
 
 namespace Sabotris.Network.Packets.Game
 {

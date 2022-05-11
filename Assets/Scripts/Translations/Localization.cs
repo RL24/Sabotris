@@ -11,18 +11,18 @@ namespace Sabotris.Translations
         Italian,
         Spanish
     }
-    
+
     public static class Localization
     {
         public static LocaleKey CurrentLocale { get; set; } = LocaleKey.English;
-        
+
         private static readonly Dictionary<LocaleKey, Locale> Translations = new Dictionary<LocaleKey, Locale>()
         {
-            { LocaleKey.English, new LocaleEnglish() },
-            { LocaleKey.French, new LocaleFrench() },
-            { LocaleKey.German, new LocaleGerman() },
-            { LocaleKey.Italian, new LocaleItalian() },
-            { LocaleKey.Spanish, new LocaleSpanish() },
+            {LocaleKey.English, new LocaleEnglish()},
+            {LocaleKey.French, new LocaleFrench()},
+            {LocaleKey.German, new LocaleGerman()},
+            {LocaleKey.Italian, new LocaleItalian()},
+            {LocaleKey.Spanish, new LocaleSpanish()},
         };
 
         public static string Translate(TranslationKey key)

@@ -1,7 +1,6 @@
 ﻿using System;
 using Sabotris.Network;
 using Sabotris.Util;
-using Steamworks;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus

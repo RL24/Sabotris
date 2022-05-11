@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Sabotris.Audio;
+using Sabotris.Game;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
@@ -33,6 +34,7 @@ namespace Sabotris
         [SerializeField] public Quaternion rotateActivator;
 
         public readonly Stopwatch DropTimer = new Stopwatch();
+
         private readonly Stopwatch _moveTimer = new Stopwatch(),
             _moveResetTimer = new Stopwatch();
 
@@ -115,7 +117,7 @@ namespace Sabotris
         {
             var block = Instantiate(blockTemplate, offset, Quaternion.identity);
             block.name = $"Block-{blockId}";
-            
+
             block.id = blockId;
 
             block.transform.SetParent(transform, false);
@@ -241,7 +243,7 @@ namespace Sabotris
                     if (isDropping && doFastMoveDown && !sound.isPlaying || isDropping && !doFastMoveDown || !isDropping)
                         sound.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetShapeMovePitch());
                 }
-                
+
                 RawPosition += roundedMoveVec;
                 if (roundedMoveVec.x != 0 || roundedMoveVec.z != 0)
                     _moveTimer.Start();
@@ -312,7 +314,7 @@ namespace Sabotris
 
             parentContainer.LockShape(this, packet.Offsets.ToArray());
         }
-        
+
         private bool IsControlling() => parentContainer.ControllingShape == this;
 
         public Vector3Int RawPosition

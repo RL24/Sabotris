@@ -1,6 +1,6 @@
 ﻿using System;
-using Sabotris.Util;
 using Sabotris.Translations;
+using Sabotris.Util;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -17,13 +17,13 @@ namespace Sabotris.IO
         public float uiAnimationSpeed = 0.2f;
         public float gameCameraSpeed = 0.75f;
         public float menuCameraSpeed = 0.1f;
-        
+
         // Audio menu
         public float masterVolume = 75;
         public float musicVolume = 25;
         public float uiVolume = 100;
         public float gameVolume = 70;
-        
+
         // Video menu
         public bool ambientOcclusion = true;
         public DepthOfFieldMode menuDofMode = DepthOfFieldMode.Bokeh;
@@ -54,7 +54,6 @@ namespace Sabotris.IO
         public Key navigateDown = Key.DownArrow;
         public Key navigateEnter = Key.Enter;
         public Key navigateBack = Key.Escape;
-
     }
 
     [Serializable]
@@ -62,10 +61,10 @@ namespace Sabotris.IO
     {
         public GamepadButton moveAscend = GamepadButton.RightShoulder;
         public GamepadButton moveDescend = GamepadButton.LeftShoulder;
-        
+
         public GamepadButton zoomIn = GamepadButton.LeftStick;
         public GamepadButton zoomOut = GamepadButton.RightStick;
-        
+
         public GamepadButton rotateYawLeft = GamepadButton.LeftShoulder;
         public GamepadButton rotateYawRight = GamepadButton.RightShoulder;
         public GamepadButton rotatePitchUp = GamepadButton.North;
@@ -97,7 +96,7 @@ namespace Sabotris.IO
     {
         public static event EventHandler OnBeforeSaveEvent;
         public static event EventHandler OnAfterLoadEvent;
-        
+
         public static GameSettingsConfig Settings = new GameSettingsConfig();
         public static GameInputConfig Input = new GameInputConfig();
 

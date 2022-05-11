@@ -5,7 +5,7 @@
         public LocaleSpanish() : base("Spanish")
         {
             // Generic menu items	
-	
+
             _translations.Add(TranslationKey.UiMenuButtonBack, "Regreso");
             _translations.Add(TranslationKey.UiMenuButtonApply, "Salvar");
             _translations.Add(TranslationKey.UiYes, "sí");

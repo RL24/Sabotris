@@ -1,6 +1,6 @@
 ﻿using System;
-using TMPro;
 using Sabotris.Translations;
+using TMPro;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu
@@ -17,7 +17,7 @@ namespace Sabotris.UI.Menu
         protected override void Start()
         {
             base.Start();
-            
+
             previous.OnClick += OnPreviousClick;
             next.OnClick += OnNextClick;
 

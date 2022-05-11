@@ -9,12 +9,12 @@ namespace Sabotris.Util
 
         private const string Consonants = "bcdfghjklmnpqrstvwxyz";
         private const string Vowels = "aeiou";
-        
+
         public static void SetSeed(int seed)
         {
             m_random = new System.Random(seed);
         }
-        
+
         public static float Range(float min, float max)
         {
             var next = m_random.NextDouble();
@@ -30,7 +30,7 @@ namespace Sabotris.Util
         {
             return m_random.NextDouble() > 0.5;
         }
-        
+
         public static string RandomName(int length)
         {
             var name = "";
@@ -55,6 +55,6 @@ namespace Sabotris.Util
 
             name = name[0].ToString().ToUpper() + name.Substring(1, name.Length - 1);
             return name;
-        } 
+        }
     }
 }

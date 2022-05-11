@@ -9,13 +9,13 @@ namespace Sabotris.Translations
         UiMenuButtonApply = 0x02,
         UiYes = 0x03,
         UiNo = 0x04,
-        
+
         MAIN_MENU = 0x10,
         UiMenuButtonHostGame = 0x11,
         UiMenuButtonJoinGame = 0x12,
         UiMenuButtonSettings = 0x13,
         UiMenuButtonExit = 0x14,
-        
+
         HOST_GAME = 0x20,
         UiMenuTitleHostGame = 0x21,
         UiMenuInputPlayFieldSize = 0x22,
@@ -26,14 +26,14 @@ namespace Sabotris.Translations
         UiMenuButtonCreateLobby = 0x27,
         UiMenuInputBotCount = 0x28,
         UiMenuInputBotDifficulty = 0x29,
-        
+
         JOIN_GAME = 0x30,
         UiMenuTitleJoinGame = 0x31,
         UiMenuButtonRefresh = 0x32,
         UiMenuNoticeRefreshing = 0x301,
         UiMenuNoticeNoLobbies = 0x302,
         UiMenuLobbyItemPlayerCount = 0x33,
-        
+
         LOBBY = 0x310,
         UiMenuTitleLobby = 0x311,
         UiMenuInputEnterText = 0x312,
@@ -45,14 +45,14 @@ namespace Sabotris.Translations
         UiMenuDisplayPracticeMode = 0x318,
         UiMenuDisplayBotCount = 0x319,
         UiMenuDisplayBotDifficulty = 0x320,
-        
+
         SETTINGS = 0x40,
         UiMenuTitleSettings = 0x41,
         UiMenuButtonVideo = 0x42,
         UiMenuButtonAudio = 0x43,
         UiMenuButtonControls = 0x44,
         UiMenuButtonGameplay = 0x45,
-        
+
         SETTINGS_VIDEO = 0x50,
         UiMenuTitleSettingsVideo = 0x51,
         UiMenuInputAmbientOcclusion = 0x52,
@@ -64,14 +64,14 @@ namespace Sabotris.Translations
         UiMenuInputFullscreenModeFullscreenWindowed = 0x540,
         UiMenuInputFullscreenModeFullscreen = 0x541,
         UiMenuInputFullscreenModeWindowed = 0x542,
-        
+
         SETTINGS_AUDIO = 0x60,
         UiMenuTitleSettingsAudio = 0x61,
         UiMenuInputMasterVolume = 0x62,
         UiMenuInputMusicVolume = 0x63,
         UiMenuInputUiVolume = 0x64,
         UiMenuInputGameVolume = 0x65,
-        
+
         SETTINGS_CONTROLS = 0x70,
         UiMenuTitleSettingsControls = 0x71,
         UiMenuButtonInputBindings = 0x72,
@@ -79,7 +79,7 @@ namespace Sabotris.Translations
         UiMenuHeadingMouse = 0x74,
         UiMenuInputCameraSensitivity = 0x75,
         UiMenuInputRotateSensitivity = 0x76,
-        
+
         SETTINGS_GAMEPLAY = 0x80,
         UiMenuTitleSettingsGameplay = 0x81,
         UiMenuHeadingGameSpeeds = 0x82,
@@ -93,24 +93,24 @@ namespace Sabotris.Translations
         UiMenuLanguageGerman = 0x872,
         UiMenuLanguageItalian = 0x873,
         UiMenuLanguageSpanish = 0x874,
-        
+
         PAUSE = 0x90,
         UiMenuTitlePause = 0x91,
         UiMenuButtonDisconnect = 0x92,
         UiMenuButtonResume = 0x93,
-        
+
         GAME_OVER = 0xA0,
         UiMenuTitleGameOver = 0xA1,
         UiMenuButtonMainMenu = 0xA2,
-        
+
         HUD = 0xB0,
         UiHudPlayerLabel = 0xB1,
         UiHudScoreLabel = 0xB2,
-        
+
         GAME = 0xC0,
         GameContainerDropSpeed = 0xC1
     }
-    
+
     public abstract class Locale
     {
         public string Name { get; }

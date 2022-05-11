@@ -1,26 +1,18 @@
-﻿namespace Sabotris
+﻿using System;
+
+namespace Sabotris
 {
-    public class PlayerScore
-    {
-        public int Score { get; }
-        public int ClearedLayers { get; }
-
-        public PlayerScore(int score, int clearedLayers)
-        {
-            Score = score;
-            ClearedLayers = clearedLayers;
-        }
-    }
-
     public class Player
     {
-        public ulong Id { get; }
+        public Guid Id { get; set; }
         public string Name { get; }
+        public ulong? SteamId { get; }
 
-        public Player(ulong id, string name)
+        public Player(Guid id, string name, ulong? steamId = null)
         {
             Id = id;
             Name = name;
+            SteamId = steamId;
         }
     }
 }

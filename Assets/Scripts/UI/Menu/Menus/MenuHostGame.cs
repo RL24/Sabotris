@@ -11,7 +11,7 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Vector3 _cameraPosition = new Vector3(5, 11, -3.5f);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(55, -51, -7);
 
-        public MenuSlider sliderPlayFieldSize, sliderMaxPlayers, sliderBlocksPerShape;
+        public MenuSlider sliderBotCount, sliderBotDifficulty, sliderPlayFieldSize, sliderMaxPlayers, sliderBlocksPerShape;
         public MenuToggle toggleGenerateVerticalBlocks, togglePracticeMode;
         public MenuButton buttonCreateLobby, buttonBack;
 
@@ -66,6 +66,8 @@ namespace Sabotris.UI.Menu.Menus
             var lobbyData = new LobbyData
             {
                 LobbyName = $"{Client.Username}'s Lobby",
+                BotCount = (int) sliderBotCount.slider.value,
+                BotDifficulty = (int) sliderBotDifficulty.slider.value,
                 PlayFieldSize = (int) sliderPlayFieldSize.slider.value,
                 MaxPlayers = (int) sliderMaxPlayers.slider.value,
                 BlocksPerShape = (int) sliderBlocksPerShape.slider.value,

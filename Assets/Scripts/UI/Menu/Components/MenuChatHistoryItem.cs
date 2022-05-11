@@ -4,7 +4,6 @@ namespace Sabotris.UI.Menu
 {
     public class MenuChatHistoryItem : MenuButton
     {
-        public Guid id;
         private string _author;
         private string _message;
 

@@ -37,6 +37,7 @@ namespace Sabotris
             _moveResetTimer = new Stopwatch();
 
         public bool permaDrop;
+        public bool locked;
 
         private float _prevAdvance, _prevStrafe;
 
@@ -46,8 +47,6 @@ namespace Sabotris
 
         public readonly Dictionary<Guid, Block> Blocks = new Dictionary<Guid, Block>();
 
-        // private GameObject _previewShape;
-
         private void Start()
         {
             RawPosition = Vector3Int.RoundToInt(transform.position - parentContainer.transform.position);
@@ -55,20 +54,8 @@ namespace Sabotris
 
             transform.localScale = Vector3.zero;
 
-            // if (!parentContainer.IsDemo())
-            // {
-            //     _previewShape = Instantiate(new GameObject(), Vector3.zero, Quaternion.identity);
-            //     _previewShape.transform.localScale = Vector3.one * 0.9f;
-            //     
-            //     _previewShape.transform.SetParent(parentContainer.transform, false);
-            // }
-
             foreach (var (blockId, blockPos) in Offsets)
-            {
                 CreateBlock(blockId, blockPos);
-                // if (_previewShape)
-                    // CreatePreviewBlock(blockId, blockPos);
-            }
 
             foreach (var ren in GetComponentsInChildren<Renderer>())
                 ren.material.color = color ?? Color.white;
@@ -90,9 +77,9 @@ namespace Sabotris
 
             DoMove();
 
-            if (inputRotateYaw.Same(0, 1f)) inputRotateYaw = InputUtil.GetRotateYaw();
-            if (inputRotatePitch.Same(0, 1f)) inputRotatePitch = InputUtil.GetRotatePitch();
-            if (inputRotateRoll.Same(0, 1f)) inputRotateRoll = InputUtil.GetRotateRoll();
+            if (inputRotateYaw.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotateYaw = InputUtil.GetRotateYaw();
+            if (inputRotatePitch.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotatePitch = InputUtil.GetRotatePitch();
+            if (inputRotateRoll.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotateRoll = InputUtil.GetRotateRoll();
         }
 
         private void FixedUpdate()
@@ -122,25 +109,7 @@ namespace Sabotris
             transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.Settings.gameTransitionSpeed);
             transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.Settings.gameTransitionSpeed);
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.Settings.gameTransitionSpeed);
-
-            // if (_previewShape)
-            // {
-            //     _previewShape.transform.position = transform.position;
-            //     _previewShape.transform.rotation = rotateActivator;
-            // }
         }
-
-        // private void CreatePreviewBlock(Guid blockId, Vector3Int offset)
-        // {
-        //     var block = Instantiate(blockTemplate, offset, Quaternion.identity);
-        //     block.name = $"Preview-Block-{blockId}";
-        //
-        //     block.id = blockId;
-        //
-        //     block.transform.SetParent(_previewShape.transform, false);
-        //
-        //     block.color = Color.gray;
-        // }
 
         private void CreateBlock(Guid blockId, Vector3Int offset)
         {
@@ -170,6 +139,7 @@ namespace Sabotris
 
         private void StopDropping()
         {
+            locked = true;
             DropTimer.Reset();
             parentContainer.LockShape(this, Offsets.Select((offset) => RawPosition + offset.Item2).ToArray());
         }
@@ -334,8 +304,11 @@ namespace Sabotris
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Client)]
         public void OnShapeLock(PacketShapeLock packet)
         {
-            if (packet.Id != id)
+            if (packet.Id != id || locked)
                 return;
+
+            RawPosition = packet.LockPos;
+            RawRotation = packet.LockRot;
 
             parentContainer.LockShape(this, packet.Offsets.ToArray());
         }

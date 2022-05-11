@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
 using Steamworks;
 using UnityEngine;
@@ -16,10 +17,10 @@ namespace Sabotris.Network.Packets
 
         public ByteBuffer Serialize()
         {
-            SenderId ??= SteamUser.GetSteamID().m_SteamID;
+            SenderId ??= Client.SteamId.m_SteamID;
 
             var outgoing = new ByteBuffer {PacketType = GetPacketType()};
-            outgoing.Write(SenderId ?? 0);
+            WriteValue(outgoing, SenderId ?? 0);
             outgoing.Write((byte) GetPacketType().Id);
 
             foreach (var property in GetType().GetProperties()
@@ -71,7 +72,7 @@ namespace Sabotris.Network.Packets
             if (type == typeof((Guid, Vector3Int))) return ((Guid) ReadValue(incoming, typeof(Guid)), (Vector3Int) ReadValue(incoming, typeof(Vector3Int)));
             if (type == typeof((Guid, int))) return ((Guid) ReadValue(incoming, typeof(Guid)), incoming.ReadInt32());
             if (type == typeof((long, int))) return (incoming.ReadInt64(), incoming.ReadInt32());
-            if (type == typeof(Player)) return new Player(incoming.ReadUInt64(), incoming.ReadString());
+            if (type == typeof(Player)) return new Player((Guid) ReadValue(incoming, typeof(Guid)), incoming.ReadString(), incoming.ReadBoolean() ? incoming.ReadUInt64() : (ulong?) null);
             if (type == typeof(PlayerScore)) return new PlayerScore(incoming.ReadInt32(), incoming.ReadInt32());
             if (type == typeof(Color)) return new Color(incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat());
 
@@ -195,8 +196,11 @@ namespace Sabotris.Network.Packets
 
                 case Player parsed:
                 {
-                    outgoing.Write(parsed.Id);
+                    WriteValue(outgoing, parsed.Id);
                     outgoing.Write(parsed.Name);
+                    outgoing.Write(parsed.SteamId != null);
+                    if (parsed.SteamId != null)
+                        outgoing.Write(parsed.SteamId.Value);
                     break;
                 }
 

@@ -6,7 +6,7 @@ namespace Sabotris.Network.Packets.Game
     {
         public override PacketType GetPacketType() => PacketTypes.BlockBulkRemove;
 
-        public ulong ContainerId { get; set; }
+        public Guid ContainerId { get; set; }
         public Guid[] Ids { get; set; }
     }
 }

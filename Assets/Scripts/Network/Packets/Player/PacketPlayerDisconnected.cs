@@ -1,9 +1,11 @@
-﻿namespace Sabotris.Network.Packets.Game
+﻿using System;
+
+namespace Sabotris.Network.Packets.Game
 {
     public class PacketPlayerDisconnected : Packet
     {
         public override PacketType GetPacketType() => PacketTypes.PlayerDisconnected;
 
-        public ulong Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

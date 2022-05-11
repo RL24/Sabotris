@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Audio;
-using JetBrains.Annotations;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
@@ -53,7 +52,8 @@ namespace Sabotris
         public GameObject floor;
         public TMP_Text nameText, dropSpeedText;
 
-        public ulong id;
+        public Guid id;
+        public ulong steamId;
         [SerializeField] private string containerName;
         private PlayerScore _score = new PlayerScore(0, 0);
         public bool dead;
@@ -61,11 +61,11 @@ namespace Sabotris
         private Shape _controllingShape;
 
         private readonly Dictionary<Guid, Shape> _shapes = new Dictionary<Guid, Shape>();
-        protected readonly Dictionary<Guid, Block> _blocks = new Dictionary<Guid, Block>();
+        private readonly Dictionary<Guid, Block> _blocks = new Dictionary<Guid, Block>();
 
-        public Vector3Int DropPosition { get; protected set; } = new Vector3Int(0, 20, 0);
+        public Vector3Int DropPosition { get; } = new Vector3Int(0, 20, 0);
 
-        protected int _dropSpeedMs = 1000;
+        private int _dropSpeedMs = 1000;
         public const int DropSpeedFastMs = 10;
         private int DropSpeedIncrementMs => Math.Max(5, 40 / (world == null ? 1 : world.Containers.Count));
 
@@ -103,7 +103,7 @@ namespace Sabotris
 
         public void StartDropping((Guid, Vector3Int)[] offsets = null)
         {
-            if (dead)
+            if (dead || this is BotContainer && networkController.Server?.Running == false)
                 return;
 
             var blocksPerShape = (networkController ? networkController.Client?.LobbyData.BlocksPerShape : null) ?? 4;
@@ -117,7 +117,7 @@ namespace Sabotris
                 shape.StartDropping();
                 ControllingShape = shape;
 
-                if (networkController)
+                if (ShouldSendPacket())
                     networkController.Client?.SendPacket(new PacketShapeCreate
                     {
                         ContainerId = id,
@@ -136,7 +136,7 @@ namespace Sabotris
 
                 dead = true;
 
-                if (networkController)
+                if (ShouldSendPacket())
                     networkController.Client?.SendPacket(new PacketPlayerDead
                     {
                         Id = id
@@ -154,15 +154,17 @@ namespace Sabotris
                 block.Value.RawPosition = shape.RawPosition + shape.Offsets.First((pair) => pair.Item1 == block.Key).Item2;
             }
 
-            if (gameController.ControllingContainer != this && !(this is BotContainer || this is DemoContainer))
+            if (gameController.ControllingContainer != this && !(this is BotContainer && networkController.Server?.Running == true || this is DemoContainer))
                 return;
 
             if (audioController)
                 audioController.shapeLock.PlayModifiedSound(AudioController.GetGameVolume());
-            if (networkController)
+            if (ShouldSendPacket())
                 networkController.Client?.SendPacket(new PacketShapeLock
                 {
                     Id = shape.id,
+                    LockPos = shape.RawPosition,
+                    LockRot = shape.RawRotation,
                     Offsets = addedBlocks
                 });
 
@@ -296,7 +298,7 @@ namespace Sabotris
                 clearingLayers.Add(layer);
             }
 
-            if (networkController)
+            if (ShouldSendPacket())
             {
                 if (deletedBlocks.Any())
                     networkController.Client?.SendPacket(new PacketBlockBulkRemove
@@ -420,6 +422,11 @@ namespace Sabotris
         public virtual bool ShouldRotateShape()
         {
             return InputUtil.ShouldRotateShape();
+        }
+
+        public virtual bool ShouldSendPacket()
+        {
+            return networkController;
         }
 
         protected virtual void OnControllingShapeCreated(Shape shape)

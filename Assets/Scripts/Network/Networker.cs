@@ -57,7 +57,7 @@ namespace Sabotris.Network
             if (incomingMessages <= 0)
                 return;
 
-            if (incomingMessages > 20)
+            if (incomingMessages > 100)
                 Logging.Warn(false, "Received more than 20 messages, potentially lag");
 
             for (var i = 0; i < incomingMessages; i++)

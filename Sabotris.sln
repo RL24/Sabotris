@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{5da1d7c7-5757-5315-bf0b-f379475595dd}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{5DA1D7C7-5757-5315-BF0B-F379475595DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{680bc80d-0907-4b95-54fa-8e27b8d0b9c6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{680BC80D-0907-4B95-54FA-8E27B8D0B9C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{52b0ba2a-f19e-6c7f-8abb-f8d014c3a74a}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests.csproj", "{a831e496-f74f-3b02-9c08-7fdd571b03c1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{52B0BA2A-F19E-6C7F-8ABB-F8D014C3A74A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +25,6 @@ Global
 		{52b0ba2a-f19e-6c7f-8abb-f8d014c3a74a}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52b0ba2a-f19e-6c7f-8abb-f8d014c3a74a}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52b0ba2a-f19e-6c7f-8abb-f8d014c3a74a}.Release|Any CPU.Build.0 = Release|Any CPU
-		{a831e496-f74f-3b02-9c08-7fdd571b03c1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{a831e496-f74f-3b02-9c08-7fdd571b03c1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{a831e496-f74f-3b02-9c08-7fdd571b03c1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{a831e496-f74f-3b02-9c08-7fdd571b03c1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

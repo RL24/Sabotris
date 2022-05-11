@@ -21,6 +21,8 @@
             // Host game
 
             _translations.Add(TranslationKey.UiMenuTitleHostGame, "Gioco Ospitante");
+            _translations.Add(TranslationKey.UiMenuInputBotCount, "Numero di ai");
+            _translations.Add(TranslationKey.UiMenuInputBotDifficulty, "Difficoltà di ai");
             _translations.Add(TranslationKey.UiMenuInputPlayFieldSize, "Dimensione del Contenitore");
             _translations.Add(TranslationKey.UiMenuInputMaxPlayers, "Giocatori Massimi");
             _translations.Add(TranslationKey.UiMenuInputBlocksPerShape, "Dimensione della Forma");
@@ -41,6 +43,8 @@
             _translations.Add(TranslationKey.UiMenuTitleLobby, "Atrio");
             _translations.Add(TranslationKey.UiMenuInputEnterText, "Inserire il Testo...");
             _translations.Add(TranslationKey.UiMenuButtonStartGame, "Inizia il Gioco");
+            _translations.Add(TranslationKey.UiMenuDisplayBotCount, "Numero di ai: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayBotDifficulty, "Difficoltà di ai: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Dimensione del Contenitore: {0}x{0}");
             _translations.Add(TranslationKey.UiMenuDisplayMaxPlayers, "Giocatori Massimi: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBlocksPerShape, "Dimensione della Forma: {0}");

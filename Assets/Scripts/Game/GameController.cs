@@ -6,7 +6,6 @@ using Translations;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using Random = UnityEngine.Random;
 
 namespace Sabotris
 {
@@ -24,6 +23,8 @@ namespace Sabotris
 
         private void Start()
         {
+            // Util.Random.SetSeed(0); // DEBUG ONLY
+            
             _renderFeatureSsao = forwardRendererData.rendererFeatures.Find((feature) => feature.name.Equals("NewScreenSpaceAmbientOcclusion"));
             renderVolume.profile.TryGet(out _dof);
             

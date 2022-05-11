@@ -9,6 +9,7 @@ using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using Steamworks;
 using UnityEngine;
+using Random = Sabotris.Util.Random;
 
 namespace Sabotris.UI.Menu.Menus
 {
@@ -62,7 +63,7 @@ namespace Sabotris.UI.Menu.Menus
             _bots.Clear();
             for (var i = 0; i < _lobbyData.BotCount; i++)
             {
-                var player = new Player(Guid.NewGuid(), "Bot");
+                var player = new Player(Guid.NewGuid(), Random.RandomName(5));
                 _bots.Add(player.Id, player);
             }
 

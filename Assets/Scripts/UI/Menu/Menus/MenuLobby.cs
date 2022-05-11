@@ -22,7 +22,7 @@ namespace Sabotris.UI.Menu.Menus
         public MenuInput inputChatMessage;
         public MenuButton buttonStartGame, buttonBack;
         
-        public TMP_Text playFieldSizeText, maxPlayersText, blocksPerShapeText, 
+        public TMP_Text botCountText, botDifficultyText, playFieldSizeText, maxPlayersText, blocksPerShapeText, 
             generateVerticalBlocksText, practiceModeText;
 
         public Menu menuHost, menuJoin;
@@ -46,6 +46,15 @@ namespace Sabotris.UI.Menu.Menus
             networkController.Client?.RegisterListener(this);
 
             var data = networkController.Client?.LobbyData;
+            if (data == null)
+                return;
+
+            if (botCountText)
+                botCountText.text = Localization.Translate(TranslationKey.UiMenuDisplayBotCount, data.BotCount);
+            
+            if (botDifficultyText)
+                botDifficultyText.text = Localization.Translate(TranslationKey.UiMenuDisplayBotDifficulty, data.BotDifficulty);
+            
             if (playFieldSizeText)
                 playFieldSizeText.text = Localization.Translate(TranslationKey.UiMenuDisplayPlayFieldSize, data.PlayFieldSize * 2 + 1);
 
@@ -93,7 +102,7 @@ namespace Sabotris.UI.Menu.Menus
             networkController.Client?.SendPacket(new PacketChatMessage
             {
                 Id = Guid.NewGuid(),
-                Author = Client.UserId.m_SteamID,
+                Author = Client.UserId,
                 Message = message
             });
             if (sender is MenuInput input)
@@ -134,8 +143,7 @@ namespace Sabotris.UI.Menu.Menus
             var chatMessage = Instantiate(chatHistoryItemTemplate, Vector3.zero, Quaternion.identity, chatHistory.transform);
             chatMessage.name = $"ChatMessage-{packet.Id}-{packet.Author}";
             chatMessage.menu = this;
-            chatMessage.id = packet.Id;
-            chatMessage.Author = SteamFriends.GetFriendPersonaName(packet.Author.ToSteamID());
+            chatMessage.Author = packet.AuthorName;
             chatMessage.Message = packet.Message;
             
             chatHistory.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Math.Max(500, chatHistory.childCount * 40));

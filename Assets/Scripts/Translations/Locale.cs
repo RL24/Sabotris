@@ -24,6 +24,8 @@ namespace Translations
         UiMenuInputGenerateVerticalBlocks = 0x25,
         UiMenuInputPracticeMode = 0x26,
         UiMenuButtonCreateLobby = 0x27,
+        UiMenuInputBotCount = 0x28,
+        UiMenuInputBotDifficulty = 0x29,
         
         JOIN_GAME = 0x30,
         UiMenuTitleJoinGame = 0x31,
@@ -41,6 +43,8 @@ namespace Translations
         UiMenuDisplayBlocksPerShape = 0x316,
         UiMenuDisplayGenerateVerticalBlocks = 0x317,
         UiMenuDisplayPracticeMode = 0x318,
+        UiMenuDisplayBotCount = 0x319,
+        UiMenuDisplayBotDifficulty = 0x320,
         
         SETTINGS = 0x40,
         UiMenuTitleSettings = 0x41,

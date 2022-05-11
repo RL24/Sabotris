@@ -21,6 +21,8 @@
             // Host game
 
             _translations.Add(TranslationKey.UiMenuTitleHostGame, "Jeu d'hôte");
+            _translations.Add(TranslationKey.UiMenuInputBotCount, "Nombre d'ai");
+            _translations.Add(TranslationKey.UiMenuInputBotDifficulty, "Difficulté AI");
             _translations.Add(TranslationKey.UiMenuInputPlayFieldSize, "Taille du Conteneur");
             _translations.Add(TranslationKey.UiMenuInputMaxPlayers, "Le Maximum de Joueurs");
             _translations.Add(TranslationKey.UiMenuInputBlocksPerShape, "Taille de Forme");
@@ -41,6 +43,8 @@
             _translations.Add(TranslationKey.UiMenuTitleLobby, "Hall");
             _translations.Add(TranslationKey.UiMenuInputEnterText, "Entrez du Texte...");
             _translations.Add(TranslationKey.UiMenuButtonStartGame, "Démarrer Jeu");
+            _translations.Add(TranslationKey.UiMenuDisplayBotCount, "Nombre d'ai: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayBotDifficulty, "Difficulté AI: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Taille du Conteneur: {0}x{0}");
             _translations.Add(TranslationKey.UiMenuDisplayMaxPlayers, "Max Joueurs: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBlocksPerShape, "Taille de la Forme: {0}");

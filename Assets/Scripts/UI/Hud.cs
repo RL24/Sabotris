@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sabotris.IO;
 using Sabotris.Network;
@@ -21,7 +22,7 @@ namespace Sabotris.UI
         public GameObject playerList, scoreList;
         public TMP_Text playerItemPrefab, scoreItemPrefab;
 
-        private readonly Dictionary<ulong, (TMP_Text, TMP_Text)> _playerScoreCache = new Dictionary<ulong, (TMP_Text, TMP_Text)>();
+        private readonly Dictionary<Guid, (TMP_Text, TMP_Text)> _playerScoreCache = new Dictionary<Guid, (TMP_Text, TMP_Text)>();
 
         private void Start()
         {
@@ -101,8 +102,11 @@ namespace Sabotris.UI
         {
             RemoveAllEntries();
 
-            foreach (var packetPlayer in packet.Players)
-                AddEntry(packetPlayer);
+            foreach (var player in packet.Players)
+                AddEntry(player);
+
+            foreach (var bot in packet.Bots)
+                AddEntry(bot);
         }
 
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Client)]

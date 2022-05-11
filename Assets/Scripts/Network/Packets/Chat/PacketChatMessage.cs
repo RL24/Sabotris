@@ -7,7 +7,8 @@ namespace Sabotris.Network.Packets.Game
         public override PacketType GetPacketType() => PacketTypes.ChatMessage;
         
         public Guid Id { get; set; }
-        public ulong Author { get; set; }
+        public Guid Author { get; set; }
+        public string AuthorName { get; set; }
         public string Message { get; set; }
     }
 }

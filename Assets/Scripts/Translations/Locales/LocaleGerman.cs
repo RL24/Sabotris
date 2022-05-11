@@ -21,6 +21,8 @@
             // Host game
 
             _translations.Add(TranslationKey.UiMenuTitleHostGame, "Neues Spiel");
+            _translations.Add(TranslationKey.UiMenuInputBotCount, "Anzahl der AI");
+            _translations.Add(TranslationKey.UiMenuInputBotDifficulty, "AI Schwierigkeitsgrad");
             _translations.Add(TranslationKey.UiMenuInputPlayFieldSize, "Behältergröße");
             _translations.Add(TranslationKey.UiMenuInputMaxPlayers, "Maximale Spieleranzahl");
             _translations.Add(TranslationKey.UiMenuInputBlocksPerShape, "Formgröße.");
@@ -41,6 +43,8 @@
             _translations.Add(TranslationKey.UiMenuTitleLobby, "Empfangshalle");
             _translations.Add(TranslationKey.UiMenuInputEnterText, "Text Eingeben...");
             _translations.Add(TranslationKey.UiMenuButtonStartGame, "Spiel Starten");
+            _translations.Add(TranslationKey.UiMenuDisplayBotCount, "Anzahl der AI: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayBotDifficulty, "AI Schwierigkeitsgrad: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Behältergröße: {0}x{0}");
             _translations.Add(TranslationKey.UiMenuDisplayMaxPlayers, "Max-Spieler: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBlocksPerShape, "Formgröße: {0}");

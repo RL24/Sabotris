@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Audio;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
+using Sabotris.Network.Packets.Bot;
 using Sabotris.Network.Packets.Game;
 using Sabotris.UI.Menu;
 using Sabotris.UI.Menu.Menus;
@@ -52,7 +53,7 @@ namespace Sabotris
 
             demoContainer.gameObject.SetActive(false);
             gameController.ControllingContainer =
-                CreateContainer(Client.UserId.m_SteamID, Client.Username);
+                CreateContainer(Client.UserId, Client.Username, Client.SteamId.m_SteamID);
         }
 
         private void DisconnectedFromServerEvent(object sender, DisconnectReason disconnectReason)
@@ -65,7 +66,7 @@ namespace Sabotris
             menuController.OpenMenu(menuMain);
         }
 
-        private Container CreateContainer(ulong id, string playerName)
+        private Container CreateContainer(Guid id, string playerName, ulong? steamId = null)
         {
             var existingContainer = Containers.Find((c) => c.id == id);
             if (existingContainer)
@@ -93,7 +94,7 @@ namespace Sabotris
             return container;
         }
 
-        private void RemoveContainer(ulong id)
+        private void RemoveContainer(Guid id)
         {
             var containers = Containers.FindAll((c) => c.id == id);
             foreach (var container in containers)
@@ -110,16 +111,18 @@ namespace Sabotris
                 c.rawPosition = GetContainerPosition(i++);
         }
 
-        private void CreateBot()
+        private void CreateBot(Guid id, string botName)
         {
-            var container = Instantiate(botContainerTemplate, GetContainerPosition(Containers.Count), Quaternion.identity);
-            container.name = $"Container-Bot";
+            var container = Instantiate(networkController.Server?.Running == true ? botContainerTemplate : containerTemplate, GetContainerPosition(Containers.Count), Quaternion.identity);
+            container.name = $"Container-Bot-{botName}";
 
-            container.ContainerName = "Bot";
+            container.id = id;
+            container.ContainerName = botName;
 
             container.world = this;
             container.gameController = gameController;
             container.menuController = menuController;
+            container.networkController = networkController;
             container.cameraController = cameraController;
 
             container.rawPosition = container.transform.position;
@@ -134,6 +137,9 @@ namespace Sabotris
         {
             if (gameController.ControllingContainer)
                 gameController.ControllingContainer.StartDropping();
+
+            foreach (var bot in Containers.FindAll((container) => container is BotContainer))
+                bot.StartDropping();
         }
 
         [PacketListener(PacketTypeId.GameEnd, PacketDirection.Client)]
@@ -149,7 +155,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.PlayerConnected, PacketDirection.Client)]
         public void OnPlayerConnected(PacketPlayerConnected packet)
         {
-            if (packet.Player.Id == Client.UserId.m_SteamID)
+            if (packet.Player.Id == Client.UserId)
                 return;
 
             CreateContainer(packet.Player.Id, packet.Player.Name);
@@ -162,11 +168,14 @@ namespace Sabotris
         {
             foreach (var player in packet.Players)
             {
-                if (player.Id == Client.UserId.m_SteamID)
+                if (player.Id == Client.UserId)
                     continue;
 
                 CreateContainer(player.Id, player.Name);
             }
+
+            foreach (var bot in packet.Bots)
+                CreateBot(bot.Id, bot.Name);
         }
 
         [PacketListener(PacketTypeId.PlayerDisconnected, PacketDirection.Client)]
@@ -174,6 +183,18 @@ namespace Sabotris
         {
             RemoveContainer(packet.Id);
             audioController.playerLeaveLobby.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetPlayerJoinLeavePitch());
+        }
+
+        [PacketListener(PacketTypeId.BotConnected, PacketDirection.Client)]
+        public void OnBotConnected(PacketBotConnected packet)
+        {
+            CreateBot(packet.Bot.Id, packet.Bot.Name);
+        }
+
+        [PacketListener(PacketTypeId.BotDisconnected, PacketDirection.Client)]
+        public void OnBotDisconnected(PacketBotDisconnected packet)
+        {
+            RemoveContainer(packet.BotId);
         }
 
         private Vector3 GetContainerPosition(int index) => Vector3.right * (index * ((networkController.Client?.LobbyData?.PlayFieldSize ?? 5) * 2 + 4));

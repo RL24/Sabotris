@@ -21,6 +21,8 @@
             // Host game	
 
             _translations.Add(TranslationKey.UiMenuTitleHostGame, "Empezar Juego");
+            _translations.Add(TranslationKey.UiMenuInputBotCount, "Número de ai");
+            _translations.Add(TranslationKey.UiMenuInputBotDifficulty, "Dificultad de ai");
             _translations.Add(TranslationKey.UiMenuInputPlayFieldSize, "Tamaño de Contenedor");
             _translations.Add(TranslationKey.UiMenuInputMaxPlayers, "Jugadores Máximos");
             _translations.Add(TranslationKey.UiMenuInputBlocksPerShape, "Tamaño de la Forma");
@@ -41,6 +43,8 @@
             _translations.Add(TranslationKey.UiMenuTitleLobby, "Vestíbulo");
             _translations.Add(TranslationKey.UiMenuInputEnterText, "Ingrese Texto...");
             _translations.Add(TranslationKey.UiMenuButtonStartGame, "Empezar Juego");
+            _translations.Add(TranslationKey.UiMenuDisplayBotCount, "Número de ai: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayBotDifficulty, "Dificultad de ai: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Tamaño del Contenedor: {0}x{0}");
             _translations.Add(TranslationKey.UiMenuDisplayMaxPlayers, "Jugadores Máximos: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBlocksPerShape, "Tamaño de la Forma: {0}");

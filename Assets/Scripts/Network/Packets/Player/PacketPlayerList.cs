@@ -5,5 +5,6 @@
         public override PacketType GetPacketType() => PacketTypes.PlayerList;
 
         public Player[] Players { get; set; }
+        public Player[] Bots { get; set; }
     }
 }

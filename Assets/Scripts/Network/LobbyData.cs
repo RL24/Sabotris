@@ -9,6 +9,8 @@ namespace Sabotris.Network
         private const string LobbyNameKey = "LobbyName";
         private const string LobbyPlayerCountKey = "PlayerCount";
         
+        private const string BotCountKey = "BotCount";
+        private const string BotDifficultyKey = "BotDifficulty";
         private const string PlayFieldSizeKey = "PlayFieldSize";
         private const string MaxPlayersKey = "MaxPlayers";
         private const string BlocksPerShapeKey = "BlocksPerShape";
@@ -18,6 +20,8 @@ namespace Sabotris.Network
         public CSteamID? HostId;
         public string LobbyName;
         public int PlayerCount;
+        public int BotCount = 0;
+        public int BotDifficulty = 5;
         public int PlayFieldSize = 5;
         public int MaxPlayers = 4;
         public int BlocksPerShape = 4;
@@ -29,6 +33,16 @@ namespace Sabotris.Network
             if (ulong.TryParse(hostId, out var hostIdParsed))
                 HostId = new CSteamID(hostIdParsed);
             else HostId = null;
+        }
+
+        private void ParseBotCount(string botCount)
+        {
+            int.TryParse(botCount, out BotCount);
+        }
+
+        private void ParseBotDifficulty(string botDifficulty)
+        {
+            int.TryParse(botDifficulty, out BotDifficulty);
         }
 
         private void ParsePlayFieldSize(string playFieldSize)
@@ -66,9 +80,11 @@ namespace Sabotris.Network
             if (lobbyId == null)
                 return;
             
-            SteamMatchmaking.SetLobbyData(lobbyId.Value, HostIdKey, Client.UserId.m_SteamID.ToString());
+            SteamMatchmaking.SetLobbyData(lobbyId.Value, HostIdKey, Client.SteamId.m_SteamID.ToString());
             SteamMatchmaking.SetLobbyData(lobbyId.Value, LobbyNameKey, LobbyName);
             SteamMatchmaking.SetLobbyData(lobbyId.Value, LobbyPlayerCountKey, PlayerCount.ToString());
+            SteamMatchmaking.SetLobbyData(lobbyId.Value, BotCountKey, BotCount.ToString());
+            SteamMatchmaking.SetLobbyData(lobbyId.Value, BotDifficultyKey, BotDifficulty.ToString());
             SteamMatchmaking.SetLobbyData(lobbyId.Value, PlayFieldSizeKey, PlayFieldSize.ToString());
             SteamMatchmaking.SetLobbyData(lobbyId.Value, MaxPlayersKey, MaxPlayers.ToString());
             SteamMatchmaking.SetLobbyData(lobbyId.Value, BlocksPerShapeKey, BlocksPerShape.ToString());
@@ -84,6 +100,8 @@ namespace Sabotris.Network
             ParseHostId(SteamMatchmaking.GetLobbyData(lobbyId.Value, HostIdKey));
             LobbyName = SteamMatchmaking.GetLobbyData(lobbyId.Value, LobbyNameKey);
             ParsePlayerCount(SteamMatchmaking.GetLobbyData(lobbyId.Value, LobbyPlayerCountKey));
+            ParseBotCount(SteamMatchmaking.GetLobbyData(lobbyId.Value, BotCountKey));
+            ParseBotDifficulty(SteamMatchmaking.GetLobbyData(lobbyId.Value, BotDifficultyKey));
             ParsePlayFieldSize(SteamMatchmaking.GetLobbyData(lobbyId.Value, PlayFieldSizeKey));
             ParseMaxPlayers(SteamMatchmaking.GetLobbyData(lobbyId.Value, MaxPlayersKey));
             ParseBlocksPerShape(SteamMatchmaking.GetLobbyData(lobbyId.Value, BlocksPerShapeKey));

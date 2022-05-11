@@ -16,7 +16,8 @@ namespace Sabotris.UI.Menu.Menus
         public event EventHandler<DisconnectReason> OnDisconnectedFromServerEvent;
         public event EventHandler OnFailedToConnectToServerEvent;
 
-        public static readonly CSteamID UserId = SteamUser.GetSteamID();
+        public static readonly Guid UserId = Guid.NewGuid();
+        public static readonly CSteamID SteamId = SteamUser.GetSteamID();
         public static readonly string Username = SteamFriends.GetPersonaName();
 
         private static readonly HSteamNetConnection LocalConnection = new HSteamNetConnection(0);
@@ -34,7 +35,7 @@ namespace Sabotris.UI.Menu.Menus
             PacketHandler.Register(this);
 
             var localIdentity = new SteamNetworkingIdentity {m_eType = ESteamNetworkingIdentityType.k_ESteamNetworkingIdentityType_SteamID};
-            localIdentity.SetSteamID(UserId);
+            localIdentity.SetSteamID(SteamId);
             _localConnectionStatus = new SteamNetConnectionStatusChangedCallback_t
             {
                 m_info = new SteamNetConnectionInfo_t
@@ -88,7 +89,6 @@ namespace Sabotris.UI.Menu.Menus
             {
                 _connection = LocalConnection;
                 NetworkController.Server.OnConnectionStatusChanged(_localConnectionStatus);
-                OnConnectedToServerEvent?.Invoke(this, _connection);
                 return;
             }
 
@@ -140,7 +140,6 @@ namespace Sabotris.UI.Menu.Menus
             {
                 case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_Connected:
                     _connection = param.m_hConn;
-                    OnConnectedToServerEvent?.Invoke(this, param.m_hConn);
                     break;
 
                 case ESteamNetworkingConnectionState.k_ESteamNetworkingConnectionState_Dead:
@@ -205,7 +204,7 @@ namespace Sabotris.UI.Menu.Menus
             if (IsHosting)
             {
                 packet.Connection = _connection;
-                packet.SenderId = UserId.m_SteamID;
+                packet.SenderId = SteamId.m_SteamID;
                 NetworkController.Server.PacketHandler.Process(packet);
                 return;
             }
@@ -219,6 +218,14 @@ namespace Sabotris.UI.Menu.Menus
         #endregion
 
         #region Packet Listeners
+
+        [PacketListener(PacketTypeId.RetrievePlayerId, PacketDirection.Client)]
+        public void OnPacketRetrievePlayerId(PacketRetrievePlayerId packet)
+        {
+            packet.Id = UserId;
+            SendPacket(packet);
+            OnConnectedToServerEvent?.Invoke(this, _connection);
+        }
 
         [PacketListener(PacketTypeId.ServerShutdown, PacketDirection.Client)]
         public void OnPacketServerShutdown(PacketServerShutdown packet)

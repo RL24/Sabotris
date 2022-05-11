@@ -87,6 +87,24 @@ namespace Sabotris.Util
             return relative;
         }
 
+        public static Vector3Int MinVec(this Vector3Int[] self)
+        {
+            var value = self[0];
+            foreach (var vec in self)
+                if (vec.x < value.x || vec.y < value.y || vec.z < value.z)
+                    value = vec;
+            return value;
+        }
+
+        public static Vector3Int MaxVec(this Vector3Int[] self)
+        {
+            var value = self[0];
+            foreach (var vec in self)
+                if (vec.x > value.x || vec.y > value.y || vec.z > value.z)
+                    value = vec;
+            return value;
+        }
+
         public static Vector3Int Size(this Vector3Int[] self)
         {
             var lowest = self[0];

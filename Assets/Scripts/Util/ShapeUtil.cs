@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Sabotris.Util
 {
@@ -42,7 +41,7 @@ namespace Sabotris.Util
 
                     if (!free.Any()) break;
 
-                    var pick = Random.Range(0, free.Count);
+                    var pick = Random.Range(0, free.Count - 1);
                     offsets.Add(free[pick]);
                 }
 

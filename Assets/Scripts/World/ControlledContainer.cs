@@ -2,32 +2,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Sabotris.Util;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Random = Sabotris.Util.Random;
 
 namespace Sabotris
 {
     public class ControlledContainer : Container
     {
-        private Quaternion[] _rotations = { };
+        private static readonly Quaternion[] Rotations = GenerateRotations();
 
-        private (Vector3Int?, Quaternion) _destination;
-
-        private List<(Vector3Int[], Quaternion)> _offsets = new List<(Vector3Int[], Quaternion)>();
-        
-        protected override void Start()
-        {
+        private static Quaternion[] GenerateRotations() {
             var rotations = new List<Quaternion>();
             for (var i = 0; i <= 270; i += 90)
                 for (var j = 0; j <= 270; j += 90)
                     for (var k = 0; k <= 270; k += 90)
                         rotations.Add(Quaternion.Euler(i, j, k));
-            _rotations = rotations.ToArray();
-            
-            base.Start();
+            return rotations.ToArray();
         }
-        
+
+        private (Vector3Int?, Quaternion) _destination;
+
+        private List<(Vector3Int[], Quaternion)> _offsets = new List<(Vector3Int[], Quaternion)>();
+
         private IEnumerable<Vector3Int> GetEmptySpaces()
         {
             var emptySpaces = new List<Vector3Int>();
@@ -49,34 +47,42 @@ namespace Sabotris
             return emptySpaces.ToArray();
         }
 
-        private (Vector3Int?, Quaternion) GetNextSpaceAndRotation()
+        private void GetNextSpaceAndRotation()
         {
             var spaces = GetEmptySpaces();
             var availableSpaces = new List<(Vector3Int, Quaternion, Vector3Int[])>();
             foreach (var space in spaces)
-            foreach (var (offset, rotation) in _offsets)
-                for (var y = 0; y <= (int) Math.Floor(offset.Size().y / 2f); y++)
-                {
-                    var relativeOffset = offset.RelativeTo(space + (Vector3Int.up * y));
-                    if (!DoesCollide(relativeOffset) && !IsBlockingSpace(relativeOffset))
+                foreach (var (offset, rotation) in _offsets)
+                    for (var y = 0; y <= (int) Math.Floor(offset.Size().y / 2f); y++)
                     {
-                        availableSpaces.Add((space, rotation, offset));
-                        break;
+                        var relativeOffset = offset.RelativeTo(space + (Vector3Int.up * y));
+                        if (!DoesCollide(relativeOffset) && !IsBlockingSpace(relativeOffset))
+                        {
+                            availableSpaces.Add((space, rotation, offset));
+                            break;
+                        }
                     }
-                }
             
             availableSpaces = availableSpaces.OrderBy((space) =>
             {
                 var shapeMin = space.Item3.Min((vec) => vec.y);
                 return space.Item1.y + shapeMin;
             }).ToList();
-            
+
             if (availableSpaces.Count <= 0)
-                return (Vector3Int.zero, Quaternion.identity);
- 
+            {
+                var (offsets, rotation) = _offsets[Random.Range(0, _offsets.Count - 1)];
+                var shapeMin = offsets.MinVec();
+                var shapeMax = offsets.MaxVec();
+                var min = new Vector3Int(-Radius, 0, -Radius) - shapeMin;
+                var max = new Vector3Int(Radius, 0, Radius) - shapeMax;
+                _destination = (new Vector3Int(Random.Range(min.x, max.x), 0, Random.Range(min.z, max.z)), rotation);
+                return;
+            }
+
             var lowestOptions = availableSpaces.Where((space) => space.Item1.y == availableSpaces[0].Item1.y).ToArray();
-            var (bestSpace, bestRotation, _) = lowestOptions[Random.Range(0, lowestOptions.Length)];
-            return (bestSpace, bestRotation);
+            var (bestSpace, bestRotation, _) = lowestOptions[Random.Range(0, lowestOptions.Length - 1)];
+            _destination = (bestSpace, bestRotation);
         }
 
         private bool IsBlockingSpace(Vector3Int[] offset)
@@ -95,15 +101,18 @@ namespace Sabotris
             
             _offsets = new List<(Vector3Int[], Quaternion)>();
             var prevRotation = shape.RawRotation;
-            foreach (var rot in _rotations)
+            foreach (var rot in Rotations)
             {
                 shape.RawRotation = rot;
                 _offsets.Add((shape.Offsets.Select((offset) => offset.Item2.Copy()).ToArray(), rot));
             }
             shape.RawRotation = prevRotation;
 
-            var next = GetNextSpaceAndRotation();
-            _destination = next;
+            _destination = (null, Quaternion.identity);
+
+            new Thread(GetNextSpaceAndRotation).Start();
+
+            yield return new WaitUntil(() => _destination.Item1 != null);
 
             var position = _destination.Item1;
             var rotation = _destination.Item2.eulerAngles;
@@ -143,7 +152,7 @@ namespace Sabotris
 
                 var positionDirection = Vector3.Normalize(position.Value - shape.RawPosition);
          
-                switch (choices[Random.Range(0, choices.Count)])
+                switch (choices[Random.Range(0, choices.Count - 1)])
                 {
                     case Movement.X:
                         shape.RawPosition += Vector3Int.right * Math.Sign(positionDirection.x);

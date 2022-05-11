@@ -12,7 +12,7 @@ using Sabotris.Util;
 using TMPro;
 using Translations;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Random = Sabotris.Util.Random;
 
 namespace Sabotris
 {
@@ -113,7 +113,7 @@ namespace Sabotris
 
             if (!DoesCollide(offsets.Select((offset) => offset.Item2 + DropPosition).ToArray()))
             {
-                var shape = CreateShape(Guid.NewGuid(), DropPosition, offsets, Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1));
+                var shape = CreateShape(Guid.NewGuid(), DropPosition, offsets, Random.RandomColor(0, 1, 0.7f, 0.7f, 1, 1));
                 shape.StartDropping();
                 ControllingShape = shape;
 
@@ -330,7 +330,7 @@ namespace Sabotris
             for (var x = min.x; x <= max.x && score > 0; x++)
             {
                 var pos = new Vector3Int(x * (Mathf.Repeat(y, 2) == 0 ? -1 : 1) * (Mathf.Repeat(z, 2) == 0 ? 1 : -1), y, z);
-                var color = Random.ColorHSV(0, 1, 0.7f, 0.7f, 1, 1);
+                var color = Random.RandomColor(0, 1, 0.7f, 0.7f, 1, 1);
 
                 CreateBlock(pos, color);
                 score--;

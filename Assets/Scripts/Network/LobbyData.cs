@@ -20,7 +20,7 @@ namespace Sabotris.Network
         public CSteamID? HostId;
         public string LobbyName;
         public int PlayerCount;
-        public int BotCount = 0;
+        public int BotCount;
         public int BotDifficulty = 5;
         public int PlayFieldSize = 5;
         public int MaxPlayers = 4;

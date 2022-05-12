@@ -69,15 +69,17 @@ namespace Sabotris
 
         private Container CreateContainer(Guid id, string playerName, ulong? steamId = null)
         {
-            var existingContainer = Containers.Find((c) => c.id == id);
+            var existingContainer = Containers.Find((c) => c.Id == id);
             if (existingContainer)
                 return existingContainer;
 
             var container = Instantiate(containerTemplate, GetContainerPosition(Containers.Count), Quaternion.identity);
             container.name = $"Container-{playerName}-{id}";
 
-            container.id = id;
+            container.Id = id;
             container.ContainerName = playerName;
+            if (steamId != null)
+                container.steamId = steamId.Value;
 
             container.world = this;
             container.gameController = gameController;
@@ -97,7 +99,7 @@ namespace Sabotris
 
         private void RemoveContainer(Guid id)
         {
-            var containers = Containers.FindAll((c) => c.id == id);
+            var containers = Containers.FindAll((c) => c.Id == id);
             foreach (var container in containers)
                 RemoveContainer(container);
         }
@@ -117,7 +119,7 @@ namespace Sabotris
             var container = Instantiate(networkController.Server?.Running == true ? botContainerTemplate : containerTemplate, GetContainerPosition(Containers.Count), Quaternion.identity);
             container.name = $"Container-Bot-{botName}";
 
-            container.id = id;
+            container.Id = id;
             container.ContainerName = botName;
 
             container.world = this;

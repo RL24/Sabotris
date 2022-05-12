@@ -11,8 +11,8 @@ namespace Sabotris
     {
         private Container _parentContainer;
 
-        public Guid id;
-        public Color? color;
+        public Guid Id;
+        public Color? BlockColor;
 
         public bool shifted;
         public bool doRemove;
@@ -22,10 +22,10 @@ namespace Sabotris
         {
             _parentContainer = GetComponentInParent<Container>();
 
-            if (color != null)
+            if (BlockColor != null)
             {
                 foreach (var ren in GetComponentsInChildren<Renderer>())
-                    ren.material.color = color ?? Color.white;
+                    ren.material.color = BlockColor ?? Color.white;
             }
 
             if (rawPosition != ShapeUtil.NullVector3Int)

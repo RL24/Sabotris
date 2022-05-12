@@ -16,7 +16,7 @@ namespace Sabotris.UI.Menu
         public TMP_Text label, valueLabel;
         public bool isGamepad;
 
-        public string OriginalText { get; set; }
+        private string OriginalText { get; set; }
 
         private string _valueText;
 

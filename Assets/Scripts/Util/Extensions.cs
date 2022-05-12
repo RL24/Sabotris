@@ -54,15 +54,11 @@ namespace Sabotris.Util
             return allMatches;
         }
 
-        public static Vector3 Horizontal(this Vector3 self) => new Vector3(self.x, 0, self.z);
-
         public static Vector3Int Horizontal(this Vector3Int self) => new Vector3Int(self.x, 0, self.z);
 
         public static Vector3Int Copy(this Vector3Int self) => new Vector3Int(self.x, self.y, self.z);
 
         public static float GetMinValue(this Vector3 self) => Mathf.Min(Math.Abs(self.x), Math.Abs(self.y), Math.Abs(self.z));
-
-        public static double Lerp(this double self, double target, double time) => (target - self) * time;
 
         public static float Lerp(this float self, float target, float time) => (target - self) * time;
 

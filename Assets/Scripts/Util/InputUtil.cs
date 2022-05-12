@@ -56,7 +56,7 @@ namespace Sabotris.Util
 
         #region Gamepad
 
-        public const float GamepadRotateSensitivity = 90; // / 3.6
+        private const float GamepadRotateSensitivity = 90; // / 3.6
         public static float GamepadCameraSensitivity => GameSettings.Input.gamepadRotateCameraSensitivity; // * 50
 
         private static ButtonControl GamepadPause => Gamepad.current?.startButton;

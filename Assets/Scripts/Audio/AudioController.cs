@@ -5,10 +5,15 @@ namespace Sabotris.Audio
 {
     public class AudioController : MonoBehaviour
     {
-        public AudioSource hoverButton, clickButton,
+        public AudioSource hoverButton,
+            clickButton,
             refreshingLobbies,
-            playerJoinLobby, playerLeaveLobby,
-            shapeDrop, shapeMove, shapeRotate, shapeLock,
+            playerJoinLobby,
+            playerLeaveLobby,
+            shapeDrop,
+            shapeMove,
+            shapeRotate,
+            shapeLock,
             layerDelete,
             playerDie,
             gameOver,

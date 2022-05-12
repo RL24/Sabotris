@@ -25,18 +25,17 @@ namespace Sabotris
         public AudioController audioController;
         public Container parentContainer;
 
-        public Guid id;
+        public Guid Id;
         public (Guid, Vector3Int)[] Offsets { get; set; }
-        public Color? color = Color.white;
+        public Color? ShapeColor = Color.white;
 
         [SerializeField] private Vector3Int rawPosition;
         [SerializeField] private Quaternion rawRotation;
         [SerializeField] public Quaternion rotateActivator;
 
-        public readonly Stopwatch DropTimer = new Stopwatch();
-
-        private readonly Stopwatch _moveTimer = new Stopwatch(),
-            _moveResetTimer = new Stopwatch();
+        private readonly Stopwatch _dropTimer = new Stopwatch(),
+                                    _moveTimer = new Stopwatch(),
+                                    _moveResetTimer = new Stopwatch();
 
         public bool permaDrop;
         public bool locked;
@@ -60,7 +59,7 @@ namespace Sabotris
                 CreateBlock(blockId, blockPos);
 
             foreach (var ren in GetComponentsInChildren<Renderer>())
-                ren.material.color = color ?? Color.white;
+                ren.material.color = ShapeColor ?? Color.white;
 
             if (networkController)
                 networkController.Client?.RegisterListener(this);
@@ -118,7 +117,7 @@ namespace Sabotris
             var block = Instantiate(blockTemplate, offset, Quaternion.identity);
             block.name = $"Block-{blockId}";
 
-            block.id = blockId;
+            block.Id = blockId;
 
             block.transform.SetParent(transform, false);
 
@@ -134,15 +133,15 @@ namespace Sabotris
 
         public void StartDropping()
         {
-            if (!DropTimer.IsRunning)
-                DropTimer.Start();
-            else DropTimer.Restart();
+            if (!_dropTimer.IsRunning)
+                _dropTimer.Start();
+            else _dropTimer.Restart();
         }
 
         private void StopDropping()
         {
             locked = true;
-            DropTimer.Reset();
+            _dropTimer.Reset();
             parentContainer.LockShape(this, Offsets.Select((offset) => RawPosition + offset.Item2).ToArray());
         }
 
@@ -160,7 +159,7 @@ namespace Sabotris
             transform.localScale = Vector3.one;
             Physics.SyncTransforms();
 
-            var offsets = Blocks.Values.Select(block => (block.id, Vector3Int.RoundToInt(block.transform.position - position))).ToArray();
+            var offsets = Blocks.Values.Select(block => (id: block.Id, Vector3Int.RoundToInt(block.transform.position - position))).ToArray();
 
             transform.position = prevPosition;
             transform.rotation = prevRotation;
@@ -176,9 +175,9 @@ namespace Sabotris
 
             var doFastMoveDown = parentContainer.DoFastDrop() || permaDrop;
             var isDropping = false;
-            if (DropTimer.ElapsedMilliseconds > (doFastMoveDown ? Container.DropSpeedFastMs : parentContainer.DropSpeedMs))
+            if (_dropTimer.ElapsedMilliseconds > (doFastMoveDown ? Container.DropSpeedFastMs : parentContainer.DropSpeedMs))
             {
-                DropTimer.Restart();
+                _dropTimer.Restart();
                 isDropping = !((networkController ? networkController.Client?.LobbyData.PracticeMode : null) ?? false) || doFastMoveDown;
             }
 
@@ -288,7 +287,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.ShapeMove, PacketDirection.Client)]
         public void OnShapeMove(PacketShapeMove packet)
         {
-            if (packet.Id != id)
+            if (packet.Id != Id)
                 return;
 
             RawPosition = packet.Position;
@@ -297,7 +296,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.ShapeRotate, PacketDirection.Client)]
         public void OnShapeRotate(PacketShapeRotate packet)
         {
-            if (packet.Id != id)
+            if (packet.Id != Id)
                 return;
 
             RawRotation = packet.Rotation;
@@ -306,7 +305,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Client)]
         public void OnShapeLock(PacketShapeLock packet)
         {
-            if (packet.Id != id || locked)
+            if (packet.Id != Id || locked)
                 return;
 
             RawPosition = packet.LockPos;
@@ -330,7 +329,7 @@ namespace Sabotris
                     if (IsControlling() && networkController)
                         networkController.Client?.SendPacket(new PacketShapeMove
                         {
-                            Id = id,
+                            Id = Id,
                             Position = RawPosition
                         });
                 }
@@ -353,7 +352,7 @@ namespace Sabotris
                 if (IsControlling() && networkController)
                     networkController.Client?.SendPacket(new PacketShapeRotate
                     {
-                        Id = id,
+                        Id = Id,
                         Rotation = RawRotation
                     });
             }

@@ -197,7 +197,7 @@ namespace Sabotris
             return true;
         }
 
-        public override bool ShouldSendPacket()
+        protected override bool ShouldSendPacket()
         {
             return base.ShouldSendPacket() && networkController.Server?.Running == true;
         }

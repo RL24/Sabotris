@@ -53,7 +53,7 @@ namespace Sabotris
         public GameObject floor;
         public TMP_Text nameText, dropSpeedText;
 
-        public Guid id;
+        public Guid Id;
         public ulong steamId;
         [SerializeField] private string containerName;
         private PlayerScore _score = new PlayerScore(0, 0);
@@ -124,11 +124,11 @@ namespace Sabotris
                 if (ShouldSendPacket())
                     networkController.Client?.SendPacket(new PacketShapeCreate
                     {
-                        ContainerId = id,
-                        Id = shape.id,
+                        ContainerId = Id,
+                        Id = shape.Id,
                         Position = DropPosition,
                         Offsets = shape.Offsets,
-                        Color = shape.color ?? Color.white
+                        Color = shape.ShapeColor ?? Color.white
                     });
             }
             else
@@ -143,7 +143,7 @@ namespace Sabotris
                 if (ShouldSendPacket())
                     networkController.Client?.SendPacket(new PacketPlayerDead
                     {
-                        Id = id
+                        Id = Id
                     });
             }
         }
@@ -166,7 +166,7 @@ namespace Sabotris
             if (ShouldSendPacket())
                 networkController.Client?.SendPacket(new PacketShapeLock
                 {
-                    Id = shape.id,
+                    Id = shape.Id,
                     LockPos = shape.RawPosition,
                     LockRot = shape.RawRotation,
                     Offsets = addedBlocks
@@ -198,7 +198,7 @@ namespace Sabotris
                 if (networkController)
                     networkController.Client?.SendPacket(new PacketLayerMove
                     {
-                        ContainerId = id,
+                        ContainerId = Id,
                         Layers = clearedLayers.ToArray()
                     });
             }
@@ -213,9 +213,9 @@ namespace Sabotris
             var shape = Instantiate(shapeTemplate, position, Quaternion.identity);
             shape.name = $"Shape-{shapeId}";
 
-            shape.id = shapeId;
+            shape.Id = shapeId;
             shape.Offsets = offsets;
-            shape.color = color;
+            shape.ShapeColor = color;
 
             shape.gameController = gameController;
             shape.menuController = menuController;
@@ -246,9 +246,9 @@ namespace Sabotris
             var block = Instantiate(blockTemplate, position, Quaternion.identity);
             block.name = $"Block-{blockId}";
             block.RawPosition = position;
-            block.color = color;
+            block.BlockColor = color;
 
-            block.id = blockId;
+            block.Id = blockId;
 
             block.transform.SetParent(transform, false);
 
@@ -266,7 +266,7 @@ namespace Sabotris
         private void RemoveBlock(Block block, int index = -1, int max = -1)
         {
             StartCoroutine(block.Remove(index, max));
-            _blocks.Remove(block.id);
+            _blocks.Remove(block.Id);
         }
 
         public bool DoesCollide(Vector3Int[] absolutePositions)
@@ -295,7 +295,7 @@ namespace Sabotris
                 var blocksToRemove = _blocks.Where((block) => block.Value.RawPosition.y == layer).Select((block) => block.Value).ToArray();
                 foreach (var block in blocksToRemove)
                 {
-                    deletedBlocks.Add(block.id);
+                    deletedBlocks.Add(block.Id);
                     RemoveBlock(block);
                 }
 
@@ -307,14 +307,14 @@ namespace Sabotris
                 if (deletedBlocks.Any())
                     networkController.Client?.SendPacket(new PacketBlockBulkRemove
                     {
-                        ContainerId = id,
+                        ContainerId = Id,
                         Ids = deletedBlocks.ToArray()
                     });
 
                 if (clearingLayers.Any())
                     networkController.Client?.SendPacket(new PacketPlayerScore
                     {
-                        Id = id,
+                        Id = Id,
                         Score = new PlayerScore(_score.Score + (deletedBlocks.Count * clearingLayers.Count), _score.ClearedLayers)
                     });
             }
@@ -353,7 +353,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.ShapeCreate, PacketDirection.Client)]
         public void OnShapeCreate(PacketShapeCreate packet)
         {
-            if (packet.ContainerId != id)
+            if (packet.ContainerId != Id)
                 return;
 
             CreateShape(packet.Id, packet.Position, packet.Offsets, packet.Color);
@@ -362,7 +362,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.LayerMove, PacketDirection.Client)]
         public void OnLayerMove(PacketLayerMove packet)
         {
-            if (packet.ContainerId != id)
+            if (packet.ContainerId != Id)
                 return;
 
             foreach (var layer in packet.Layers)
@@ -376,7 +376,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Client)]
         public void OnBlockBulkRemove(PacketBlockBulkRemove packet)
         {
-            if (packet.ContainerId != id)
+            if (packet.ContainerId != Id)
                 return;
 
             foreach (var blockId in packet.Ids)
@@ -386,7 +386,7 @@ namespace Sabotris
         [PacketListener(PacketTypeId.PlayerDead, PacketDirection.Client)]
         public void OnPlayerDead(PacketPlayerDead packet)
         {
-            if (packet.Id != id)
+            if (packet.Id != Id)
                 return;
 
             var index = 0;
@@ -402,7 +402,7 @@ namespace Sabotris
         {
             DropSpeedMs = Mathf.Clamp(DropSpeedMs - DropSpeedIncrementMs, 100, 1000);
 
-            if (packet.Id != id)
+            if (packet.Id != Id)
                 return;
 
             _score = packet.Score;
@@ -428,7 +428,7 @@ namespace Sabotris
             return InputUtil.ShouldRotateShape();
         }
 
-        public virtual bool ShouldSendPacket()
+        protected virtual bool ShouldSendPacket()
         {
             return networkController;
         }
@@ -445,7 +445,7 @@ namespace Sabotris
         public Shape ControllingShape
         {
             get => _controllingShape;
-            set
+            private set
             {
                 if (_controllingShape == value)
                     return;

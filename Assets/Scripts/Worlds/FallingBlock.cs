@@ -10,6 +10,8 @@ namespace Sabotris.Worlds
 {
     public class FallingBlock : MonoBehaviour
     {
+        public Material standardMaterial, poweredMaterial;
+
         public GameController gameController;
         public NetworkController networkController;
         public Container parentContainer;

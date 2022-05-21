@@ -94,6 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a1bdfe511204d649873c224c6e68862, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  standardMaterial: {fileID: 2100000, guid: 48bf85ed4cc662343ab3ecbdf4bf681e, type: 2}
+  poweredMaterial: {fileID: 2100000, guid: 649b7b89c3857ec41bff4e74626b932b, type: 2}
   parentContainer: {fileID: 0}
   parentShape: {fileID: 0}
   shifted: 0

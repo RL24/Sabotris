@@ -17,6 +17,7 @@ namespace Sabotris.Worlds
 {
     public class Shape : MonoBehaviour
     {
+        public Material standardMaterial, poweredMaterial;
         public Block blockTemplate;
 
         public GameController gameController;
@@ -64,10 +65,7 @@ namespace Sabotris.Worlds
             foreach (var ren in GetComponentsInChildren<Renderer>())
                 ren.material.color = color;
             
-            var layer = (int) (PowerUp == null ? Layer.Default : Layer.Glow); 
-            gameObject.layer = layer;
-            for (var i = 0; i < transform.childCount; i++)
-                transform.GetChild(i).gameObject.layer = layer;
+            UpdatedPower();
 
             if (networkController)
                 networkController.Client?.RegisterListener(this);
@@ -297,6 +295,14 @@ namespace Sabotris.Worlds
             Physics.SyncTransforms();
         }
 
+        private void UpdatedPower()
+        {
+            var layer = (int) (PowerUp == null ? Layer.Default : Layer.Glow); 
+            gameObject.layer = layer;
+            for (var i = 0; i < transform.childCount; i++)
+                transform.GetChild(i).gameObject.layer = layer;
+        }
+
         [PacketListener(PacketTypeId.ShapeMove, PacketDirection.Client)]
         public void OnShapeMove(PacketShapeMove packet)
         {
@@ -381,10 +387,7 @@ namespace Sabotris.Worlds
                 
                 _powerUp = value;
 
-                var layer = (int) (PowerUp == null ? Layer.Default : Layer.Glow); 
-                gameObject.layer = layer;
-                for (var i = 0; i < transform.childCount; i++)
-                    transform.GetChild(i).gameObject.layer = layer;
+                UpdatedPower();
             }
         }
     }

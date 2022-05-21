@@ -9,6 +9,8 @@ namespace Sabotris.Worlds
 {
     public class Block : MonoBehaviour
     {
+        public Material standardMaterial, poweredMaterial;
+        
         public Container parentContainer;
         public Shape parentShape;
         

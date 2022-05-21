@@ -122,7 +122,7 @@
             _translations.Add(TranslationKey.UiHudPowerUpLabel, "Kräfte");
             _translations.Add(TranslationKey.UiHudSelectContainerLabel, "Spieler Auswählen");
             _translations.Add(TranslationKey.UiHudSelectContainerSubLabel, "Sabotage, Fähigkeit: {0}");
-            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Verbleibende Zeit: {0}");
+            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Verbleibende Zeit: {0}s");
 
             // Game
 

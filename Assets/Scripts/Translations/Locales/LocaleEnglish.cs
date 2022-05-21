@@ -122,7 +122,7 @@
             _translations.Add(TranslationKey.UiHudPowerUpLabel, "Powers");
             _translations.Add(TranslationKey.UiHudSelectContainerLabel, "Select A Player");
             _translations.Add(TranslationKey.UiHudSelectContainerSubLabel, "To sabotage, power: {0}");
-            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Time remaining: {0}");
+            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Time remaining: {0}s");
 
             // Game
 

@@ -122,7 +122,7 @@
             _translations.Add(TranslationKey.UiHudPowerUpLabel, "Potestades");
             _translations.Add(TranslationKey.UiHudSelectContainerLabel, "Seleccionar Jugador");
             _translations.Add(TranslationKey.UiHudSelectContainerSubLabel, "Para sabotaje, habilidad: {0}");
-            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Tiempo restante: {0}");
+            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Tiempo restante: {0}s");
 
             // Game	
 

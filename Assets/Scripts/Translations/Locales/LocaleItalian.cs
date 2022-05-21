@@ -122,7 +122,7 @@
             _translations.Add(TranslationKey.UiHudPowerUpLabel, "Poteri");
             _translations.Add(TranslationKey.UiHudSelectContainerLabel, "Seleziona Giocatore");
             _translations.Add(TranslationKey.UiHudSelectContainerSubLabel, "Al sabotaggio, abilità: {0}");
-            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Tempo rimanente: {0}");
+            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Tempo rimanente: {0}s");
 
             // Game
 

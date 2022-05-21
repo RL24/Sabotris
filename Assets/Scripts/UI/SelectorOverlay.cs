@@ -32,7 +32,7 @@ namespace Sabotris.UI
             canvasGroup.alpha += canvasGroup.alpha.Lerp(_open.Int(), GameSettings.Settings.uiAnimationSpeed.Delta());
 
             if (timerLabel)
-                timerLabel.text = $"{(ContainerSelectorController.PowerUpUseTimeoutMs - _timer.ElapsedMilliseconds) / 1000:F1}";
+                timerLabel.text = Localization.Translate(TranslationKey.UiHudSelectContainerTimerLabel, $"{(ContainerSelectorController.PowerUpUseTimeoutMs - _timer?.ElapsedMilliseconds) / 1000.0:F1}");
         }
 
         public void Open(PowerUp power, Stopwatch timer)

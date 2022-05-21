@@ -23,8 +23,12 @@ namespace Sabotris.Util
 
         public static int Range(int min, int max) => (int) Math.Round(Range((float) min, max));
 
+        public static Color RandomColor() => RandomColor(0, 1, 0.7f, 0.7f, 1, 1);
+        
         public static Color RandomColor(float hueMin, float hueMax, float saturationMin, float saturationMax, float valueMin, float valueMax) =>
             Color.HSVToRGB(Range(hueMin, hueMax), Range(saturationMin, saturationMax), Range(valueMin, valueMax), true);
+
+        public static Color RandomPoweredColor() => Color.HSVToRGB(0, 0, 0.2f);
 
         public static bool Boolean()
         {

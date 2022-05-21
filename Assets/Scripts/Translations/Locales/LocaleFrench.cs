@@ -119,10 +119,20 @@
 
             _translations.Add(TranslationKey.UiHudPlayerLabel, "Joueur");
             _translations.Add(TranslationKey.UiHudScoreLabel, "But");
+            _translations.Add(TranslationKey.UiHudPowerUpLabel, "Pouvoirs");
+            _translations.Add(TranslationKey.UiHudSelectContainerLabel, "Sélectionner un Joueur");
+            _translations.Add(TranslationKey.UiHudSelectContainerSubLabel, "Pour saboter, capacité: {0}");
+            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Temps restant: {0}");
 
             // Game
 
             _translations.Add(TranslationKey.GameContainerDropSpeed, "Drop Vitesse: {0}");
+            
+            // Power Up
+
+            _translations.Add(TranslationKey.PowerUpRandomBlock, "Bloc Aléatoire");
+            _translations.Add(TranslationKey.PowerUpClearLayer, "Couche Claire");
+            _translations.Add(TranslationKey.PowerUpAddLayer, "Ajouter la Couche");
         }
     }
 }

@@ -119,10 +119,20 @@
 
             _translations.Add(TranslationKey.UiHudPlayerLabel, "Player");
             _translations.Add(TranslationKey.UiHudScoreLabel, "Score");
+            _translations.Add(TranslationKey.UiHudPowerUpLabel, "Powers");
+            _translations.Add(TranslationKey.UiHudSelectContainerLabel, "Select A Player");
+            _translations.Add(TranslationKey.UiHudSelectContainerSubLabel, "To sabotage, power: {0}");
+            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Time remaining: {0}");
 
             // Game
 
             _translations.Add(TranslationKey.GameContainerDropSpeed, "Drop Speed: {0}");
+            
+            // Power Up
+
+            _translations.Add(TranslationKey.PowerUpRandomBlock, "Random Block");
+            _translations.Add(TranslationKey.PowerUpClearLayer, "Clear Layer");
+            _translations.Add(TranslationKey.PowerUpAddLayer, "Add Layer");
         }
     }
 }

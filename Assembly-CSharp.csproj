@@ -27,7 +27,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\Bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_2020_3_25;UNITY_2020_3;UNITY_2020;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;USE_SEARCH_ENGINE_API;SCENE_TEMPLATE_MODULE;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_LINUX;UNITY_STANDALONE_LINUX;UNITY_STANDALONE;UNITY_STANDALONE_LINUX_API;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;ENABLE_SPATIALTRACKING;ENABLE_MODULAR_UNITYENGINE_ASSEMBLIES;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;STEAMWORKS_NET;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_2020_3_25;UNITY_2020_3;UNITY_2020;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;UNITY_2020_3_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;USE_SEARCH_ENGINE_API;SCENE_TEMPLATE_MODULE;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;ENABLE_MANAGED_UNITYTLS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_STANDARD_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;STEAMWORKS_NET;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn></NoWarn>
@@ -60,19 +60,23 @@
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerConnected.cs" />
      <Compile Include="Assets\Scripts\Util\ShapeUtil.cs" />
      <Compile Include="Assets\Scripts\Util\Logging.cs" />
-     <Compile Include="Assets\Scripts\World\ControlledContainer.cs" />
+     <Compile Include="Assets\Settings\ScreenShader.cs" />
+     <Compile Include="Assets\Scripts\Worlds\ControlledContainer.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsVideo.cs" />
      <Compile Include="Assets\Scripts\Network\NetworkController.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettings.cs" />
      <Compile Include="Assets\Scripts\Translations\Locales\LocaleItalian.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeRotate.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Layer\PacketLayerClear.cs" />
      <Compile Include="Assets\Scripts\Network\LobbyData.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
+     <Compile Include="Assets\Scripts\UI\SelectorOverlay.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Game\PacketServerShutdown.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpClearLayer.cs" />
      <Compile Include="Assets\Scripts\Translations\Locales\LocaleEnglish.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Bot\PacketBotConnected.cs" />
-     <Compile Include="Assets\Scripts\World\World.cs" />
+     <Compile Include="Assets\Scripts\Worlds\World.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Chat\PacketChatMessage.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\PacketTypes.cs" />
      <Compile Include="Assets\Scripts\UI\TranslatableTMP.cs" />
@@ -80,21 +84,26 @@
      <Compile Include="Assets\Scripts\Network\Networker.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuJoinGame.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
-     <Compile Include="Assets\Scripts\World\Shape.cs" />
+     <Compile Include="Assets\Scripts\Worlds\Shape.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerDead.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\SmoothScrollRect.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Block\PacketBlockCreate.cs" />
      <Compile Include="Assets\Scripts\Util\ClassUtil.cs" />
-     <Compile Include="Assets\Scripts\World\BotContainer.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Block\PacketFallingBlockCreate.cs" />
+     <Compile Include="Assets\Scripts\Worlds\BotContainer.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUp.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Packet.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Game\PacketGameStart.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Game\PacketGameEnd.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUpFactory.cs" />
      <Compile Include="Assets\Scripts\IO\GameSettings.cs" />
-     <Compile Include="Assets\Scripts\World\DemoContainer.cs" />
+     <Compile Include="Assets\Scripts\Worlds\DemoContainer.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
+     <Compile Include="Assets\Scripts\Game\ContainerSelectorController.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Bot\PacketBotDisconnected.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuToggle.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuInput.cs" />
@@ -116,8 +125,9 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuButton.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
-     <Compile Include="Assets\Scripts\World\Block.cs" />
+     <Compile Include="Assets\Scripts\Worlds\Block.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
+     <Compile Include="Assets\Scripts\Worlds\FallingBlock.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuHostGame.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
@@ -130,19 +140,23 @@
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuLobbyListItem.cs" />
      <Compile Include="Assets\Scripts\Network\Client.cs" />
      <Compile Include="Assets\Scripts\Util\GamepadUtil.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpRandomBlock.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
      <Compile Include="Assets\Scripts\Game\GameController.cs" />
+     <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpAddLayer.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Layer\PackerLayerAdd.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuBind.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsControls.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeMove.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuSlider.cs" />
+     <Compile Include="Assets\Scripts\Powers\Power.cs" />
      <Compile Include="Assets\Scripts\Network\Server.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsGameplay.cs" />
      <Compile Include="Assets\Scripts\Util\FileUtil.cs" />
      <Compile Include="Assets\Scripts\Network\Handler\PacketHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
-     <Compile Include="Assets\Scripts\World\Container.cs" />
+     <Compile Include="Assets\Scripts\Worlds\Container.cs" />
      <Compile Include="Assets\Scripts\Translations\Locale.cs" />
      <Compile Include="Assets\Scripts\Util\Random.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerScore.cs" />
@@ -153,8 +167,10 @@
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuCarousel.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
      <Compile Include="Assets\Scripts\Steamworks.NET\SteamManager.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Block\PacketBlockBulkCreate.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuGameOver.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuFadeText.cs" />
+     <Compile Include="Assets\Scripts\Util\Layer.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuChatHistoryItem.cs" />
      <Compile Include="Assets\Scripts\Translations\Locales\LocaleFrench.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeCreate.cs" />
@@ -177,6 +193,7 @@
      <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Anton OFL.txt" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
+     <None Include="Assets\Shaders\PencilShader.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
      <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
@@ -200,6 +217,9 @@
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.25f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.ARModule">
+ <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.25f1/Editor/Data/Managed/UnityEngine/UnityEngine.ARModule.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AccessibilityModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.25f1/Editor/Data/Managed/UnityEngine/UnityEngine.AccessibilityModule.dll</HintPath>

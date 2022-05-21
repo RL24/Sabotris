@@ -8,11 +8,12 @@ using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Powers;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using UnityEngine;
 
-namespace Sabotris
+namespace Sabotris.Worlds
 {
     public class Shape : MonoBehaviour
     {
@@ -28,6 +29,7 @@ namespace Sabotris
         public Guid Id;
         public (Guid, Vector3Int)[] Offsets { get; set; }
         public Color? ShapeColor = Color.white;
+        [SerializeReference] private PowerUp _powerUp;
 
         [SerializeField] private Vector3Int rawPosition;
         [SerializeField] private Quaternion rawRotation;
@@ -58,8 +60,14 @@ namespace Sabotris
             foreach (var (blockId, blockPos) in Offsets)
                 CreateBlock(blockId, blockPos);
 
+            var color = ShapeColor ?? Color.white;
             foreach (var ren in GetComponentsInChildren<Renderer>())
-                ren.material.color = ShapeColor ?? Color.white;
+                ren.material.color = color;
+            
+            var layer = (int) (PowerUp == null ? Layer.Default : Layer.Glow); 
+            gameObject.layer = layer;
+            for (var i = 0; i < transform.childCount; i++)
+                transform.GetChild(i).gameObject.layer = layer;
 
             if (networkController)
                 networkController.Client?.RegisterListener(this);
@@ -73,6 +81,10 @@ namespace Sabotris
 
         private void Update()
         {
+            var color = ShapeColor ?? Color.white;
+            foreach (var ren in GetComponentsInChildren<Renderer>())
+                ren.material.color = Color.Lerp(ren.material.color, color, GameSettings.Settings.gameTransitionSpeed.Delta());
+            
             if (!IsControlling())
                 return;
 
@@ -117,6 +129,8 @@ namespace Sabotris
             var block = Instantiate(blockTemplate, offset, Quaternion.identity);
             block.name = $"Block-{blockId}";
 
+            block.parentContainer = parentContainer;
+            block.parentShape = this;
             block.Id = blockId;
 
             block.transform.SetParent(transform, false);
@@ -140,7 +154,6 @@ namespace Sabotris
 
         private void StopDropping()
         {
-            locked = true;
             _dropTimer.Reset();
             parentContainer.LockShape(this, Offsets.Select((offset) => RawPosition + offset.Item2).ToArray());
         }
@@ -355,6 +368,23 @@ namespace Sabotris
                         Id = Id,
                         Rotation = RawRotation
                     });
+            }
+        }
+
+        public PowerUp PowerUp
+        {
+            get => _powerUp;
+            set
+            {
+                if (_powerUp == value)
+                    return;
+                
+                _powerUp = value;
+
+                var layer = (int) (PowerUp == null ? Layer.Default : Layer.Glow); 
+                gameObject.layer = layer;
+                for (var i = 0; i < transform.childCount; i++)
+                    transform.GetChild(i).gameObject.layer = layer;
             }
         }
     }

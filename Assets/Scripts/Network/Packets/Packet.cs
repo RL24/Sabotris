@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sabotris.Game;
+using Sabotris.Powers;
 using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
 using Steamworks;
@@ -71,11 +72,13 @@ namespace Sabotris.Network.Packets
             if (type == typeof(Vector3Int)) return new Vector3Int(incoming.ReadSByte(), incoming.ReadSByte(), incoming.ReadSByte());
             if (type == typeof(Quaternion)) return new Quaternion(incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat());
             if (type == typeof((Guid, Vector3Int))) return ((Guid) ReadValue(incoming, typeof(Guid)), (Vector3Int) ReadValue(incoming, typeof(Vector3Int)));
+            if (type == typeof((Guid, Vector3Int, Color))) return ((Guid) ReadValue(incoming, typeof(Guid)), (Vector3Int) ReadValue(incoming, typeof(Vector3Int)), (Color) ReadValue(incoming, typeof(Color)));
             if (type == typeof((Guid, int))) return ((Guid) ReadValue(incoming, typeof(Guid)), incoming.ReadInt32());
             if (type == typeof((long, int))) return (incoming.ReadInt64(), incoming.ReadInt32());
             if (type == typeof(Player)) return new Player((Guid) ReadValue(incoming, typeof(Guid)), incoming.ReadString(), incoming.ReadBoolean() ? incoming.ReadUInt64() : (ulong?) null);
             if (type == typeof(PlayerScore)) return new PlayerScore(incoming.ReadInt32(), incoming.ReadInt32());
             if (type == typeof(Color)) return new Color(incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat());
+            if (type == typeof(Power)) return (Power) incoming.ReadInt16();
 
             if (type == typeof(bool[])) return ReadArray<bool>(incoming, type.GetElementType());
             if (type == typeof(byte[])) return ReadArray<byte>(incoming, type.GetElementType());
@@ -94,11 +97,13 @@ namespace Sabotris.Network.Packets
             if (type == typeof(Vector3Int[])) return ReadArray<Vector3Int>(incoming, type.GetElementType());
             if (type == typeof(Quaternion[])) return ReadArray<Quaternion>(incoming, type.GetElementType());
             if (type == typeof((Guid, Vector3Int)[])) return ReadArray<(Guid, Vector3Int)>(incoming, type.GetElementType());
+            if (type == typeof((Guid, Vector3Int, Color)[])) return ReadArray<(Guid, Vector3Int, Color)>(incoming, type.GetElementType());
             if (type == typeof((Guid, int)[])) return ReadArray<(Guid, int)>(incoming, type.GetElementType());
             if (type == typeof((long, int)[])) return ReadArray<(long, int)>(incoming, type.GetElementType());
             if (type == typeof(Player[])) return ReadArray<Player>(incoming, type.GetElementType());
             if (type == typeof(PlayerScore[])) return ReadArray<PlayerScore>(incoming, type.GetElementType());
             if (type == typeof(Color[])) return ReadArray<Color>(incoming, type.GetElementType());
+            if (type == typeof(Power[])) return ReadArray<Power>(incoming, type.GetElementType());
 
             if (type == typeof(Dictionary<long, PlayerScore>)) return ReadDictionary<long, PlayerScore>(incoming, type.GetGenericArguments());
 
@@ -181,6 +186,14 @@ namespace Sabotris.Network.Packets
                     break;
                 }
 
+                case ValueTuple<Guid, Vector3Int, Color> parsed:
+                {
+                    WriteValue(outgoing, parsed.Item1);
+                    WriteValue(outgoing, parsed.Item2);
+                    WriteValue(outgoing, parsed.Item3);
+                    break;
+                }
+
                 case ValueTuple<Guid, int> parsed:
                 {
                     WriteValue(outgoing, parsed.Item1);
@@ -218,6 +231,12 @@ namespace Sabotris.Network.Packets
                     outgoing.Write(parsed.g);
                     outgoing.Write(parsed.b);
                     outgoing.Write(parsed.a);
+                    break;
+                }
+
+                case Power parsed:
+                {
+                    outgoing.Write((int) parsed);
                     break;
                 }
 
@@ -269,6 +288,9 @@ namespace Sabotris.Network.Packets
                 case IEnumerable<(Guid, Vector3Int)> parsed:
                     WriteArray(outgoing, parsed);
                     break;
+                case IEnumerable<(Guid, Vector3Int, Color)> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
                 case IEnumerable<(Guid, int)> parsed:
                     WriteArray(outgoing, parsed);
                     break;
@@ -282,6 +304,9 @@ namespace Sabotris.Network.Packets
                     WriteArray(outgoing, parsed);
                     break;
                 case IEnumerable<Color> parsed:
+                    WriteArray(outgoing, parsed);
+                    break;
+                case IEnumerable<Power> parsed:
                     WriteArray(outgoing, parsed);
                     break;
 

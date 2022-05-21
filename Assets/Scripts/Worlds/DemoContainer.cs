@@ -1,4 +1,4 @@
-﻿namespace Sabotris
+﻿namespace Sabotris.Worlds
 {
     public class DemoContainer : ControlledContainer
     {

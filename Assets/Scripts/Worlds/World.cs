@@ -6,13 +6,14 @@ using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Bot;
 using Sabotris.Network.Packets.Game;
+using Sabotris.UI;
 using Sabotris.UI.Menu;
 using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
 using Steamworks;
 using UnityEngine;
 
-namespace Sabotris
+namespace Sabotris.Worlds
 {
     public class World : MonoBehaviour
     {
@@ -25,6 +26,7 @@ namespace Sabotris
         public CameraController cameraController;
         public AudioController audioController;
 
+        public SelectorOverlay selectorOverlay;
         public DemoContainer demoContainer;
         public Menu menuMain, menuPause, menuGameOver;
 
@@ -87,6 +89,7 @@ namespace Sabotris
             container.networkController = networkController;
             container.cameraController = cameraController;
             container.audioController = audioController;
+            container.selectorOverlay = selectorOverlay;
 
             container.rawPosition = container.transform.position;
 

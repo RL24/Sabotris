@@ -106,9 +106,18 @@ namespace Sabotris.Translations
         HUD = 0xB0,
         UiHudPlayerLabel = 0xB1,
         UiHudScoreLabel = 0xB2,
+        UiHudPowerUpLabel = 0xB3,
+        UiHudSelectContainerLabel = 0xB4,
+        UiHudSelectContainerSubLabel = 0xB5,
+        UiHudSelectContainerTimerLabel = 0xB6,
 
         GAME = 0xC0,
-        GameContainerDropSpeed = 0xC1
+        GameContainerDropSpeed = 0xC1,
+        
+        POWER_UPS = 0xD0,
+        PowerUpRandomBlock = 0xD1,
+        PowerUpClearLayer = 0xD2,
+        PowerUpAddLayer = 0xD3
     }
 
     public abstract class Locale

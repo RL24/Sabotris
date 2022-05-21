@@ -7,7 +7,7 @@ using Sabotris.Util;
 using UnityEngine;
 using Random = Sabotris.Util.Random;
 
-namespace Sabotris
+namespace Sabotris.Worlds
 {
     public class ControlledContainer : Container
     {
@@ -199,7 +199,7 @@ namespace Sabotris
 
         protected override bool ShouldSendPacket()
         {
-            return base.ShouldSendPacket() && networkController.Server?.Running == true;
+            return networkController && networkController.Server?.Running == true;
         }
 
         protected override void OnControllingShapeCreated(Shape shape)

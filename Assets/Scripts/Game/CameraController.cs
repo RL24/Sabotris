@@ -1,6 +1,9 @@
+using System;
+using System.Collections;
 using Sabotris.IO;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
+using Sabotris.Worlds;
 using UnityEngine;
 
 namespace Sabotris.Game
@@ -9,6 +12,7 @@ namespace Sabotris.Game
     {
         public GameController gameController;
         public MenuController menuController;
+        public ContainerSelectorController containerSelector;
 
         public new Camera camera;
         private Vector3 _defaultPosition;
@@ -108,6 +112,13 @@ namespace Sabotris.Game
             var toRotation = cameraRotation;
             var animationTime = GameSettings.Settings.gameCameraSpeed.FixedDelta();
 
+            if (containerSelector.Active)
+            {
+                toPosition = containerSelector.position;
+                toRotation = containerSelector.rotation;
+                animationTime = GameSettings.Settings.menuCameraSpeed.FixedDelta();
+            }
+            
             if (menuController.IsInMenu)
             {
                 var targetMenu = menuController.GetTargetMenu();
@@ -121,6 +132,26 @@ namespace Sabotris.Game
 
             cameraTransform.position = Vector3.Lerp(cameraTransformPosition, toPosition, animationTime);
             cameraTransform.rotation = Quaternion.Lerp(cameraTransformRotation, toRotation, animationTime);
+        }
+
+        public void SetSelectingContainer(Func<Container, Container, IEnumerator> selectedContainerFunc, Container activatingContainer, Container[] exclusions = null)
+        {
+            containerSelector.activatingContainer = activatingContainer;
+            containerSelector.exclusions = exclusions;
+            containerSelector.SelectedContainerFunc = (selectedContainer) =>
+            {
+                StartCoroutine(OnSelectedContainer(selectedContainerFunc, activatingContainer, selectedContainer));
+            };
+            containerSelector.PowerUpTimer = activatingContainer.PowerUpTimer;
+            containerSelector.Active = true;
+        }
+        
+        private IEnumerator OnSelectedContainer(Func<Container, Container, IEnumerator> selectedContainerFunc, Container activatingContainer, Container selectedContainer)
+        {
+            activatingContainer.SelectedContainer();
+            yield return selectedContainerFunc?.Invoke(activatingContainer, selectedContainer);
+            containerSelector.End();
+            activatingContainer.StartDropping();
         }
 
         public void ResetCamera()

@@ -94,6 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a1bdfe511204d649873c224c6e68862, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentContainer: {fileID: 0}
+  parentShape: {fileID: 0}
   shifted: 0
   doRemove: 0
   rawPosition: {x: 0, y: 0, z: 0}

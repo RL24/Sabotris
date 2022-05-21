@@ -8,6 +8,7 @@ using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Bot;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
+using Sabotris.Worlds;
 using Steamworks;
 using Random = Sabotris.Util.Random;
 
@@ -268,8 +269,13 @@ namespace Sabotris.UI.Menu.Menus
         [PacketListener(PacketTypeId.ShapeMove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.ShapeRotate, PacketDirection.Server)]
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.BlockBulkCreate, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.BlockCreate, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.FallingBlockCreate, PacketDirection.Server)]
         [PacketListener(PacketTypeId.LayerMove, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.LayerClear, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.LayerAdd, PacketDirection.Server)]
         public void OnPacketForwardExclude(Packet packet)
         {
             SendPacketToAll(packet, packet.SenderId);

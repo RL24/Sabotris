@@ -8,5 +8,6 @@ namespace Sabotris.Network.Packets.Game
 
         public Guid ContainerId { get; set; }
         public int[] Layers { get; set; }
+        public int Y { get; set; }
     }
 }

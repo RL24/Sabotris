@@ -119,10 +119,20 @@
 
             _translations.Add(TranslationKey.UiHudPlayerLabel, "Spieler");
             _translations.Add(TranslationKey.UiHudScoreLabel, "Punkte");
+            _translations.Add(TranslationKey.UiHudPowerUpLabel, "Kräfte");
+            _translations.Add(TranslationKey.UiHudSelectContainerLabel, "Spieler Auswählen");
+            _translations.Add(TranslationKey.UiHudSelectContainerSubLabel, "Sabotage, Fähigkeit: {0}");
+            _translations.Add(TranslationKey.UiHudSelectContainerTimerLabel, "Verbleibende Zeit: {0}");
 
             // Game
 
             _translations.Add(TranslationKey.GameContainerDropSpeed, "Tropfengeschwindigkeit: {0}");
+            
+            // Power Up
+
+            _translations.Add(TranslationKey.PowerUpRandomBlock, "Zufallsblock");
+            _translations.Add(TranslationKey.PowerUpClearLayer, "Klare Schicht");
+            _translations.Add(TranslationKey.PowerUpAddLayer, "Schicht Hinzufügen");
         }
     }
 }

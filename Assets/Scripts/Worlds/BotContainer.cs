@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Sabotris
+namespace Sabotris.Worlds
 {
     public class BotContainer : ControlledContainer
     {

@@ -35,8 +35,7 @@ namespace Sabotris.Worlds
                 foreach (var ren in GetComponentsInChildren<Renderer>())
                     ren.material.color = BlockColor ?? Color.white;
 
-            if (rawPosition != ShapeUtil.NullVector3Int && parentShape)
-                transform.localScale = Vector3.zero;
+            transform.localScale = (rawPosition != ShapeUtil.NullVector3Int && parentShape) ? Vector3.zero : Vector3.one;
         }
 
         private void FixedUpdate()

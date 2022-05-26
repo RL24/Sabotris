@@ -133,6 +133,7 @@
             _translations.Add(TranslationKey.PowerUpRandomBlock, "Blocco Casuale");
             _translations.Add(TranslationKey.PowerUpClearLayer, "Livello Chiaro");
             _translations.Add(TranslationKey.PowerUpAddLayer, "Aggiungi Livello");
+            _translations.Add(TranslationKey.PowerUpRandomShape, "Forma Casuale");
         }
     }
 }

@@ -6,6 +6,7 @@
         RandomBlock,
         ClearLayer,
         AddLayer,
+        RandomShape,
         AdjacentExplode,
         XExplode,
         YExplode,

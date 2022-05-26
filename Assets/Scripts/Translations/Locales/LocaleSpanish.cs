@@ -133,6 +133,7 @@
             _translations.Add(TranslationKey.PowerUpRandomBlock, "Bloque Aleatorio");
             _translations.Add(TranslationKey.PowerUpClearLayer, "Capa Transparente");
             _translations.Add(TranslationKey.PowerUpAddLayer, "Agregar Capa");
+            _translations.Add(TranslationKey.PowerUpRandomShape, "Forma Aleatoria");
         }
     }
 }

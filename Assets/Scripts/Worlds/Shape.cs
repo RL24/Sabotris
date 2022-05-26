@@ -61,11 +61,11 @@ namespace Sabotris.Worlds
             foreach (var (blockId, blockPos) in Offsets)
                 CreateBlock(blockId, blockPos);
 
+            UpdatedPower();
+            
             var color = ShapeColor ?? Color.white;
             foreach (var ren in GetComponentsInChildren<Renderer>())
                 ren.material.color = color;
-            
-            UpdatedPower();
 
             if (networkController)
                 networkController.Client?.RegisterListener(this);
@@ -122,7 +122,7 @@ namespace Sabotris.Worlds
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
         }
 
-        private void CreateBlock(Guid blockId, Vector3Int offset)
+        protected void CreateBlock(Guid blockId, Vector3Int offset)
         {
             var block = Instantiate(blockTemplate, offset, Quaternion.identity);
             block.name = $"Block-{blockId}";
@@ -301,6 +301,9 @@ namespace Sabotris.Worlds
             gameObject.layer = layer;
             for (var i = 0; i < transform.childCount; i++)
                 transform.GetChild(i).gameObject.layer = layer;
+            
+            foreach (var ren in GetComponentsInChildren<Renderer>())
+                ren.material = PowerUp == null ? standardMaterial : poweredMaterial;
         }
 
         [PacketListener(PacketTypeId.ShapeMove, PacketDirection.Client)]

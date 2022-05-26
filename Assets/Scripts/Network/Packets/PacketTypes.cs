@@ -16,6 +16,7 @@ namespace Sabotris.Network.Packets
         ShapeMove = 0x21,
         ShapeRotate = 0x22,
         ShapeLock = 0x23,
+        FallingShapeCreate = 0x24,
 
         BlockBulkCreate = 0x30,
         BlockBulkRemove = 0x31,
@@ -63,6 +64,7 @@ namespace Sabotris.Network.Packets
         public static readonly PacketType ShapeMove = new PacketType(PacketTypeId.ShapeMove, () => new PacketShapeMove());
         public static readonly PacketType ShapeRotate = new PacketType(PacketTypeId.ShapeRotate, () => new PacketShapeRotate());
         public static readonly PacketType ShapeLock = new PacketType(PacketTypeId.ShapeLock, () => new PacketShapeLock());
+        public static readonly PacketType FallingShapeCreate = new PacketType(PacketTypeId.FallingShapeCreate, () => new PacketFallingShapeCreate());
 
         public static readonly PacketType BlockBulkCreate = new PacketType(PacketTypeId.BlockBulkCreate, () => new PacketBlockBulkCreate());
         public static readonly PacketType BlockBulkRemove = new PacketType(PacketTypeId.BlockBulkRemove, () => new PacketBlockBulkRemove());
@@ -86,7 +88,7 @@ namespace Sabotris.Network.Packets
         public static readonly PacketType BotConnected = new PacketType(PacketTypeId.BotConnected, () => new PacketBotConnected());
         public static readonly PacketType BotDisconnected = new PacketType(PacketTypeId.BotDisconnected, () => new PacketBotDisconnected());
 
-        private static readonly PacketType[] PacketTypeList = {GameStart, GameEnd, ChatMessage, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, BlockBulkCreate, BlockBulkRemove, BlockCreate, FallingBlockCreate, LayerMove, LayerClear, LayerAdd, PlayerConnected, PlayerDisconnected, PlayerList, RetrievePlayerList, PlayerDead, PlayerScore, RetrievePlayerId, ServerShutdown, BotConnected, BotDisconnected};
+        private static readonly PacketType[] PacketTypeList = {GameStart, GameEnd, ChatMessage, ShapeCreate, ShapeMove, ShapeRotate, ShapeLock, FallingShapeCreate, BlockBulkCreate, BlockBulkRemove, BlockCreate, FallingBlockCreate, LayerMove, LayerClear, LayerAdd, PlayerConnected, PlayerDisconnected, PlayerList, RetrievePlayerList, PlayerDead, PlayerScore, RetrievePlayerId, ServerShutdown, BotConnected, BotDisconnected};
 
         public static PacketType GetPacketType(PacketTypeId packetTypeId) => PacketTypeList.First((packetType) => packetType.Id == packetTypeId);
     }

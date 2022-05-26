@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7908623741212500492
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7908623741212500488}
+  - component: {fileID: -3182868517047506160}
+  m_Layer: 0
+  m_Name: FallingShape
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7908623741212500488
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7908623741212500492}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-3182868517047506160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7908623741212500492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eaf4ec0ab0f44cd8b72cd5a88003720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  standardMaterial: {fileID: 2100000, guid: 48bf85ed4cc662343ab3ecbdf4bf681e, type: 2}
+  poweredMaterial: {fileID: 2100000, guid: 649b7b89c3857ec41bff4e74626b932b, type: 2}
+  blockTemplate: {fileID: 771673464604701970, guid: 6649352b212ec1640bae16559d3fb9c0, type: 3}
+  gameController: {fileID: 0}
+  menuController: {fileID: 0}
+  networkController: {fileID: 0}
+  cameraController: {fileID: 0}
+  audioController: {fileID: 0}
+  parentContainer: {fileID: 0}
+  _powerUp:
+    id: 0
+  rawPosition: {x: 0, y: 0, z: 0}
+  rawRotation: {x: 0, y: 0, z: 0, w: 0}
+  rotateActivator: {x: 0, y: 0, z: 0, w: 0}
+  permaDrop: 0
+  locked: 0
+  inputRotateYaw: 0
+  inputRotatePitch: 0
+  inputRotateRoll: 0
+  RawPosition: {x: 0, y: 0, z: 0}
+  removed: 0
+  references:
+    version: 1
+    00000000:
+      type: {class: , ns: , asm: }

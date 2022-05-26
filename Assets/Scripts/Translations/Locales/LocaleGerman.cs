@@ -133,6 +133,7 @@
             _translations.Add(TranslationKey.PowerUpRandomBlock, "Zufallsblock");
             _translations.Add(TranslationKey.PowerUpClearLayer, "Klare Schicht");
             _translations.Add(TranslationKey.PowerUpAddLayer, "Schicht Hinzufügen");
+            _translations.Add(TranslationKey.PowerUpRandomShape, "Zufällige Form");
         }
     }
 }

@@ -269,6 +269,7 @@ namespace Sabotris.UI.Menu.Menus
         [PacketListener(PacketTypeId.ShapeMove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.ShapeRotate, PacketDirection.Server)]
         [PacketListener(PacketTypeId.ShapeLock, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.FallingShapeCreate, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkCreate, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockBulkRemove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.BlockCreate, PacketDirection.Server)]

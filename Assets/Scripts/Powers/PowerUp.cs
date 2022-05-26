@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Sabotris.Translations;
 using Sabotris.Worlds;
 
@@ -6,9 +7,20 @@ namespace Sabotris.Powers
 {
     public abstract class PowerUp
     {
+        protected Container ActivatingContainer, SelectingContainer;
+        
         public abstract Power GetPower();
 
-        public abstract void Use(Container activatingContainer);
+        public void Use(Container activatingContainer)
+        {
+            activatingContainer.cameraController.SetSelectingContainer(this, OnSelectedContainer, activatingContainer, new[] {activatingContainer});
+        }
+
+        protected abstract IEnumerator OnSelectedContainer(Container activatingContainer, Container selectedContainer);
+
+        public virtual void Update()
+        {
+        }
 
         public override string ToString()
         {

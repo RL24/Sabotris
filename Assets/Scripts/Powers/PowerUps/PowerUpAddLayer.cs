@@ -12,12 +12,7 @@ namespace Sabotris.Powers.PowerUps
             return Power.AddLayer;
         }
 
-        public override void Use(Container activatingContainer)
-        {
-            activatingContainer.cameraController.SetSelectingContainer(OnSelectedContainer, activatingContainer, new[] {activatingContainer});
-        }
-
-        private IEnumerator OnSelectedContainer(Container activatingContainer, Container selectedContainer)
+        protected override IEnumerator OnSelectedContainer(Container activatingContainer, Container selectedContainer)
         {
             var packet = new PacketLayerAdd
             {

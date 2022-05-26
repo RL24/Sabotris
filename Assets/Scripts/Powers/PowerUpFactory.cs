@@ -10,21 +10,17 @@ namespace Sabotris.Powers
         private static readonly Dictionary<Power, Func<PowerUp>> PowerCache = new Dictionary<Power, Func<PowerUp>>()
         {
             {Power.RandomBlock, () => new PowerUpRandomBlock()},
+            {Power.RandomShape, () => new PowerUpRandomShape()},
             {Power.ClearLayer, () => new PowerUpClearLayer()},
-            {Power.AddLayer, () => new PowerUpAddLayer()},
-            // {Power.AdjacentExplode, () => new PowerUpAdjacentExplode()},
-            // {Power.XExplode, () => new PowerUpXExplode()},
-            // {Power.YExplode, () => new PowerUpYExplode()},
-            // {Power.ZExplode, () => new PowerUpZExplode()},
+            {Power.AddLayer, () => new PowerUpAddLayer()}
         };
 
-        public static PowerUp CreatePowerUp(Power power)
+        public static PowerUp CreatePowerUp(Power? power)
         {
-            if (power == Power.None && Random.Boolean())
-                power = (Power) Random.Range(0, (int) Power.Count);
+            if (power == null && Random.Boolean())
+                power = (Power) Random.Range(0, (int) Power.Count - 1);
 
-            // power = Power.AddLayer;
-            PowerCache.TryGetValue(power, out var powerUp);
+            PowerCache.TryGetValue(power ?? Power.None, out var powerUp);
             return powerUp?.Invoke();
         }
     }

@@ -14,6 +14,8 @@ namespace Sabotris.Game
         public const int PowerUpUseTimeoutMs = 5000;
         
         public CameraController cameraController;
+        
+        public PowerUp PowerUp;
         public Container activatingContainer;
         public Action<Container> SelectedContainerFunc;
         public Container[] exclusions;
@@ -28,10 +30,10 @@ namespace Sabotris.Game
         private const int SelectDelay = 500;
         private readonly Stopwatch _selectTimer = new Stopwatch();
         private bool _selectDelayed;
-
+        
         private int _selectedIndex;
         private Container[] _selectableContainers = new Container[0];
-        public bool DoneSelecting { get; set; }
+        private bool _doneSelecting;
 
         private void Update()
         {
@@ -39,7 +41,7 @@ namespace Sabotris.Game
                 return;
             
             var changeContainer = InputUtil.GetChangeContainerSelection();
-            if (changeContainer != 0 && !_selectDelayed && !DoneSelecting)
+            if (changeContainer != 0 && !_selectDelayed && !_doneSelecting)
             {
                 _selectedIndex += changeContainer;
                 _selectDelayed = true;
@@ -64,11 +66,11 @@ namespace Sabotris.Game
             position = container.rawPosition + (Vector3.back * 20) + (Vector3.up * 22);
             rotation = Quaternion.Euler(30, 0, 0);
 
-            if (!(InputUtil.GetSelectContainer() || PowerUpTimer.ElapsedMilliseconds > PowerUpUseTimeoutMs) || DoneSelecting)
+            if (!(InputUtil.GetSelectContainer() || PowerUpTimer.ElapsedMilliseconds > PowerUpUseTimeoutMs) || _doneSelecting)
                 return;
 
             selectedContainer = container;
-            DoneSelecting = true;
+            _doneSelecting = true;
             SelectedContainerFunc?.Invoke(container);
         }
 
@@ -76,7 +78,7 @@ namespace Sabotris.Game
         {
             Active = false;
             selectedContainer = null;
-            DoneSelecting = false;
+            _doneSelecting = false;
         }
 
         public bool Active

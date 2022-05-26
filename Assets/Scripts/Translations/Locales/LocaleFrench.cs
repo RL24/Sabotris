@@ -133,6 +133,7 @@
             _translations.Add(TranslationKey.PowerUpRandomBlock, "Bloc Aléatoire");
             _translations.Add(TranslationKey.PowerUpClearLayer, "Couche Claire");
             _translations.Add(TranslationKey.PowerUpAddLayer, "Ajouter la Couche");
+            _translations.Add(TranslationKey.PowerUpRandomShape, "Forme Aléatoire");
         }
     }
 }

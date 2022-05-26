@@ -133,6 +133,7 @@
             _translations.Add(TranslationKey.PowerUpRandomBlock, "Random Block");
             _translations.Add(TranslationKey.PowerUpClearLayer, "Clear Layer");
             _translations.Add(TranslationKey.PowerUpAddLayer, "Add Layer");
+            _translations.Add(TranslationKey.PowerUpRandomShape, "Random Shape");
         }
     }
 }

@@ -117,7 +117,8 @@ namespace Sabotris.Translations
         POWER_UPS = 0xD0,
         PowerUpRandomBlock = 0xD1,
         PowerUpClearLayer = 0xD2,
-        PowerUpAddLayer = 0xD3
+        PowerUpAddLayer = 0xD3,
+        PowerUpRandomShape = 0xD3
     }
 
     public abstract class Locale

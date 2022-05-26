@@ -16,6 +16,7 @@ using Sabotris.UI.Menu;
 using Sabotris.Util;
 using TMPro;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 using Random = Sabotris.Util.Random;
 
 namespace Sabotris.Worlds
@@ -39,15 +40,17 @@ namespace Sabotris.Worlds
         private const float ClearLayerSpeed = 0.1f;
         private const float ClearedLayerDropSpeed = 0.25f;
         private const float DropNewShapeSpeed = 0.4f;
+        private const int PowerUpCountDelay = 10;
         
         protected int Radius => (networkController ? networkController.Client?.LobbyData?.PlayFieldSize : null) ?? 2;
         private Vector3Int BottomLeft => new Vector3Int(-Radius, 1, -Radius);
         private Vector3Int TopRight => new Vector3Int(Radius, 25, Radius);
 
-        private Vector3Int GenerateBottomLeft => new Vector3Int(-Radius, 0, -Radius);
-        private Vector3Int GenerateTopRight => new Vector3Int(Radius, 24, Radius);
+        public Vector3Int GenerateBottomLeft => new Vector3Int(-Radius, 0, -Radius);
+        public Vector3Int GenerateTopRight => new Vector3Int(Radius, 24, Radius);
 
         public Shape shapeTemplate;
+        public FallingShape fallingShapeTemplate;
         public Block blockTemplate;
         public FallingBlock fallingBlockTemplate;
 
@@ -71,7 +74,8 @@ namespace Sabotris.Worlds
 
         private Shape _controllingShape;
         private readonly List<PowerUp> _powerUps = new List<PowerUp>();
-        public Stopwatch PowerUpTimer = new Stopwatch();
+        public readonly Stopwatch PowerUpTimer = new Stopwatch();
+        private int _powerUpCount;
 
         private readonly Dictionary<Guid, Shape> _shapes = new Dictionary<Guid, Shape>();
         private readonly Dictionary<Guid, Block> _blocks = new Dictionary<Guid, Block>();
@@ -117,10 +121,14 @@ namespace Sabotris.Worlds
             transform.position = Vector3.Lerp(transform.position, rawPosition, GameSettings.Settings.gameTransitionSpeed.FixedDelta() * 0.5f);
         }
 
-        public Vector3Int GetRandomStartingPosition()
+        public Vector3Int GetRandomStartingPosition((Guid, Vector3Int)[] offsets = null)
         {
-            var x = Random.Range(-Radius, Radius);
-            var z = Random.Range(-Radius, Radius);
+            var minX = offsets?.Min((offset) => offset.Item2.x) ?? 0;
+            var maxX = offsets?.Max((offset) => offset.Item2.x) ?? 0;
+            var minZ = offsets?.Min((offset) => offset.Item2.z) ?? 0;
+            var maxZ = offsets?.Max((offset) => offset.Item2.z) ?? 0;
+            var x = Random.Range(-Radius - minX, Radius - maxX);
+            var z = Random.Range(-Radius - minZ, Radius - maxZ);
             return DropPosition + new Vector3Int(x, 0, z);
         }
         
@@ -231,6 +239,7 @@ namespace Sabotris.Worlds
             var distinctLayers = addedBlocks.Select((vec) => vec.y).Distinct().ToArray();
             var clearingLayers = new List<int>();
             var deletedBlocks = new List<Guid>();
+            var powerUpsPerLayer = new Dictionary<int, List<PowerUp>>();
             foreach (var layer in distinctLayers)
             {
                 var blocksInLayer = _blocks.Count((block) => block.Value.RawPosition.y == layer);
@@ -242,10 +251,26 @@ namespace Sabotris.Worlds
                 foreach (var block in blocksToRemove)
                 {
                     deletedBlocks.Add(block.Id);
-                    RemoveBlock(block);
+                    var (powerUp, powerUpLayer) = RemoveBlock(block);
+                    if (powerUp == null)
+                        continue;
+                    
+                    if (!powerUpsPerLayer.ContainsKey(powerUpLayer))
+                        powerUpsPerLayer.Add(powerUpLayer, new List<PowerUp> {powerUp});
+                    powerUpsPerLayer[powerUpLayer].Add(powerUp);
                 }
 
                 clearingLayers.Add(layer);
+            }
+
+            if (!(this is DemoContainer) && gameController.ControllingContainer == this)
+            {
+                foreach (var powerUpEntries in powerUpsPerLayer)
+                {
+                    var powerUp = powerUpEntries.Value[Random.Range(0, powerUpEntries.Value.Count - 1)];
+                    _powerUps.Add(powerUp);
+                    OnAddPowerUp?.Invoke(this, powerUp);
+                }
             }
 
             if (ShouldSendPacket())
@@ -339,7 +364,7 @@ namespace Sabotris.Worlds
             yield return new WaitForSeconds(DropNewShapeSpeed);
         }
 
-        private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null, Power power = Power.None)
+        private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null, Power? power = null)
         {
             var shape = Instantiate(shapeTemplate, position, Quaternion.identity);
             shape.name = $"Shape-{shapeId}";
@@ -347,8 +372,14 @@ namespace Sabotris.Worlds
             shape.Id = shapeId;
             shape.Offsets = offsets;
             shape.ShapeColor = color;
-            if (!(this is DemoContainer || this is BotContainer) && world.Containers.Count > 1)
+
+            if (!(this is DemoContainer || this is BotContainer) && world.Containers.Count > 1 && _powerUpCount > PowerUpCountDelay) {
                 shape.PowerUp = PowerUpFactory.CreatePowerUp(power);
+                if (shape.PowerUp != null)
+                    _powerUpCount = 0;
+            }
+            if (power == null && shape.PowerUp == null)
+                _powerUpCount++;
 
             shape.gameController = gameController;
             shape.menuController = menuController;
@@ -360,6 +391,25 @@ namespace Sabotris.Worlds
             shape.transform.SetParent(transform, false);
 
             _shapes.Add(shapeId, shape);
+
+            return shape;
+        }
+        
+        public FallingShape CreateFallingShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null)
+        {
+            var shape = Instantiate(fallingShapeTemplate, position, Quaternion.identity);
+            shape.name = $"Shape-{shapeId}";
+
+            shape.Id = shapeId;
+            shape.RawPosition = position;
+            shape.Offsets = offsets;
+            shape.ShapeColor = color;
+
+            shape.gameController = gameController;
+            shape.networkController = networkController;
+            shape.parentContainer = this;
+
+            shape.transform.SetParent(transform, false);
 
             return shape;
         }
@@ -412,21 +462,17 @@ namespace Sabotris.Worlds
             RemoveBlock(block, index, max);
         }
 
-        private void RemoveBlock(Block block, int index = -1, int max = -1)
+        private (PowerUp, int) RemoveBlock(Block block, int index = -1, int max = -1)
         {
             StartCoroutine(block.Remove(index, max));
             _blocks.Remove(block.Id);
 
             if (!(block.parentShape is {PowerUp: { }} ps))
-                return;
+                return (null, -1);
 
-            if (!(this is DemoContainer) && gameController.ControllingContainer == this)
-            {
-                _powerUps.Add(ps.PowerUp);
-                OnAddPowerUp?.Invoke(this, ps.PowerUp);
-            }
-
+            var powerUp = ps.PowerUp;
             ps.PowerUp = null;
+            return (powerUp, block.RawPosition.y);
         }
 
         public bool DoesCollide(Vector3Int[] absolutePositions)
@@ -493,6 +539,15 @@ namespace Sabotris.Worlds
                 return;
 
             CreateShape(packet.Id, packet.Position, packet.Offsets, packet.Color, packet.Power);
+        }
+        
+        [PacketListener(PacketTypeId.FallingShapeCreate, PacketDirection.Client)]
+        public void OnFallingShapeCreate(PacketFallingShapeCreate packet)
+        {
+            if (packet.ContainerId != Id)
+                return;
+
+            CreateFallingShape(packet.Id, packet.Position, packet.Offsets, packet.Color);
         }
 
         [PacketListener(PacketTypeId.LayerMove, PacketDirection.Client)]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Sabotris.IO;
+using Sabotris.Powers;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
 using Sabotris.Worlds;
@@ -134,8 +135,9 @@ namespace Sabotris.Game
             cameraTransform.rotation = Quaternion.Lerp(cameraTransformRotation, toRotation, animationTime);
         }
 
-        public void SetSelectingContainer(Func<Container, Container, IEnumerator> selectedContainerFunc, Container activatingContainer, Container[] exclusions = null)
+        public void SetSelectingContainer(PowerUp powerUp, Func<Container, Container, IEnumerator> selectedContainerFunc, Container activatingContainer, Container[] exclusions = null)
         {
+            containerSelector.PowerUp = powerUp;
             containerSelector.activatingContainer = activatingContainer;
             containerSelector.exclusions = exclusions;
             containerSelector.SelectedContainerFunc = (selectedContainer) =>

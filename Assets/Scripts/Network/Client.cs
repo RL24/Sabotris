@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Network.Packets.Players;
 using Sabotris.Util;
 using Steamworks;
 

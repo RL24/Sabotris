@@ -2,7 +2,7 @@
 using Sabotris.Powers;
 using UnityEngine;
 
-namespace Sabotris.Network.Packets.Game
+namespace Sabotris.Network.Packets.Shape
 {
     public class PacketShapeCreate : Packet
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
+using Sabotris.Network.Packets.Chat;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Translations;
 using TMPro;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sabotris.Network.Packets.Game
+namespace Sabotris.Network.Packets.Block
 {
     public class PacketBlockBulkRemove : Packet
     {

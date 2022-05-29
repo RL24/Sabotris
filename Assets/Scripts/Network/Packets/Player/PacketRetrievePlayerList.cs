@@ -1,4 +1,4 @@
-﻿namespace Sabotris.Network.Packets.Game
+﻿namespace Sabotris.Network.Packets.Players
 {
     public class PacketRetrievePlayerList : Packet
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sabotris.Network.Packets.Game
+namespace Sabotris.Network.Packets.Chat
 {
     public class PacketChatMessage : Packet
     {

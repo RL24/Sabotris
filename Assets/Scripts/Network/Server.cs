@@ -7,6 +7,7 @@ using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Bot;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Network.Packets.Players;
 using Sabotris.Util;
 using Sabotris.Worlds;
 using Steamworks;
@@ -260,6 +261,7 @@ namespace Sabotris.UI.Menu.Menus
 
         [PacketListener(PacketTypeId.ChatMessage, PacketDirection.Server)]
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.PlayerPositions, PacketDirection.Server)]
         public void OnPacketForward(Packet packet)
         {
             SendPacketToAll(packet);
@@ -277,6 +279,9 @@ namespace Sabotris.UI.Menu.Menus
         [PacketListener(PacketTypeId.LayerMove, PacketDirection.Server)]
         [PacketListener(PacketTypeId.LayerClear, PacketDirection.Server)]
         [PacketListener(PacketTypeId.LayerAdd, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.SpectatorCreate, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.SpectatorMove, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.SpectatorRemove, PacketDirection.Server)]
         public void OnPacketForwardExclude(Packet packet)
         {
             SendPacketToAll(packet, packet.SenderId);

@@ -1,7 +1,7 @@
 ﻿using System;
 using Sabotris.Game;
 
-namespace Sabotris.Network.Packets.Game
+namespace Sabotris.Network.Packets.Players
 {
     public class PacketPlayerScore : Packet
     {

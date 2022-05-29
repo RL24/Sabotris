@@ -19,6 +19,7 @@ namespace Sabotris.Util
         private static KeyControl KeyBackward => Tern(GameSettings.Input.keyboardBinds.moveBack);
         private static KeyControl KeyAscend => Tern(GameSettings.Input.keyboardBinds.moveAscend);
         private static KeyControl KeyDescend => Tern(GameSettings.Input.keyboardBinds.moveDescend);
+        private static KeyControl KeyJump => Tern(GameSettings.Input.keyboardBinds.moveJump);
 
         private static KeyControl KeyMoveDown => Tern(GameSettings.Input.keyboardBinds.moveDown);
 
@@ -77,6 +78,7 @@ namespace Sabotris.Util
 
         private static ButtonControl GamepadAscend => Tern(GameSettings.Input.gamepadBinds.moveAscend);
         private static ButtonControl GamepadDescend => Tern(GameSettings.Input.gamepadBinds.moveDescend);
+        private static ButtonControl GamepadJump => Tern(GameSettings.Input.gamepadBinds.moveJump);
 
         private static ButtonControl GamepadRotateYawLeft => Tern(GameSettings.Input.gamepadBinds.rotateYawLeft);
         private static ButtonControl GamepadRotateYawRight => Tern(GameSettings.Input.gamepadBinds.rotateYawRight);
@@ -162,6 +164,11 @@ namespace Sabotris.Util
             var keyboardValue = IsPressed(KeyAscend).Int() - IsPressed(KeyDescend).Int();
             var gamepadValue = IsPressed(GamepadDescend).Int() - IsPressed(GamepadAscend).Int();
             return Mathf.Clamp(keyboardValue - gamepadValue, -1, 1);
+        }
+
+        public static bool GetMoveJump()
+        {
+            return WasPressed(KeyJump) || WasPressed(GamepadJump);
         }
 
         public static bool GetMoveDown()

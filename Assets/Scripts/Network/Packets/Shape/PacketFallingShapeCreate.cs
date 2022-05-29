@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Sabotris.Network.Packets.Game
+namespace Sabotris.Network.Packets.Shape
 {
     public class PacketFallingShapeCreate : Packet
     {

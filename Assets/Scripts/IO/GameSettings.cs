@@ -40,6 +40,7 @@ namespace Sabotris.IO
         public Key moveDown = Key.Space;
         public Key moveAscend = Key.Space;
         public Key moveDescend = Key.LeftShift;
+        public Key moveJump = Key.Space;
 
         public Key rotateYawLeft = Key.U;
         public Key rotateYawRight = Key.O;
@@ -65,6 +66,7 @@ namespace Sabotris.IO
     {
         public GamepadButton moveAscend = GamepadButton.RightShoulder;
         public GamepadButton moveDescend = GamepadButton.LeftShoulder;
+        public GamepadButton moveJump = GamepadButton.South;
 
         public GamepadButton zoomIn = GamepadButton.LeftStick;
         public GamepadButton zoomOut = GamepadButton.RightStick;

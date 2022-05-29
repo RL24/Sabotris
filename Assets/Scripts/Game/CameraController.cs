@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using Sabotris.IO;
+using Sabotris.Network;
+using Sabotris.Network.Packets.Spectator;
 using Sabotris.Powers;
 using Sabotris.UI.Menu;
+using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
 using Sabotris.Worlds;
 using UnityEngine;
@@ -13,7 +16,9 @@ namespace Sabotris.Game
     {
         public GameController gameController;
         public MenuController menuController;
+        public NetworkController networkController;
         public ContainerSelectorController containerSelector;
+        public SpectatorController spectatorControllerPrefab;
 
         public new Camera camera;
         private Vector3 _defaultPosition;
@@ -37,6 +42,9 @@ namespace Sabotris.Game
         private float Pitch { get; set; }
         private float Zoom { get; set; } = 15;
 
+        private bool _isSpectating;
+        private SpectatorController _spectatorObject;
+
         private void Start()
         {
             var ct = camera.transform;
@@ -49,28 +57,12 @@ namespace Sabotris.Game
 
         private void Update()
         {
+            IsSpectating = gameController.ControllingContainer is {dead: true} && !gameController.menuController.IsInMenu;
+            
             if (!camera || !gameController.ControllingContainer)
                 return;
 
-            var container = gameController.ControllingContainer;
-
-            if (_targetContainer != container)
-            {
-                _targetShapePosition = container.transform.position + container.DropPosition;
-                _targetContainer = container;
-            }
-
-            if (container.ControllingShape)
-                _targetShapePosition = container.ControllingShape.transform.position;
-
-            var shapePosition = _targetShapePosition;
-            var containerPosition = container.transform.position;
-            var targetPosition = (containerPosition + shapePosition) * 0.5f;
-
-            var distance = (containerPosition - shapePosition).magnitude;
-            var cameraDistance = distance / 2.0f / _aspectRatio / _tanFov;
-
-            _rotationInput = menuController.IsInMenu || InputUtil.ShouldRotateShape()
+            _rotationInput = menuController.IsInMenu || containerSelector.Active || InputUtil.ShouldRotateShape()
                 ? Vector3.zero
                 : new Vector3(
                     InputUtil.GetCameraRotateYaw(),
@@ -88,16 +80,41 @@ namespace Sabotris.Game
             cameraRotation = Quaternion.Euler(Pitch, Yaw, 0);
             if (IsSpectating)
             {
-                var advance = -InputUtil.GetMoveAdvance() * Acceleration;
-                var strafe = InputUtil.GetMoveStrafe() * Acceleration;
-                var ascend = InputUtil.GetMoveAscend() * Acceleration;
+                if (_spectatorObject)
+                {
+                    _velocity = Vector3.zero;
+                    cameraPosition = cameraRotation * new Vector3(0f, 0f, (8 - Zoom) * 0.5f) + _spectatorObject.transform.position;
+                }
+                else
+                {
+                    var advance = -InputUtil.GetMoveAdvance() * Acceleration;
+                    var strafe = InputUtil.GetMoveStrafe() * Acceleration;
+                    var ascend = InputUtil.GetMoveAscend() * Acceleration;
 
-                _velocity += transform.forward.Horizontal(true) * advance + transform.right * strafe + Vector3.up * ascend;
-                cameraPosition += _velocity;
-                _velocity *= Friction;
+                    _velocity += transform.forward.Horizontal(true) * advance + transform.right * strafe + Vector3.up * ascend;
+                    _velocity *= Friction;
+                }
             }
             else
             {
+                var container = gameController.ControllingContainer;
+
+                if (_targetContainer != container)
+                {
+                    _targetShapePosition = container.transform.position + container.DropPosition;
+                    _targetContainer = container;
+                }
+
+                if (container.ControllingShape)
+                    _targetShapePosition = container.ControllingShape.transform.position;
+
+                var shapePosition = _targetShapePosition;
+                var containerPosition = container.transform.position;
+                var targetPosition = (containerPosition + shapePosition) * 0.5f;
+
+                var distance = (containerPosition - shapePosition).magnitude;
+                var cameraDistance = distance / 2.0f / _aspectRatio / _tanFov;
+                
                 _velocity = Vector3.zero;
                 cameraPosition = cameraRotation * new Vector3(0f, 0f, -cameraDistance - Zoom) + targetPosition;
             }
@@ -108,6 +125,8 @@ namespace Sabotris.Game
             var cameraTransform = camera.transform;
             var cameraTransformPosition = cameraTransform.position;
             var cameraTransformRotation = cameraTransform.rotation;
+            
+            cameraPosition += _velocity;
 
             var toPosition = cameraPosition;
             var toRotation = cameraRotation;
@@ -163,6 +182,53 @@ namespace Sabotris.Game
             ct.rotation = cameraRotation = _defaultRotation;
         }
 
-        private bool IsSpectating => gameController.ControllingContainer is {dead: true} && !gameController.menuController.IsInMenu;
+        private void CreateSpectator()
+        {
+            if (_spectatorObject)
+                Destroy(_spectatorObject.gameObject);
+            _spectatorObject = Instantiate(spectatorControllerPrefab, new Vector3(cameraPosition.x, 1, cameraPosition.z), cameraRotation);
+
+            _spectatorObject.cameraController = this;
+            _spectatorObject.networkController = networkController;
+            
+            _spectatorObject.transform.SetParent(transform.parent, true);
+            
+            networkController.Client?.SendPacket(new PacketSpectatorCreate
+            {
+                Id = Client.UserId,
+                Position = _spectatorObject.transform.position,
+                Rotation = _spectatorObject.transform.rotation
+            });
+        }
+
+        private void DestroySpectator()
+        {
+            if (!_spectatorObject)
+                return;
+            Destroy(_spectatorObject.gameObject);
+            _spectatorObject = null;
+            
+            networkController.Client?.SendPacket(new PacketSpectatorRemove
+            {
+                Id = Client.UserId
+            });
+        }
+
+        private bool IsSpectating
+        {
+            get => _isSpectating;
+            set
+            {
+                if (_isSpectating == value)
+                    return;
+                
+                _isSpectating = value;
+
+                if (IsSpectating)
+                    CreateSpectator();
+                else
+                    DestroySpectator();
+            }
+        }
     }
 }

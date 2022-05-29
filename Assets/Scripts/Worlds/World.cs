@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Sabotris.Audio;
 using Sabotris.Game;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Bot;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Network.Packets.Players;
+using Sabotris.Network.Packets.Spectator;
 using Sabotris.UI;
 using Sabotris.UI.Menu;
 using Sabotris.UI.Menu.Menus;
@@ -17,6 +21,8 @@ namespace Sabotris.Worlds
 {
     public class World : MonoBehaviour
     {
+        private const float PositionUpdateDelay = 200;
+        
         public Container containerTemplate;
         public BotContainer botContainerTemplate;
 
@@ -30,7 +36,12 @@ namespace Sabotris.Worlds
         public DemoContainer demoContainer;
         public Menu menuMain, menuPause, menuGameOver;
 
+        public Spectator spectatorPrefab;
+
         public readonly List<Container> Containers = new List<Container>();
+        private readonly Dictionary<Guid, Spectator> _spectators = new Dictionary<Guid, Spectator>();
+
+        private readonly Stopwatch _positionUpdateTimer = new Stopwatch();
 
         private void Start()
         {
@@ -41,12 +52,23 @@ namespace Sabotris.Worlds
             }
 
             networkController.Client?.RegisterListener(this);
+            
+            _positionUpdateTimer.Start();
         }
 
         private void Update()
         {
             if (InputUtil.ShouldPause() && !menuController.IsInMenu && networkController.Client is {IsConnected: true})
                 menuController.OpenMenu(menuPause);
+
+            if (networkController.Server?.Running == true && _positionUpdateTimer.ElapsedMilliseconds > PositionUpdateDelay)
+            {
+                _positionUpdateTimer.Restart();
+                networkController.Client?.SendPacket(new PacketPlayerPositions
+                {
+                    Positions = Containers.Select((container, index) => (container.Id, GetContainerPosition(index))).ToArray()
+                });
+            }
         }
 
         private void ConnectedToServerEvent(object sender, HSteamNetConnection? connection)
@@ -55,8 +77,7 @@ namespace Sabotris.Worlds
                 return;
 
             demoContainer.gameObject.SetActive(false);
-            gameController.ControllingContainer =
-                CreateContainer(Client.UserId, Client.Username, Client.SteamId.m_SteamID);
+            gameController.ControllingContainer = CreateContainer(Client.UserId, Client.Username, Client.SteamId.m_SteamID);
         }
 
         private void DisconnectedFromServerEvent(object sender, DisconnectReason disconnectReason)
@@ -65,8 +86,13 @@ namespace Sabotris.Worlds
             foreach (var container in Containers.ToArray())
                 RemoveContainer(container);
             demoContainer.gameObject.SetActive(true);
+            Containers.Clear();
 
             menuController.OpenMenu(menuMain);
+
+            foreach (var spectator in _spectators.Values)
+                Destroy(spectator.gameObject);
+            _spectators.Clear();
         }
 
         private Container CreateContainer(Guid id, string playerName, ulong? steamId = null)
@@ -111,6 +137,8 @@ namespace Sabotris.Worlds
         {
             Destroy(container.gameObject);
             Containers.Remove(container);
+            
+            DestroySpectator(container.Id);
 
             var i = 0;
             foreach (var c in Containers)
@@ -136,6 +164,38 @@ namespace Sabotris.Worlds
             container.transform.SetParent(transform, false);
 
             Containers.Add(container);
+        }
+
+        private void CreateSpectator(Guid id, Vector3 position, Quaternion rotation)
+        {
+            if (_spectators.ContainsKey(id))
+                DestroySpectator(id);
+            
+            var spectator = Instantiate(spectatorPrefab, position, rotation);
+            spectator.position = position;
+            spectator.rotation = rotation;
+
+            spectator.transform.SetParent(transform.parent, true);
+            
+            _spectators.Add(id, spectator);
+        }
+
+        private void MoveSpectator(Guid id, Vector3 position, Quaternion rotation)
+        {
+            if (!_spectators.TryGetValue(id, out var spectator))
+                return;
+
+            spectator.position = position;
+            spectator.rotation = rotation;
+        }
+
+        private void DestroySpectator(Guid id)
+        {
+            if (!_spectators.TryGetValue(id, out var spectator))
+                return;
+            
+            _spectators.Remove(id);
+            Destroy(spectator.gameObject);
         }
 
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]
@@ -191,6 +251,17 @@ namespace Sabotris.Worlds
             audioController.playerLeaveLobby.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetPlayerJoinLeavePitch());
         }
 
+        [PacketListener(PacketTypeId.PlayerPositions, PacketDirection.Client)]
+        public void OnPlayerDisconnected(PacketPlayerPositions packet)
+        {
+            foreach (var container in Containers)
+            {
+                var (id, position) = packet.Positions.DefaultIfEmpty((Guid.Empty, Vector3.zero)).FirstOrDefault((entry) => entry.Item1 == container.Id);
+                if (id != Guid.Empty)
+                    container.rawPosition = position;
+            }
+        }
+
         [PacketListener(PacketTypeId.BotConnected, PacketDirection.Client)]
         public void OnBotConnected(PacketBotConnected packet)
         {
@@ -201,6 +272,24 @@ namespace Sabotris.Worlds
         public void OnBotDisconnected(PacketBotDisconnected packet)
         {
             RemoveContainer(packet.BotId);
+        }
+
+        [PacketListener(PacketTypeId.SpectatorCreate, PacketDirection.Client)]
+        public void OnSpectatorCreate(PacketSpectatorCreate packet)
+        {
+            CreateSpectator(packet.Id, packet.Position, packet.Rotation);
+        }
+
+        [PacketListener(PacketTypeId.SpectatorMove, PacketDirection.Client)]
+        public void OnSpectatorMove(PacketSpectatorMove packet)
+        {
+            MoveSpectator(packet.Id, packet.Position, packet.Rotation);
+        }
+        
+        [PacketListener(PacketTypeId.SpectatorRemove, PacketDirection.Client)]
+        public void OnSpectatorRemove(PacketSpectatorRemove packet)
+        {
+            DestroySpectator(packet.Id);
         }
 
         private Vector3 GetContainerPosition(int index) => Vector3.right * (index * ((networkController.Client?.LobbyData?.PlayFieldSize ?? 5) * 2 + 4));

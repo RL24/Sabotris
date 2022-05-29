@@ -1,6 +1,6 @@
 ﻿using Sabotris.Game;
 
-namespace Sabotris.Network.Packets.Game
+namespace Sabotris.Network.Packets.Players
 {
     public class PacketPlayerList : Packet
     {

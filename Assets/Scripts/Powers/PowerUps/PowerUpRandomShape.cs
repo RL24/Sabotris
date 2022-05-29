@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Network.Packets.Shape;
 using Sabotris.Util;
 using Sabotris.Worlds;
 using UnityEngine;

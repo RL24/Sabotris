@@ -171,6 +171,7 @@
      <Compile Include="Assets\Scripts\Util\Layer.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuChatHistoryItem.cs" />
      <Compile Include="Assets\Scripts\Translations\Locales\LocaleFrench.cs" />
+     <Compile Include="Assets\Scripts\Game\SpectatorController.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Shape\PacketShapeCreate.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsAudio.cs" />
@@ -184,6 +185,11 @@
      <Compile Include="Assets\Scripts\UI\Menu\Menu.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsInputBindings.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Spectator\PacketSpectatorRemove.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Spectator\PacketSpectatorMove.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Spectator\PacketSpectatorCreate.cs" />
+     <Compile Include="Assets\Scripts\Game\Spectator.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerPositions.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

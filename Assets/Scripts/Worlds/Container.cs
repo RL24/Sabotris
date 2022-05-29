@@ -8,7 +8,11 @@ using Sabotris.Game;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
+using Sabotris.Network.Packets.Block;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Network.Packets.Layer;
+using Sabotris.Network.Packets.Players;
+using Sabotris.Network.Packets.Shape;
 using Sabotris.Powers;
 using Sabotris.Translations;
 using Sabotris.UI;
@@ -66,6 +70,7 @@ namespace Sabotris.Worlds
         public GameObject floor;
         public TMP_Text nameText, dropSpeedText;
 
+        public int Index;
         public Guid Id;
         public ulong steamId;
         [SerializeField] private string containerName;
@@ -199,7 +204,6 @@ namespace Sabotris.Worlds
                 _blocks.Add(blockId, block);
                 block.RawPosition = shape.RawPosition + shape.Offsets.First((pair) => pair.Item1 == blockId).Item2;
                 block.shifted = true;
-                block.transform.rotation = Quaternion.identity;
             }
 
             if (gameController.ControllingContainer != this && !(this is BotContainer && networkController.Server?.Running == true || this is DemoContainer))

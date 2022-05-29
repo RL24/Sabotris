@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Sabotris.Translations.Locales;
 
 namespace Sabotris.Translations
@@ -14,7 +15,9 @@ namespace Sabotris.Translations
 
     public static class Localization
     {
-        public static LocaleKey CurrentLocale { get; set; } = LocaleKey.English;
+        public static event EventHandler<LocaleKey> LanguageChangedEvent;
+        
+        private static LocaleKey _currentLocale = LocaleKey.English;
 
         private static readonly Dictionary<LocaleKey, Locale> Translations = new Dictionary<LocaleKey, Locale>()
         {
@@ -33,6 +36,20 @@ namespace Sabotris.Translations
         public static string Translate(TranslationKey key, params object[] args)
         {
             return string.Format(Translations[CurrentLocale].Translate(key), args);
+        }
+
+        public static LocaleKey CurrentLocale
+        {
+            get => _currentLocale;
+            set
+            {
+                if (_currentLocale == value)
+                    return;
+                
+                _currentLocale = value;
+                
+                LanguageChangedEvent?.Invoke(null, CurrentLocale);
+            }
         }
     }
 }

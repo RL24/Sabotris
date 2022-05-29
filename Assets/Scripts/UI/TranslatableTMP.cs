@@ -11,6 +11,11 @@ namespace Sabotris.UI
 
         private void Start()
         {
+            UpdateTranslation();
+        }
+
+        public void UpdateTranslation()
+        {
             text.text = Localization.Translate(key);
         }
     }

@@ -87,6 +87,7 @@
      <Compile Include="Assets\Scripts\Util\ClassUtil.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Block\PacketFallingBlockCreate.cs" />
      <Compile Include="Assets\Scripts\Worlds\BotContainer.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Spectator\PacketSpectatorRemove.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
      <Compile Include="Assets\Scripts\Powers\PowerUp.cs" />
@@ -95,9 +96,11 @@
      <Compile Include="Assets\Scripts\Network\Packets\Game\PacketGameEnd.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
      <Compile Include="Assets\Scripts\Powers\PowerUpFactory.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Spectator\PacketSpectatorMove.cs" />
      <Compile Include="Assets\Scripts\IO\GameSettings.cs" />
      <Compile Include="Assets\Scripts\Worlds\DemoContainer.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerPositions.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
      <Compile Include="Assets\Scripts\Game\ContainerSelectorController.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Bot\PacketBotDisconnected.cs" />
@@ -156,12 +159,14 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
      <Compile Include="Assets\Scripts\Worlds\Container.cs" />
      <Compile Include="Assets\Scripts\Translations\Locale.cs" />
+     <Compile Include="Assets\Scripts\Game\Spectator.cs" />
      <Compile Include="Assets\Scripts\Util\Random.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerScore.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketRetrievePlayerId.cs" />
      <Compile Include="Assets\Scripts\Game\Player.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Spectator\PacketSpectatorCreate.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuCarousel.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
      <Compile Include="Assets\Scripts\Steamworks.NET\SteamManager.cs" />
@@ -185,11 +190,6 @@
      <Compile Include="Assets\Scripts\UI\Menu\Menu.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsInputBindings.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
-     <Compile Include="Assets\Scripts\Network\Packets\Spectator\PacketSpectatorRemove.cs" />
-     <Compile Include="Assets\Scripts\Network\Packets\Spectator\PacketSpectatorMove.cs" />
-     <Compile Include="Assets\Scripts\Network\Packets\Spectator\PacketSpectatorCreate.cs" />
-     <Compile Include="Assets\Scripts\Game\Spectator.cs" />
-     <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerPositions.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

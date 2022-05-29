@@ -8,6 +8,7 @@ using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Network.Packets.Players;
 using Sabotris.Powers;
+using Sabotris.Translations;
 using Sabotris.UI.Menu;
 using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
@@ -46,10 +47,13 @@ namespace Sabotris.UI
                 networkController.Client.OnDisconnectedFromServerEvent += DisconnectedFromServerEvent;
 
             canvasGroup.alpha = 0;
+
+            Localization.LanguageChangedEvent += OnLanguageChanged;
         }
 
         private void OnDestroy()
         {
+            Localization.LanguageChangedEvent -= OnLanguageChanged;
             networkController.Client?.DeregisterListener(this);
         }
 
@@ -136,6 +140,13 @@ namespace Sabotris.UI
         {
             RemoveAllScoreEntries();
             RemoveAllPowerUpEntries();
+        }
+
+        private void OnLanguageChanged(object sender, LocaleKey locale)
+        {
+            var translations = GetComponentsInChildren<TranslatableTMP>();
+            foreach (var translation in translations)
+                translation.UpdateTranslation();
         }
 
         [PacketListener(PacketTypeId.PlayerConnected, PacketDirection.Client)]

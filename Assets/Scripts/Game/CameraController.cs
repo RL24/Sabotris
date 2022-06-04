@@ -9,6 +9,7 @@ using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
 using Sabotris.Worlds;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Sabotris.Game
 {
@@ -43,7 +44,7 @@ namespace Sabotris.Game
         private float Zoom { get; set; } = 15;
 
         private bool _isSpectating;
-        private SpectatorController _spectatorObject;
+        public SpectatorController spectatorObject;
 
         private void Start()
         {
@@ -80,10 +81,16 @@ namespace Sabotris.Game
             cameraRotation = Quaternion.Euler(Pitch, Yaw, 0);
             if (IsSpectating)
             {
-                if (_spectatorObject)
+                if (spectatorObject)
                 {
+                    const float upscale = 4f;
+                    var targetPosition = spectatorObject.transform.position + Vector3.up * (Zoom - 8) / upscale;
+
+                    var distance = (spectatorObject.transform.position - targetPosition).magnitude;
+                    var cameraDistance = distance * upscale / _aspectRatio / _tanFov;
+                
                     _velocity = Vector3.zero;
-                    cameraPosition = cameraRotation * new Vector3(0f, 0f, (8 - Zoom) * 0.5f) + _spectatorObject.transform.position;
+                    cameraPosition = cameraRotation * new Vector3(0f, 0f, -cameraDistance) + targetPosition;
                 }
                 else
                 {
@@ -184,29 +191,29 @@ namespace Sabotris.Game
 
         private void CreateSpectator()
         {
-            if (_spectatorObject)
-                Destroy(_spectatorObject.gameObject);
-            _spectatorObject = Instantiate(spectatorControllerPrefab, new Vector3(cameraPosition.x, 1, cameraPosition.z), cameraRotation);
+            if (spectatorObject)
+                Destroy(spectatorObject.gameObject);
+            spectatorObject = Instantiate(spectatorControllerPrefab, new Vector3(cameraPosition.x, 1, cameraPosition.z), cameraRotation);
 
-            _spectatorObject.cameraController = this;
-            _spectatorObject.networkController = networkController;
+            spectatorObject.cameraController = this;
+            spectatorObject.networkController = networkController;
             
-            _spectatorObject.transform.SetParent(transform.parent, true);
+            spectatorObject.transform.SetParent(transform.parent, true);
             
             networkController.Client?.SendPacket(new PacketSpectatorCreate
             {
                 Id = Client.UserId,
-                Position = _spectatorObject.transform.position,
-                Rotation = _spectatorObject.transform.rotation
+                Position = spectatorObject.transform.position,
+                Rotation = spectatorObject.transform.rotation
             });
         }
 
         private void DestroySpectator()
         {
-            if (!_spectatorObject)
+            if (!spectatorObject)
                 return;
-            Destroy(_spectatorObject.gameObject);
-            _spectatorObject = null;
+            Destroy(spectatorObject.gameObject);
+            spectatorObject = null;
             
             networkController.Client?.SendPacket(new PacketSpectatorRemove
             {
@@ -214,7 +221,7 @@ namespace Sabotris.Game
             });
         }
 
-        private bool IsSpectating
+        public bool IsSpectating
         {
             get => _isSpectating;
             set

@@ -19,7 +19,7 @@ namespace Sabotris.Game
 
         private ScriptableRendererFeature _renderFeatureSsao;
         private DepthOfField _dof;
-
+        
         public Container ControllingContainer { get; set; }
 
         private void Start()

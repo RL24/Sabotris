@@ -70,7 +70,6 @@ namespace Sabotris.Worlds
         public GameObject floor;
         public TMP_Text nameText, dropSpeedText;
 
-        public int Index;
         public Guid Id;
         public ulong steamId;
         [SerializeField] private string containerName;

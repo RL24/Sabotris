@@ -38,6 +38,9 @@ namespace Sabotris.Worlds
 
         public Spectator spectatorPrefab;
 
+        private Vector3 _boundaryHeight = new Vector3(0, -0.25f, 0);
+        public GameObject boundary;
+
         public readonly List<Container> Containers = new List<Container>();
         private readonly Dictionary<Guid, Spectator> _spectators = new Dictionary<Guid, Spectator>();
 
@@ -69,6 +72,22 @@ namespace Sabotris.Worlds
                     Positions = Containers.Select((container, index) => (container.Id, GetContainerPosition(index))).ToArray()
                 });
             }
+
+            var spectatorCount = _spectators.Count + cameraController.IsSpectating.Int();
+            var boundaryPosition = _boundaryHeight;
+            var boundarySize = new Vector3(100, 1, 100);
+            if (spectatorCount > 0)
+            {
+                var cameraSpectatorPosition = cameraController.spectatorObject.transform.position;
+                boundaryPosition += new Vector3(cameraSpectatorPosition.x, 0, cameraSpectatorPosition.z);
+                var maxDistance = 100f;
+                foreach (var spectator in _spectators.Values)
+                    maxDistance = Math.Max(maxDistance, Vector3.Distance(cameraSpectatorPosition, spectator.position)) + 5;
+                boundarySize = new Vector3(maxDistance, 1, maxDistance);
+            }
+            boundary.transform.position = boundaryPosition;
+            boundary.transform.localScale = boundarySize;
+            boundary.SetActive(spectatorCount > 0);
         }
 
         private void ConnectedToServerEvent(object sender, HSteamNetConnection? connection)

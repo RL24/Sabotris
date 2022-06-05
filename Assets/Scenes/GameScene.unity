@@ -3363,6 +3363,7 @@ MonoBehaviour:
   menuController: {fileID: 1370561258}
   networkController: {fileID: 858393423}
   containerSelector: {fileID: 858393427}
+  world: {fileID: 2032613557}
   spectatorControllerPrefab: {fileID: 1225049540822542087, guid: e1772585b75427c4eb1a69023c7b9d00, type: 3}
   camera: {fileID: 1687258584}
   cameraPosition: {x: 0, y: 0, z: 0}

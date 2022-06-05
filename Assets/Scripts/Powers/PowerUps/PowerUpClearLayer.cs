@@ -20,7 +20,6 @@ namespace Sabotris.Powers.PowerUps
                 ContainerId = selectedContainer.Id,
                 Layer = 1
             };
-            yield return selectedContainer.StartClearingLayers(new [] {new Vector3Int(0, packet.Layer, 0)}, true);
             activatingContainer.networkController.Client?.SendPacket(packet);
             yield return new WaitForSeconds(1);
         }

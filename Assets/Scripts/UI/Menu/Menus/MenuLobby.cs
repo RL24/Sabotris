@@ -107,6 +107,7 @@ namespace Sabotris.UI.Menu.Menus
             {
                 Id = Guid.NewGuid(),
                 Author = Client.UserId,
+                AuthorName = Client.Username,
                 Message = message
             });
             if (sender is MenuInput input)

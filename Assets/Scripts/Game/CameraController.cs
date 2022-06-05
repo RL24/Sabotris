@@ -19,6 +19,7 @@ namespace Sabotris.Game
         public MenuController menuController;
         public NetworkController networkController;
         public ContainerSelectorController containerSelector;
+        public World world;
         public SpectatorController spectatorControllerPrefab;
 
         public new Camera camera;
@@ -192,13 +193,19 @@ namespace Sabotris.Game
         private void CreateSpectator()
         {
             if (spectatorObject)
+            {
+                world.Spectators.Remove(Client.UserId);
                 Destroy(spectatorObject.gameObject);
+            }
+
             spectatorObject = Instantiate(spectatorControllerPrefab, new Vector3(cameraPosition.x, 1, cameraPosition.z), cameraRotation);
 
             spectatorObject.cameraController = this;
             spectatorObject.networkController = networkController;
             
             spectatorObject.transform.SetParent(transform.parent, true);
+            
+            world.Spectators.Add(Client.UserId, spectatorObject);
             
             networkController.Client?.SendPacket(new PacketSpectatorCreate
             {
@@ -212,6 +219,7 @@ namespace Sabotris.Game
         {
             if (!spectatorObject)
                 return;
+            world.Spectators.Remove(Client.UserId);
             Destroy(spectatorObject.gameObject);
             spectatorObject = null;
             

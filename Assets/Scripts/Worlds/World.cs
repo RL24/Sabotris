@@ -21,6 +21,8 @@ namespace Sabotris.Worlds
 {
     public class World : MonoBehaviour
     {
+        private static readonly Vector3 MinVec = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+        private static readonly Vector3 MaxVec = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         private const float PositionUpdateDelay = 200;
         
         public Container containerTemplate;
@@ -38,11 +40,12 @@ namespace Sabotris.Worlds
 
         public Spectator spectatorPrefab;
 
-        private Vector3 _boundaryHeight = new Vector3(0, -0.25f, 0);
+        private const float BoundaryPadding = 100;
+        private const float BoundaryHeight = -0.25f;
         public GameObject boundary;
 
         public readonly List<Container> Containers = new List<Container>();
-        private readonly Dictionary<Guid, Spectator> _spectators = new Dictionary<Guid, Spectator>();
+        public readonly Dictionary<Guid, Spectator> Spectators = new Dictionary<Guid, Spectator>();
 
         private readonly Stopwatch _positionUpdateTimer = new Stopwatch();
 
@@ -73,21 +76,20 @@ namespace Sabotris.Worlds
                 });
             }
 
-            var spectatorCount = _spectators.Count + cameraController.IsSpectating.Int();
-            var boundaryPosition = _boundaryHeight;
-            var boundarySize = new Vector3(100, 1, 100);
-            if (spectatorCount > 0)
+            if (Spectators.Count > 0)
             {
-                var cameraSpectatorPosition = cameraController.spectatorObject.transform.position;
-                boundaryPosition += new Vector3(cameraSpectatorPosition.x, 0, cameraSpectatorPosition.z);
-                var maxDistance = 100f;
-                foreach (var spectator in _spectators.Values)
-                    maxDistance = Math.Max(maxDistance, Vector3.Distance(cameraSpectatorPosition, spectator.position)) + 5;
-                boundarySize = new Vector3(maxDistance, 1, maxDistance);
+                var spectatorPositions = Spectators.Values.Select((spectator) => spectator.transform.position).ToArray();
+                var min = spectatorPositions.MinVec();
+                var max = spectatorPositions.MaxVec();
+                var size = max - min;
+
+                var boundaryPosition = new Vector3(min.x + size.x * 0.5f, BoundaryHeight, min.z + size.z * 0.5f);
+                var boundarySize = new Vector3(size.x + BoundaryPadding, 1, size.z + BoundaryPadding);
+
+                boundary.transform.position = boundaryPosition;
+                boundary.transform.localScale = boundarySize;
             }
-            boundary.transform.position = boundaryPosition;
-            boundary.transform.localScale = boundarySize;
-            boundary.SetActive(spectatorCount > 0);
+            boundary.SetActive(Spectators.Count > 0);
         }
 
         private void ConnectedToServerEvent(object sender, HSteamNetConnection? connection)
@@ -109,9 +111,9 @@ namespace Sabotris.Worlds
 
             menuController.OpenMenu(menuMain);
 
-            foreach (var spectator in _spectators.Values)
+            foreach (var spectator in Spectators.Values)
                 Destroy(spectator.gameObject);
-            _spectators.Clear();
+            Spectators.Clear();
         }
 
         private Container CreateContainer(Guid id, string playerName, ulong? steamId = null)
@@ -187,7 +189,7 @@ namespace Sabotris.Worlds
 
         private void CreateSpectator(Guid id, Vector3 position, Quaternion rotation)
         {
-            if (_spectators.ContainsKey(id))
+            if (Spectators.ContainsKey(id))
                 DestroySpectator(id);
             
             var spectator = Instantiate(spectatorPrefab, position, rotation);
@@ -196,12 +198,12 @@ namespace Sabotris.Worlds
 
             spectator.transform.SetParent(transform.parent, true);
             
-            _spectators.Add(id, spectator);
+            Spectators.Add(id, spectator);
         }
 
         private void MoveSpectator(Guid id, Vector3 position, Quaternion rotation)
         {
-            if (!_spectators.TryGetValue(id, out var spectator))
+            if (!Spectators.TryGetValue(id, out var spectator))
                 return;
 
             spectator.position = position;
@@ -210,10 +212,10 @@ namespace Sabotris.Worlds
 
         private void DestroySpectator(Guid id)
         {
-            if (!_spectators.TryGetValue(id, out var spectator))
+            if (!Spectators.TryGetValue(id, out var spectator))
                 return;
             
-            _spectators.Remove(id);
+            Spectators.Remove(id);
             Destroy(spectator.gameObject);
         }
 

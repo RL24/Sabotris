@@ -26,6 +26,8 @@ namespace Sabotris.Translations
         UiMenuButtonCreateLobby = 0x27,
         UiMenuInputBotCount = 0x28,
         UiMenuInputBotDifficulty = 0x29,
+        UiMenuInputPowerUps = 0x2A,
+        UiMenuInputPowerUpAutoPickDelay = 0x2B,
 
         JOIN_GAME = 0x30,
         UiMenuTitleJoinGame = 0x31,
@@ -45,6 +47,8 @@ namespace Sabotris.Translations
         UiMenuDisplayPracticeMode = 0x318,
         UiMenuDisplayBotCount = 0x319,
         UiMenuDisplayBotDifficulty = 0x320,
+        UiMenuDisplayPowerUps = 0x321,
+        UiMenuDisplayPowerUpAutoPickDelay = 0x322,
 
         SETTINGS = 0x40,
         UiMenuTitleSettings = 0x41,
@@ -123,13 +127,7 @@ namespace Sabotris.Translations
 
     public abstract class Locale
     {
-        public string Name { get; }
         protected Dictionary<TranslationKey, string> _translations = new Dictionary<TranslationKey, string>();
-
-        public Locale(string name)
-        {
-            Name = name;
-        }
 
         public string Translate(TranslationKey key)
         {

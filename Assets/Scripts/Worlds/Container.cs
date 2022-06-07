@@ -376,13 +376,18 @@ namespace Sabotris.Worlds
             shape.Offsets = offsets;
             shape.ShapeColor = color;
 
-            if (!(this is DemoContainer || this is BotContainer) && world.Containers.Count > 1 && _powerUpCount > PowerUpCountDelay) {
-                shape.PowerUp = PowerUpFactory.CreatePowerUp(power);
-                if (shape.PowerUp != null)
-                    _powerUpCount = 0;
+            if (networkController && networkController.Client?.LobbyData.PowerUps == true)
+            {
+                if (!(this is DemoContainer || this is BotContainer) && world.Containers.Count > 1 && _powerUpCount > PowerUpCountDelay)
+                {
+                    shape.PowerUp = PowerUpFactory.CreatePowerUp(power);
+                    if (shape.PowerUp != null)
+                        _powerUpCount = 0;
+                }
+
+                if (power == null && shape.PowerUp == null)
+                    _powerUpCount++;
             }
-            if (power == null && shape.PowerUp == null)
-                _powerUpCount++;
 
             shape.gameController = gameController;
             shape.menuController = menuController;

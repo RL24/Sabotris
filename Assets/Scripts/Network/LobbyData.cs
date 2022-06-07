@@ -1,4 +1,5 @@
-﻿using Sabotris.UI.Menu.Menus;
+﻿using System.Globalization;
+using Sabotris.UI.Menu.Menus;
 using Steamworks;
 
 namespace Sabotris.Network
@@ -16,6 +17,8 @@ namespace Sabotris.Network
         private const string BlocksPerShapeKey = "BlocksPerShape";
         private const string GenerateVerticalBlocksKey = "GenerateVerticalBlocks";
         private const string PracticeModeKey = "PracticeMode";
+        private const string PowerUpsKey = "PowerUps";
+        private const string PowerUpAutoPickDelayKey = "PowerUpAutoPickDelay";
 
         public CSteamID? HostId;
         public string LobbyName;
@@ -27,6 +30,8 @@ namespace Sabotris.Network
         public int BlocksPerShape = 4;
         public bool GenerateVerticalBlocks;
         public bool PracticeMode;
+        public bool PowerUps = true;
+        public float PowerUpAutoPickDelay = 5f;
 
         private void ParseHostId(string hostId)
         {
@@ -75,6 +80,16 @@ namespace Sabotris.Network
             bool.TryParse(practiceMode, out PracticeMode);
         }
 
+        private void ParsePowerUps(string powerUps)
+        {
+            bool.TryParse(powerUps, out PowerUps);
+        }
+
+        private void ParsePowerUpAutoPickDelay(string powerUpAutoPickDelay)
+        {
+            float.TryParse(powerUpAutoPickDelay, out PowerUpAutoPickDelay);
+        }
+
         public void Store(CSteamID? lobbyId)
         {
             if (lobbyId == null)
@@ -90,6 +105,8 @@ namespace Sabotris.Network
             SteamMatchmaking.SetLobbyData(lobbyId.Value, BlocksPerShapeKey, BlocksPerShape.ToString());
             SteamMatchmaking.SetLobbyData(lobbyId.Value, GenerateVerticalBlocksKey, GenerateVerticalBlocks.ToString());
             SteamMatchmaking.SetLobbyData(lobbyId.Value, PracticeModeKey, PracticeMode.ToString());
+            SteamMatchmaking.SetLobbyData(lobbyId.Value, PowerUpsKey, PowerUps.ToString());
+            SteamMatchmaking.SetLobbyData(lobbyId.Value, PowerUpAutoPickDelayKey, PowerUpAutoPickDelay.ToString(CultureInfo.InvariantCulture));
         }
 
         public void Retrieve(CSteamID? lobbyId)
@@ -107,6 +124,8 @@ namespace Sabotris.Network
             ParseBlocksPerShape(SteamMatchmaking.GetLobbyData(lobbyId.Value, BlocksPerShapeKey));
             ParseGenerateVerticalBlocks(SteamMatchmaking.GetLobbyData(lobbyId.Value, GenerateVerticalBlocksKey));
             ParsePracticeMode(SteamMatchmaking.GetLobbyData(lobbyId.Value, PracticeModeKey));
+            ParsePowerUps(SteamMatchmaking.GetLobbyData(lobbyId.Value, PowerUpsKey));
+            ParsePowerUpAutoPickDelay(SteamMatchmaking.GetLobbyData(lobbyId.Value, PowerUpAutoPickDelayKey));
         }
 
         public void UpdatePlayerCount(CSteamID? lobbyId, int playerCount)

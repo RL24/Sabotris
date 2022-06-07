@@ -96,6 +96,12 @@ namespace Sabotris.Worlds
 
         private void FixedUpdate()
         {
+            if (!parentContainer)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             if (parentContainer.IsControllingShape(this, true))
             {
                 if (!parentContainer.ShouldRotateShape())

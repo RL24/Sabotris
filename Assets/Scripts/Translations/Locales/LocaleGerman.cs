@@ -2,7 +2,7 @@
 {
     public class LocaleGerman : Locale
     {
-        public LocaleGerman() : base("German")
+        public LocaleGerman()
         {
             // Generic menu items
 
@@ -26,6 +26,8 @@
             _translations.Add(TranslationKey.UiMenuInputPlayFieldSize, "Behältergröße");
             _translations.Add(TranslationKey.UiMenuInputMaxPlayers, "Maximale Spieleranzahl");
             _translations.Add(TranslationKey.UiMenuInputBlocksPerShape, "Formgröße.");
+            _translations.Add(TranslationKey.UiMenuInputPowerUpAutoPickDelay, "Automatische Auswahlverzögerung Einschalten");
+            _translations.Add(TranslationKey.UiMenuInputPowerUps, "Einschalten");
             _translations.Add(TranslationKey.UiMenuInputGenerateVerticalBlocks, "Vertikale Formen");
             _translations.Add(TranslationKey.UiMenuInputPracticeMode, "Üben");
             _translations.Add(TranslationKey.UiMenuButtonCreateLobby, "Spiel Erstellen");
@@ -48,6 +50,8 @@
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Behältergröße: {0}x{0}");
             _translations.Add(TranslationKey.UiMenuDisplayMaxPlayers, "Max-Spieler: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBlocksPerShape, "Formgröße: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayPowerUpAutoPickDelay, "Automatische Auswahlverzögerung Einschalten: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayPowerUps, "Einschalten: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayGenerateVerticalBlocks, "Vertikale Blöcke: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPracticeMode, "Üben: {0}");
 

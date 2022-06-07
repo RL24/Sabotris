@@ -2,7 +2,7 @@
 {
     public class LocaleFrench : Locale
     {
-        public LocaleFrench() : base("French")
+        public LocaleFrench()
         {
             // Generic menu items
 
@@ -26,6 +26,8 @@
             _translations.Add(TranslationKey.UiMenuInputPlayFieldSize, "Taille du Conteneur");
             _translations.Add(TranslationKey.UiMenuInputMaxPlayers, "Le Maximum de Joueurs");
             _translations.Add(TranslationKey.UiMenuInputBlocksPerShape, "Taille de Forme");
+            _translations.Add(TranslationKey.UiMenuInputPowerUpAutoPickDelay, "Retard de Sélection Automatique de Mise Sous Tension");
+            _translations.Add(TranslationKey.UiMenuInputPowerUps, "Mises Sous Tension");
             _translations.Add(TranslationKey.UiMenuInputGenerateVerticalBlocks, "Formes Verticales");
             _translations.Add(TranslationKey.UiMenuInputPracticeMode, "Entraine Toi");
             _translations.Add(TranslationKey.UiMenuButtonCreateLobby, "Créer un Jeu");
@@ -48,6 +50,8 @@
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Taille du Conteneur: {0}x{0}");
             _translations.Add(TranslationKey.UiMenuDisplayMaxPlayers, "Max Joueurs: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBlocksPerShape, "Taille de la Forme: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayPowerUpAutoPickDelay, "Retard de Sélection Automatique de Mise Sous Tension: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayPowerUps, "Mises Sous Tension: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayGenerateVerticalBlocks, "Blocs Verticaux: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPracticeMode, "Pratique: {0}");
 

@@ -10,8 +10,8 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Vector3 _cameraPosition = new Vector3(5, 11, -3.5f);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(55, -51, -7);
 
-        public MenuSlider sliderBotCount, sliderBotDifficulty, sliderPlayFieldSize, sliderMaxPlayers, sliderBlocksPerShape;
-        public MenuToggle toggleGenerateVerticalBlocks, togglePracticeMode;
+        public MenuSlider sliderBotCount, sliderBotDifficulty, sliderPlayFieldSize, sliderMaxPlayers, sliderBlocksPerShape, sliderPowerUpAutoPickDelay;
+        public MenuToggle toggleGenerateVerticalBlocks, togglePracticeMode, togglePowerUps;
         public MenuButton buttonCreateLobby, buttonBack;
 
         public Menu menuMain, menuLobby;
@@ -71,7 +71,9 @@ namespace Sabotris.UI.Menu.Menus
                 MaxPlayers = (int) sliderMaxPlayers.slider.value,
                 BlocksPerShape = (int) sliderBlocksPerShape.slider.value,
                 GenerateVerticalBlocks = toggleGenerateVerticalBlocks.isToggledOn,
-                PracticeMode = togglePracticeMode.isToggledOn
+                PracticeMode = togglePracticeMode.isToggledOn,
+                PowerUps = togglePowerUps.isToggledOn,
+                PowerUpAutoPickDelay = sliderPowerUpAutoPickDelay.slider.value
             };
 
             networkController.Server.OnServerStartEvent += ServerStarted;

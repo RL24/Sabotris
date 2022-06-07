@@ -2,7 +2,7 @@
 {
     public class LocaleEnglish : Locale
     {
-        public LocaleEnglish() : base("English")
+        public LocaleEnglish()
         {
             // Generic menu items
 
@@ -26,6 +26,8 @@
             _translations.Add(TranslationKey.UiMenuInputPlayFieldSize, "Container Size");
             _translations.Add(TranslationKey.UiMenuInputMaxPlayers, "Max Players");
             _translations.Add(TranslationKey.UiMenuInputBlocksPerShape, "Shape Size");
+            _translations.Add(TranslationKey.UiMenuInputPowerUpAutoPickDelay, "Power Up Auto Pick Delay");
+            _translations.Add(TranslationKey.UiMenuInputPowerUps, "Power Ups");
             _translations.Add(TranslationKey.UiMenuInputGenerateVerticalBlocks, "Vertical Shapes");
             _translations.Add(TranslationKey.UiMenuInputPracticeMode, "Practice");
             _translations.Add(TranslationKey.UiMenuButtonCreateLobby, "Create Lobby");
@@ -48,6 +50,8 @@
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Container Size: {0}x{0}");
             _translations.Add(TranslationKey.UiMenuDisplayMaxPlayers, "Max Players: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBlocksPerShape, "Shape Size: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayPowerUpAutoPickDelay, "Power Up Auto Pick Delay: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayPowerUps, "Power Ups: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayGenerateVerticalBlocks, "Vertical Shapes: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPracticeMode, "Practice: {0}");
 

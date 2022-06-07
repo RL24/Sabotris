@@ -12,7 +12,7 @@ namespace Sabotris.UI.Menu
     {
         private static readonly Vector3 HoverPosition = new Vector3(40, 0, 0);
         private static readonly Color ColorDisabled = new Color(1, 1, 1, 0.3f);
-        private static readonly Color ColorActive = new Color(0.6f, 0.9f, 1, 1f);
+        private static readonly Color ColorActive = new Color(1f, 0f, 0, 1f);
 
         public event EventHandler OnMouseEnter, OnMouseExit, OnClick;
 

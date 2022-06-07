@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Sabotris.Game;
 using Sabotris.IO;
+using Sabotris.Network;
 using Sabotris.Powers;
 using Sabotris.Translations;
 using Sabotris.Util;
@@ -11,6 +12,8 @@ namespace Sabotris.UI
 {
     public class SelectorOverlay : MonoBehaviour
     {
+        public NetworkController networkController;
+        
         public CanvasGroup canvasGroup;
         public TMP_Text subLabel;
         public TMP_Text timerLabel;
@@ -24,7 +27,7 @@ namespace Sabotris.UI
                 subLabel.text = Localization.Translate(TranslationKey.UiHudSelectContainerSubLabel, "None");
 
             if (timerLabel)
-                timerLabel.text = $"{ContainerSelectorController.PowerUpUseTimeoutMs}";
+                timerLabel.text = Localization.Translate(TranslationKey.UiHudSelectContainerTimerLabel, $"{(((networkController.Client?.LobbyData.PowerUpAutoPickDelay ?? ContainerSelectorController.PowerUpUseTimeoutSeconds) * 1000) - _timer?.ElapsedMilliseconds) / 1000.0:F1}");
         }
 
         private void Update()
@@ -32,7 +35,7 @@ namespace Sabotris.UI
             canvasGroup.alpha += canvasGroup.alpha.Lerp(_open.Int(), GameSettings.Settings.uiAnimationSpeed.Delta());
 
             if (timerLabel)
-                timerLabel.text = Localization.Translate(TranslationKey.UiHudSelectContainerTimerLabel, $"{(ContainerSelectorController.PowerUpUseTimeoutMs - _timer?.ElapsedMilliseconds) / 1000.0:F1}");
+                timerLabel.text = Localization.Translate(TranslationKey.UiHudSelectContainerTimerLabel, $"{(((networkController.Client?.LobbyData.PowerUpAutoPickDelay ?? ContainerSelectorController.PowerUpUseTimeoutSeconds) * 1000) - _timer?.ElapsedMilliseconds) / 1000.0:F1}");
         }
 
         public void Open(PowerUp power, Stopwatch timer)

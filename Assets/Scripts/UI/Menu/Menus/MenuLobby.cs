@@ -27,7 +27,9 @@ namespace Sabotris.UI.Menu.Menus
             maxPlayersText,
             blocksPerShapeText,
             generateVerticalBlocksText,
-            practiceModeText;
+            practiceModeText,
+            powerUpsText,
+            powerUpAutoPickDelayText;
 
         public Menu menuHost, menuJoin;
 
@@ -73,6 +75,12 @@ namespace Sabotris.UI.Menu.Menus
 
             if (practiceModeText)
                 practiceModeText.text = Localization.Translate(TranslationKey.UiMenuDisplayPracticeMode, Localization.Translate(data.PracticeMode ? TranslationKey.UiYes : TranslationKey.UiNo));
+
+            if (powerUpsText)
+                powerUpsText.text = Localization.Translate(TranslationKey.UiMenuDisplayPowerUps, data.PowerUps);
+            
+            if (powerUpAutoPickDelayText)
+                powerUpAutoPickDelayText.text = Localization.Translate(TranslationKey.UiMenuDisplayPowerUpAutoPickDelay, data.PowerUpAutoPickDelay);
         }
 
         protected override void OnDestroy()

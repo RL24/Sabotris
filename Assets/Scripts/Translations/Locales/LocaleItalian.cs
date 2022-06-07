@@ -2,7 +2,7 @@
 {
     public class LocaleItalian : Locale
     {
-        public LocaleItalian() : base("Italian")
+        public LocaleItalian()
         {
             // Generic menu items
 
@@ -26,6 +26,8 @@
             _translations.Add(TranslationKey.UiMenuInputPlayFieldSize, "Dimensione del Contenitore");
             _translations.Add(TranslationKey.UiMenuInputMaxPlayers, "Giocatori Massimi");
             _translations.Add(TranslationKey.UiMenuInputBlocksPerShape, "Dimensione della Forma");
+            _translations.Add(TranslationKey.UiMenuInputPowerUpAutoPickDelay, "Accendi il Ritardo di Raccolta Automatica");
+            _translations.Add(TranslationKey.UiMenuInputPowerUps, "Potenziamento");
             _translations.Add(TranslationKey.UiMenuInputGenerateVerticalBlocks, "Forme Verticali");
             _translations.Add(TranslationKey.UiMenuInputPracticeMode, "Pratica");
             _translations.Add(TranslationKey.UiMenuButtonCreateLobby, "Creare Lobby");
@@ -48,6 +50,8 @@
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Dimensione del Contenitore: {0}x{0}");
             _translations.Add(TranslationKey.UiMenuDisplayMaxPlayers, "Giocatori Massimi: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBlocksPerShape, "Dimensione della Forma: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayPowerUpAutoPickDelay, "Sollevare il Ritardo di Raccolta Automatica: {0}");
+            _translations.Add(TranslationKey.UiMenuDisplayPowerUps, "Potenziamento: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayGenerateVerticalBlocks, "Forme Verticali: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPracticeMode, "Pratica: {0}");
 

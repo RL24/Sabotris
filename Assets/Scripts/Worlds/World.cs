@@ -78,13 +78,25 @@ namespace Sabotris.Worlds
 
             if (Spectators.Count > 0)
             {
-                var spectatorPositions = Spectators.Values.Select((spectator) => spectator.transform.position).ToArray();
-                var min = spectatorPositions.MinVec();
-                var max = spectatorPositions.MaxVec();
+                var xMin = float.MaxValue;
+                var xMax = float.MinValue;
+                var zMin = float.MaxValue;
+                var zMax = float.MinValue;
+                
+                foreach (var pos in Spectators.Values.Select(spectator => spectator.transform.position))
+                {
+                    xMin = Math.Min(xMin, pos.x);
+                    xMax = Math.Max(xMax, pos.x);
+                    zMin = Math.Min(zMin, pos.z);
+                    zMax = Math.Max(zMax, pos.z);
+                }
+
+                var min = new Vector3(xMin, 0, zMin);
+                var max = new Vector3(xMax, 0, zMax);
                 var size = max - min;
 
-                var boundaryPosition = new Vector3(min.x + size.x * 0.5f, BoundaryHeight, min.z + size.z * 0.5f);
-                var boundarySize = new Vector3(size.x + BoundaryPadding, 1, size.z + BoundaryPadding);
+                var boundaryPosition = new Vector3(min.x + Math.Abs(size.x) * 0.5f, BoundaryHeight, min.z + Math.Abs(size.z) * 0.5f);
+                var boundarySize = new Vector3(Math.Abs(size.x) + BoundaryPadding, 1, Math.Abs(size.z) + BoundaryPadding);
 
                 boundary.transform.position = boundaryPosition;
                 boundary.transform.localScale = boundarySize;

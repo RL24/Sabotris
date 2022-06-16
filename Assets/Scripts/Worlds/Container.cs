@@ -92,9 +92,8 @@ namespace Sabotris.Worlds
 
         public int MoveSpeedMs { get; } = 200;
         public int MoveResetSpeedMs { get; } = 50;
-
         public int RotateThreshold { get; } = 90;
-        
+
         protected virtual void Start()
         {
             if (networkController)

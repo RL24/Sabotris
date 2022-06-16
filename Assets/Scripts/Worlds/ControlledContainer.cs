@@ -55,7 +55,7 @@ namespace Sabotris.Worlds
             var availableSpaces = new List<(Vector3Int, Quaternion, Vector3Int[])>();
             foreach (var space in spaces)
             foreach (var (offset, rotation) in _offsets)
-                for (var y = 0; y <= (int) Math.Floor(offset.Size().y / 2f); y++)
+                for (var y = 0; y <= (int) Math.Floor(offset.Height().y / 2f); y++)
                 {
                     var relativeOffset = offset.RelativeTo(space + (Vector3Int.up * y));
                     if (!DoesCollide(relativeOffset) && !IsBlockingSpace(relativeOffset))

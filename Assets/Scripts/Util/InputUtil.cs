@@ -30,6 +30,8 @@ namespace Sabotris.Util
         private static KeyControl KeyRotateRollLeft => Tern(GameSettings.Input.keyboardBinds.rotateRollLeft);
         private static KeyControl KeyRotateRollRight => Tern(GameSettings.Input.keyboardBinds.rotateRollRight);
         
+        private static KeyControl KeySnapCamera => Tern(GameSettings.Input.keyboardBinds.snapCamera);
+        
         #region Sabotage
 
         private static KeyControl KeyPreviousContainer => Tern(GameSettings.Input.keyboardBinds.previousContainer);
@@ -59,6 +61,7 @@ namespace Sabotris.Util
         private static Vector2Control MouseDelta => Mouse.current?.delta;
         private static Vector2Control MouseScroll => Mouse.current?.scroll;
         private static ButtonControl MouseLeftButton => Mouse.current?.leftButton;
+        private static ButtonControl MouseMiddleButton => Mouse.current?.middleButton;
         private static ButtonControl MouseRightButton => Mouse.current?.rightButton;
 
         #endregion
@@ -173,7 +176,12 @@ namespace Sabotris.Util
 
         public static bool GetMoveDown()
         {
-            return IsPressed(MouseLeftButton) || IsPressed(KeyMoveDown) || IsPressed(GamepadRightTrigger) || IsPressed(GamepadLeftTrigger);
+            return IsPressed(MouseLeftButton) || IsPressed(KeyMoveDown) || IsPressed(GamepadRightTrigger);
+        }
+
+        public static bool GetSnapCamera()
+        {
+            return IsPressed(MouseMiddleButton) || IsPressed(KeySnapCamera) || IsPressed(GamepadLeftTrigger);
         }
 
         public static int GetChangeContainerSelection()

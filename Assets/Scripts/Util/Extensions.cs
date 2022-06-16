@@ -1,5 +1,6 @@
 ﻿using System;
 using Steamworks;
+using UnityEditor;
 using UnityEngine;
 
 namespace Sabotris.Util
@@ -31,6 +32,8 @@ namespace Sabotris.Util
                 vec.Normalize();
             return vec.normalized;
         }
+        
+        public static Vector3Int Horizontal(this Vector3Int self) => new Vector3Int(self.x, 0, self.z);
 
         public static bool Same(this float self, float compare, float tolerance = Tolerance) => Math.Abs(self - compare) <= tolerance;
 
@@ -53,8 +56,6 @@ namespace Sabotris.Util
 
             return allMatches;
         }
-
-        public static Vector3Int Horizontal(this Vector3Int self) => new Vector3Int(self.x, 0, self.z);
 
         public static Vector3Int Copy(this Vector3Int self) => new Vector3Int(self.x, self.y, self.z);
 
@@ -119,7 +120,31 @@ namespace Sabotris.Util
             return value;
         }
 
-        public static Vector3Int Size(this Vector3Int[] self)
+        public static (Vector3Int, Vector3Int) MinMax(this Vector3Int[] self)
+        {
+            var minX = self[0].x;
+            var minY = self[0].y;
+            var minZ = self[0].z;
+
+            var maxX = self[0].x;
+            var maxY = self[0].y;
+            var maxZ = self[0].z;
+            
+            foreach (var vec in self)
+            {
+                minX = Math.Min(minX, vec.x);
+                minY = Math.Min(minY, vec.y);
+                minZ = Math.Min(minZ, vec.z);
+                
+                maxX = Math.Max(maxX, vec.x);
+                maxY = Math.Max(maxY, vec.y);
+                maxZ = Math.Max(maxZ, vec.z);
+            }
+
+            return (new Vector3Int(minX, minY, minZ), new Vector3Int(maxX, maxY, maxZ));
+        }
+        
+        public static Vector3Int Height(this Vector3Int[] self)
         {
             var lowest = self[0];
             var highest = self[0];
@@ -137,5 +162,19 @@ namespace Sabotris.Util
         public static float Delta(this float self) => self * (Time.deltaTime * 50);
 
         public static float FixedDelta(this float self) => self * (Time.fixedDeltaTime * 50);
+
+        public static Quaternion Yaw(this Quaternion self) => Quaternion.Euler(self.eulerAngles.Round(1) * Vector3Int.up);
+        
+        public static float Pitch(this Quaternion self) => RadiansToDegrees(Mathf.Atan2(2 * self.x * self.w - 2 * self.y * self.z, 1 - 2 * self.x * self.x - 2 * self.z * self.z));
+
+        public static (float, float) AngleToVec(this float angle)
+        {
+            var radians = DegreesToRadians(-angle);
+            return ((float) Math.Cos(radians), (float) Math.Sin(radians));
+        }
+        
+        private static float DegreesToRadians(float radians) => (float) (radians * Math.PI / 180f);
+        
+        private static float RadiansToDegrees(float radians) => (float) (radians / Math.PI * 180f);
     }
 }

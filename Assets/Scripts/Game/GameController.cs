@@ -13,13 +13,15 @@ namespace Sabotris.Game
     public class GameController : MonoBehaviour
     {
         public MenuController menuController;
+        public World world;
 
         public ForwardRendererData forwardRendererData;
         public Volume renderVolume;
+        public TutorialHelper tutorialHelper;
 
         private ScriptableRendererFeature _renderFeatureSsao;
         private DepthOfField _dof;
-        
+
         public Container ControllingContainer { get; set; }
 
         private void Start()
@@ -53,6 +55,13 @@ namespace Sabotris.Game
 
             if (Cursor.visible != visible)
                 Cursor.visible = visible;
+
+            if (!tutorialHelper)
+                return;
+
+            var showingTutorial = GameSettings.Settings.tutorial && ControllingContainer && ControllingContainer.ControllingShape;
+            tutorialHelper.gameObject.SetActive(showingTutorial);
+            tutorialHelper.shape = showingTutorial ? ControllingContainer.ControllingShape : null;
         }
 
         private void OnBeforeSave(object sender, EventArgs e)

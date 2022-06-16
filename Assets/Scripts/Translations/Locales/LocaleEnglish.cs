@@ -107,6 +107,7 @@
             _translations.Add(TranslationKey.UiMenuLanguageGerman, "German");
             _translations.Add(TranslationKey.UiMenuLanguageItalian, "Italian");
             _translations.Add(TranslationKey.UiMenuLanguageSpanish, "Spanish");
+            _translations.Add(TranslationKey.UiMenuInputTutorial, "Tutorial");
 
             // Pause
 

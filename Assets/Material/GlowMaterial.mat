@@ -130,6 +130,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Base_Color: {r: 1, g: 0, b: 0, a: 0}
+    - Color_4c6177dab39a48d493f78414361db772: {r: 0, g: 0, b: 0, a: 0}
     - Color_62be02325df44bee9d81ca8d1e8e2ca1: {r: 1, g: 0, b: 0.06987047, a: 1}
     - Color_d3832ee0cd5349f39892e27d4f94c02d: {r: 1, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

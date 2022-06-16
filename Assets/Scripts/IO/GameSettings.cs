@@ -17,6 +17,7 @@ namespace Sabotris.IO
         public float uiAnimationSpeed = 0.2f;
         public float gameCameraSpeed = 0.75f;
         public float menuCameraSpeed = 0.1f;
+        public bool tutorial = true;
 
         // Audio menu
         public float masterVolume = 75;
@@ -41,6 +42,8 @@ namespace Sabotris.IO
         public Key moveAscend = Key.Space;
         public Key moveDescend = Key.LeftShift;
         public Key moveJump = Key.Space;
+
+        public Key snapCamera = Key.LeftShift;
 
         public Key rotateYawLeft = Key.U;
         public Key rotateYawRight = Key.O;

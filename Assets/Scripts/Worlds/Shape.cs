@@ -51,7 +51,7 @@ namespace Sabotris.Worlds
         [SerializeField] private float inputRotateRoll;
 
         public readonly Dictionary<Guid, Block> Blocks = new Dictionary<Guid, Block>();
-
+        
         private void Start()
         {
             RawPosition = Vector3Int.RoundToInt(transform.position - parentContainer.transform.position);

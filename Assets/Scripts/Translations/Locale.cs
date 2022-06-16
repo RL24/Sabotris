@@ -97,6 +97,7 @@ namespace Sabotris.Translations
         UiMenuLanguageGerman = 0x872,
         UiMenuLanguageItalian = 0x873,
         UiMenuLanguageSpanish = 0x874,
+        UiMenuInputTutorial = 0x88,
 
         PAUSE = 0x90,
         UiMenuTitlePause = 0x91,

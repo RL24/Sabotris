@@ -15,6 +15,8 @@ namespace Sabotris.Game
 {
     public class CameraController : MonoBehaviour
     {
+        private const int CameraAngleSnap = 18;
+        
         public GameController gameController;
         public MenuController menuController;
         public NetworkController networkController;
@@ -77,9 +79,20 @@ namespace Sabotris.Game
             Zoom -= _rotationInput.z;
 
             Pitch = Mathf.Clamp(Pitch, -80, 80);
-            Zoom = Mathf.Clamp(Zoom, 10, 20);
+            Zoom = Mathf.Clamp(Zoom, 5, 30);
 
             cameraRotation = Quaternion.Euler(Pitch, Yaw, 0);
+            if (InputUtil.GetSnapCamera())
+            {
+                cameraRotation = Quaternion.Euler(cameraRotation.eulerAngles.Round(CameraAngleSnap));
+
+                if (_rotationInput == Vector3.zero)
+                {
+                    Yaw = cameraRotation.eulerAngles.y;
+                    Pitch = cameraRotation.Pitch();
+                }
+            }
+
             if (IsSpectating)
             {
                 if (spectatorObject)
@@ -114,13 +127,12 @@ namespace Sabotris.Game
                 }
 
                 if (container.ControllingShape)
-                    _targetShapePosition = container.ControllingShape.transform.position;
+                    _targetShapePosition = container.ControllingShape.transform.position + Vector3.up * ((30 - Zoom) * 0.25f);
 
-                var shapePosition = _targetShapePosition;
                 var containerPosition = container.transform.position;
-                var targetPosition = (containerPosition + shapePosition) * 0.5f;
+                var targetPosition = (containerPosition + _targetShapePosition) * 0.5f;
 
-                var distance = (containerPosition - shapePosition).magnitude;
+                var distance = (containerPosition - _targetShapePosition).magnitude;
                 var cameraDistance = distance / 2.0f / _aspectRatio / _tanFov;
                 
                 _velocity = Vector3.zero;

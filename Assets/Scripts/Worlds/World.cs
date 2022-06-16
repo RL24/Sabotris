@@ -33,12 +33,14 @@ namespace Sabotris.Worlds
         public NetworkController networkController;
         public CameraController cameraController;
         public AudioController audioController;
+        public Textures textures;
 
         public SelectorOverlay selectorOverlay;
         public DemoContainer demoContainer;
         public Menu menuMain, menuPause, menuGameOver;
-
+        
         public Spectator spectatorPrefab;
+        public TutorialHelper tutorialHelperPrefab;
 
         private const float BoundaryPadding = 100;
         private const float BoundaryHeight = -0.25f;

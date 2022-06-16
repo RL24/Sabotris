@@ -11,12 +11,12 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Quaternion _cameraRotation = Quaternion.Euler(21, 209, 5);
 
         public MenuCarousel carouselLanguage;
-
-        public MenuButton buttonGameTransitionSpeed,
+        public MenuToggle toggleTutorial;
+        public MenuSlider buttonGameTransitionSpeed,
             buttonUIAnimationSpeed,
             buttonGameCameraSpeed,
-            buttonMenuCameraSpeed,
-            buttonApply,
+            buttonMenuCameraSpeed;
+        public MenuButton buttonApply,
             buttonBack;
 
         public Menu menuSettings;
@@ -31,29 +31,20 @@ namespace Sabotris.UI.Menu.Menus
             carouselLanguage.index = (int) GameSettings.Settings.language;
             carouselLanguage.OnValueChanged += OnLanguageChanged;
 
-            if (buttonGameTransitionSpeed is MenuSlider sgts)
-            {
-                sgts.OnValueChanged += OnGameTransitionSpeedChanged;
-                sgts.SetValue(GameSettings.Settings.gameTransitionSpeed * 100);
-            }
+            toggleTutorial.OnValueChanged += OnTutorialChanged;
+            toggleTutorial.isToggledOn = GameSettings.Settings.tutorial;
 
-            if (buttonUIAnimationSpeed is MenuSlider suas)
-            {
-                suas.OnValueChanged += OnUIAnimationSpeed;
-                suas.SetValue(GameSettings.Settings.uiAnimationSpeed * 100);
-            }
+            buttonGameTransitionSpeed.OnValueChanged += OnGameTransitionSpeedChanged;
+            buttonGameTransitionSpeed.SetValue(GameSettings.Settings.gameTransitionSpeed * 100);
 
-            if (buttonGameCameraSpeed is MenuSlider sgcs)
-            {
-                sgcs.OnValueChanged += OnGameCameraSpeedChanged;
-                sgcs.SetValue(GameSettings.Settings.gameCameraSpeed * 100);
-            }
+            buttonUIAnimationSpeed.OnValueChanged += OnUIAnimationSpeed;
+            buttonUIAnimationSpeed.SetValue(GameSettings.Settings.uiAnimationSpeed * 100);
 
-            if (buttonMenuCameraSpeed is MenuSlider smcs)
-            {
-                smcs.OnValueChanged += OnMenuCameraSpeedChanged;
-                smcs.SetValue(GameSettings.Settings.menuCameraSpeed * 100);
-            }
+            buttonGameCameraSpeed.OnValueChanged += OnGameCameraSpeedChanged;
+            buttonGameCameraSpeed.SetValue(GameSettings.Settings.gameCameraSpeed * 100);
+
+            buttonMenuCameraSpeed.OnValueChanged += OnMenuCameraSpeedChanged;
+            buttonMenuCameraSpeed.SetValue(GameSettings.Settings.menuCameraSpeed * 100);
         }
 
         protected override void OnDestroy()
@@ -63,13 +54,17 @@ namespace Sabotris.UI.Menu.Menus
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
 
-            if (buttonGameTransitionSpeed is MenuSlider sgcs)
-                sgcs.OnValueChanged -= OnGameTransitionSpeedChanged;
+            buttonGameTransitionSpeed.OnValueChanged -= OnGameTransitionSpeedChanged;
         }
 
         private void OnLanguageChanged(object sender, int index)
         {
             GameSettings.Settings.language = (LocaleKey) index;
+        }
+
+        private void OnTutorialChanged(object sender, bool value)
+        {
+            GameSettings.Settings.tutorial = value;
         }
 
         private void OnGameTransitionSpeedChanged(object sender, float value)

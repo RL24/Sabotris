@@ -7,6 +7,7 @@ using Sabotris.Powers;
 using Sabotris.UI.Menu;
 using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
+using Sabotris.Util.Input;
 using Sabotris.Worlds;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -17,6 +18,7 @@ namespace Sabotris.Game
     {
         private const int CameraAngleSnap = 18;
         
+        public InputController inputController;
         public GameController gameController;
         public MenuController menuController;
         public NetworkController networkController;
@@ -66,12 +68,12 @@ namespace Sabotris.Game
             if (!camera || !gameController.ControllingContainer)
                 return;
 
-            _rotationInput = menuController.IsInMenu || containerSelector.Active || InputUtil.ShouldRotateShape()
+            _rotationInput = menuController.IsInMenu || containerSelector.Active || inputController.ShouldRotateShape()
                 ? Vector3.zero
                 : new Vector3(
-                    InputUtil.GetCameraRotateYaw(),
-                    InputUtil.GetCameraRotatePitch(),
-                    InputUtil.GetCameraZoom()
+                    inputController.GetCameraRotateYaw(),
+                    inputController.GetCameraRotatePitch(),
+                    inputController.GetCameraZoom()
                 );
 
             Yaw += _rotationInput.x;
@@ -82,7 +84,7 @@ namespace Sabotris.Game
             Zoom = Mathf.Clamp(Zoom, 5, 30);
 
             cameraRotation = Quaternion.Euler(Pitch, Yaw, 0);
-            if (InputUtil.GetSnapCamera())
+            if (inputController.GetSnapCamera())
             {
                 cameraRotation = Quaternion.Euler(cameraRotation.eulerAngles.Round(CameraAngleSnap));
 
@@ -108,9 +110,9 @@ namespace Sabotris.Game
                 }
                 else
                 {
-                    var advance = -InputUtil.GetMoveAdvance() * Acceleration;
-                    var strafe = InputUtil.GetMoveStrafe() * Acceleration;
-                    var ascend = InputUtil.GetMoveAscend() * Acceleration;
+                    var advance = -inputController.GetMoveAdvance() * Acceleration;
+                    var strafe = inputController.GetMoveStrafe() * Acceleration;
+                    var ascend = inputController.GetMoveAscend() * Acceleration;
 
                     _velocity += transform.forward.Horizontal(true) * advance + transform.right * strafe + Vector3.up * ascend;
                     _velocity *= Friction;

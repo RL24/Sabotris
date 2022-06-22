@@ -2,6 +2,7 @@
 using System.Linq;
 using Sabotris.Game;
 using Sabotris.Util;
+using Sabotris.Util.Input;
 using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
@@ -10,14 +11,22 @@ namespace Sabotris.Worlds
 {
     public class TutorialHelper : MonoBehaviour
     {
-        public Textures textures;
+        public InputController inputController;
         public CameraController cameraController;
+        public Textures textures;
         public TutorialItem yawItem, pitchItem, rollItem;
 
         public Shape shape;
 
+        private bool _isGamepad;
+
         private void Update()
         {
+            // if (inputController.AnyKey())
+            //     _isGamepad = false;
+            // if (inputController.AnyButton())
+            //     _isGamepad = true;
+            
             if (!shape)
                 return;
 

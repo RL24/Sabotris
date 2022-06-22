@@ -22,10 +22,6 @@ namespace Sabotris.Worlds
 
         private void Start()
         {
-            if (ShapeColor != null)
-                foreach (var ren in GetComponentsInChildren<Renderer>())
-                    ren.material.color = ShapeColor ?? Color.white;
-
             foreach (var (blockId, blockPos) in Offsets)
                 CreateBlock(blockId, blockPos);
             
@@ -54,7 +50,7 @@ namespace Sabotris.Worlds
                     removed = true;
                     if (gameController.ControllingContainer == parentContainer || (parentContainer is BotContainer && networkController.Server?.Running == true))
                     {
-                        var blocks = Offsets.Select((offset) => (offset.Item1, offset.Item2 + RawPosition.Round(1), ShapeColor ?? Color.white)).ToArray();
+                        var blocks = Offsets.Select((offset) => (offset.Item1, offset.Item2 + RawPosition.Round(1), shapeColor)).ToArray();
                         var packet = new PacketBlockBulkCreate
                         {
                             ContainerId = parentContainer.Id,

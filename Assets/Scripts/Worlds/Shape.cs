@@ -12,6 +12,7 @@ using Sabotris.Network.Packets.Shape;
 using Sabotris.Powers;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
+using Sabotris.Util.Input;
 using UnityEngine;
 
 namespace Sabotris.Worlds
@@ -21,6 +22,7 @@ namespace Sabotris.Worlds
         public Material standardMaterial, poweredMaterial;
         public Block blockTemplate;
 
+        public InputController inputController;
         public GameController gameController;
         public MenuController menuController;
         public NetworkController networkController;
@@ -30,7 +32,7 @@ namespace Sabotris.Worlds
 
         public Guid Id;
         public (Guid, Vector3Int)[] Offsets { get; set; }
-        public Color? ShapeColor = Color.white;
+        public Color shapeColor = Color.white;
         [SerializeReference] private PowerUp _powerUp;
 
         [SerializeField] private Vector3Int rawPosition;
@@ -64,9 +66,8 @@ namespace Sabotris.Worlds
 
             UpdatedPower();
             
-            var color = ShapeColor ?? Color.white;
             foreach (var ren in GetComponentsInChildren<Renderer>())
-                ren.material.color = color;
+                ren.material.color = shapeColor;
 
             if (networkController)
                 networkController.Client?.RegisterListener(this);
@@ -80,18 +81,17 @@ namespace Sabotris.Worlds
 
         private void Update()
         {
-            var color = ShapeColor ?? Color.white;
-            foreach (var ren in GetComponentsInChildren<Renderer>())
-                ren.material.color = Color.Lerp(ren.material.color, color, GameSettings.Settings.gameTransitionSpeed.Delta());
+            foreach (var block in Blocks)
+                block.Value.blockColor = shapeColor;
             
             if (!IsControlling())
                 return;
 
             DoMove();
 
-            if (inputRotateYaw.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotateYaw = InputUtil.GetRotateYaw();
-            if (inputRotatePitch.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotatePitch = InputUtil.GetRotatePitch();
-            if (inputRotateRoll.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotateRoll = InputUtil.GetRotateRoll();
+            if (inputRotateYaw.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotateYaw = inputController.GetRotateYaw();
+            if (inputRotatePitch.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotatePitch = inputController.GetRotatePitch();
+            if (inputRotateRoll.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotateRoll = inputController.GetRotateRoll();
         }
 
         private void FixedUpdate()
@@ -137,6 +137,7 @@ namespace Sabotris.Worlds
             block.parentContainer = parentContainer;
             block.parentShape = this;
             block.Id = blockId;
+            block.blockColor = shapeColor;
 
             block.transform.SetParent(transform, false);
 

@@ -18,6 +18,7 @@ using Sabotris.Translations;
 using Sabotris.UI;
 using Sabotris.UI.Menu;
 using Sabotris.Util;
+using Sabotris.Util.Input;
 using TMPro;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -58,6 +59,7 @@ namespace Sabotris.Worlds
         public Block blockTemplate;
         public FallingBlock fallingBlockTemplate;
 
+        public InputController inputController;
         public World world;
         public GameController gameController;
         public MenuController menuController;
@@ -83,6 +85,8 @@ namespace Sabotris.Worlds
 
         private readonly Dictionary<Guid, Shape> _shapes = new Dictionary<Guid, Shape>();
         private readonly Dictionary<Guid, Block> _blocks = new Dictionary<Guid, Block>();
+
+        public int maxBlockHeight;
 
         public Vector3Int DropPosition { get; } = new Vector3Int(0, 20, 0);
 
@@ -172,7 +176,7 @@ namespace Sabotris.Worlds
                         Id = shape.Id,
                         Position = DropPosition,
                         Offsets = shape.Offsets,
-                        Color = shape.ShapeColor ?? Color.white,
+                        Color = shape.shapeColor,
                         Power = shape.PowerUp?.GetPower() ?? Power.None
                     });
             }
@@ -366,14 +370,14 @@ namespace Sabotris.Worlds
             yield return new WaitForSeconds(DropNewShapeSpeed);
         }
 
-        private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null, Power? power = null)
+        private Shape CreateShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color color, Power? power = null)
         {
             var shape = Instantiate(shapeTemplate, position, Quaternion.identity);
             shape.name = $"Shape-{shapeId}";
 
             shape.Id = shapeId;
             shape.Offsets = offsets;
-            shape.ShapeColor = color;
+            shape.shapeColor = color;
 
             if (networkController && networkController.Client?.LobbyData.PowerUps == true)
             {
@@ -388,6 +392,7 @@ namespace Sabotris.Worlds
                     _powerUpCount++;
             }
 
+            shape.inputController = inputController;
             shape.gameController = gameController;
             shape.menuController = menuController;
             shape.networkController = networkController;
@@ -402,7 +407,7 @@ namespace Sabotris.Worlds
             return shape;
         }
         
-        public FallingShape CreateFallingShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color? color = null)
+        public FallingShape CreateFallingShape(Guid shapeId, Vector3Int position, (Guid, Vector3Int)[] offsets, Color color)
         {
             var shape = Instantiate(fallingShapeTemplate, position, Quaternion.identity);
             shape.name = $"Shape-{shapeId}";
@@ -410,8 +415,9 @@ namespace Sabotris.Worlds
             shape.Id = shapeId;
             shape.RawPosition = position;
             shape.Offsets = offsets;
-            shape.ShapeColor = color;
+            shape.shapeColor = color;
 
+            shape.inputController = inputController;
             shape.gameController = gameController;
             shape.networkController = networkController;
             shape.parentContainer = this;
@@ -433,7 +439,7 @@ namespace Sabotris.Worlds
             
             block.Id = blockId;
             block.RawPosition = position;
-            block.BlockColor = color;
+            block.blockColor = color;
             
             block.parentContainer = this;
             
@@ -660,12 +666,12 @@ namespace Sabotris.Worlds
 
         public virtual (float, float) GetMovement()
         {
-            return gameController.ControllingContainer == this ? (InputUtil.GetMoveAdvance(), InputUtil.GetMoveStrafe()) : (0, 0);
+            return gameController.ControllingContainer == this ? (inputController.GetMoveAdvance(), inputController.GetMoveStrafe()) : (0, 0);
         }
 
         public virtual bool DoFastDrop()
         {
-            return gameController.ControllingContainer == this && InputUtil.GetMoveDown() && !menuController.IsInMenu;
+            return gameController.ControllingContainer == this && inputController.GetMoveDown() && !menuController.IsInMenu;
         }
 
         public virtual bool IsControllingShape(Shape shape, bool notInMenu = false)
@@ -675,7 +681,7 @@ namespace Sabotris.Worlds
 
         public virtual bool ShouldRotateShape()
         {
-            return InputUtil.ShouldRotateShape();
+            return inputController.ShouldRotateShape();
         }
 
         protected virtual bool ShouldSendPacket()

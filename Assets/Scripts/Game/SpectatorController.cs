@@ -3,6 +3,7 @@ using Sabotris.Network;
 using Sabotris.Network.Packets.Spectator;
 using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
+using Sabotris.Util.Input;
 using UnityEngine;
 
 namespace Sabotris.Game
@@ -12,7 +13,8 @@ namespace Sabotris.Game
         private const float Acceleration = 65f;
         private const float JumpHeight = 250f;
         private const float Drag = 0.6f;
-        
+
+        public InputController inputController;
         public CameraController cameraController;
         public NetworkController networkController;
         public Rigidbody rigidBody;
@@ -30,9 +32,9 @@ namespace Sabotris.Game
         
         private void Update()
         {
-            _advance = -InputUtil.GetMoveAdvance() * Acceleration;
-            _strafe = InputUtil.GetMoveStrafe() * Acceleration;
-            _jump = (_jump || InputUtil.GetMoveJump()) && _jumpCount < 1;
+            _advance = -inputController.GetMoveAdvance() * Acceleration;
+            _strafe = inputController.GetMoveStrafe() * Acceleration;
+            _jump = (_jump || inputController.GetMoveJump()) && _jumpCount < 1;
         }
 
         private void FixedUpdate()

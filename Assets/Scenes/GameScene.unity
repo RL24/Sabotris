@@ -1565,6 +1565,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 441727066}
     - target: {fileID: 5792942197404027228, guid: d0d66c19eec593246b5a59618348f833, type: 3}
+      propertyPath: inputController
+      value: 
+      objectReference: {fileID: 858393429}
+    - target: {fileID: 5792942197404027228, guid: d0d66c19eec593246b5a59618348f833, type: 3}
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 1687258583}
@@ -2034,6 +2038,7 @@ GameObject:
   - component: {fileID: 858393426}
   - component: {fileID: 858393427}
   - component: {fileID: 858393428}
+  - component: {fileID: 858393429}
   m_Layer: 0
   m_Name: Controllers
   m_TagString: Untagged
@@ -2071,6 +2076,7 @@ MonoBehaviour:
   forwardRendererData: {fileID: 11400000, guid: 4a8e21d5c33334b11b34a596161b9360, type: 2}
   renderVolume: {fileID: 653260036}
   tutorialHelper: {fileID: 2016058821}
+  inputActions: {fileID: -944628639613478452, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
 --- !u!4 &858393425
 Transform:
   m_ObjectHideFlags: 0
@@ -2109,6 +2115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dccfe517b9ff8884d9f59cfd1f215b00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputController: {fileID: 858393429}
   cameraController: {fileID: 1687258583}
   networkController: {fileID: 858393423}
   activatingContainer: {fileID: 0}
@@ -2138,6 +2145,46 @@ MonoBehaviour:
   l2: {fileID: 21300000, guid: 216a583c4b5083142b31724be74f4778, type: 3}
   r1: {fileID: 21300000, guid: cf5f7d5518c00714e98007946997e46b, type: 3}
   r2: {fileID: 21300000, guid: 86c071681c0e12541bbde36677427dcf, type: 3}
+--- !u!114 &858393429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858393422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ec67652546e4999a7d4a9eee44ee845, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveForward: {fileID: 7903665703742110528, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  moveBack: {fileID: 1321244385897215752, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  moveLeft: {fileID: 873504003289917397, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  moveRight: {fileID: 332403679809060861, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  moveDown: {fileID: -4417120968189204971, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  moveAscend: {fileID: 1858609416840980774, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  moveDescend: {fileID: -6721751680132758978, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  moveJump: {fileID: -4143922354169891428, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  rotateWithMouse: {fileID: -8720685899637768762, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  rotateYawLeft: {fileID: 3339633187345963201, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  rotateYawRight: {fileID: -3310597626178882619, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  rotatePitchUp: {fileID: -301212910912205334, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  rotatePitchDown: {fileID: 2820582882463546944, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  rotateRollLeft: {fileID: 2773283478061961114, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  rotateRollRight: {fileID: 4594988482631988648, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  prevContainer: {fileID: -442108225872455504, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  nextContainer: {fileID: -6999631925508881715, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  selectContainer: {fileID: -6778935745790694192, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  zoomIn: {fileID: -5576965798068712563, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  zoomOut: {fileID: -9191592907013182317, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  snapCamera: {fileID: -8084602446661289972, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  navigateUp: {fileID: 2694811045033003790, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  navigateDown: {fileID: -3573780776343837719, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  navigateLeft: {fileID: 4532487700139257707, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  navigateRight: {fileID: -1802836920006926715, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  navigateEnter: {fileID: 5985552257831782262, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  navigateBack: {fileID: -5395011687484965384, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  gamePause: {fileID: 2780735044081285308, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
 --- !u!1 &885284547
 GameObject:
   m_ObjectHideFlags: 0
@@ -3066,6 +3113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 534101c019e4436e8a2a028849b09159, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputController: {fileID: 858393429}
   networkController: {fileID: 858393423}
   cameraController: {fileID: 1687258583}
   audioController: {fileID: 441727066}
@@ -3386,6 +3434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71f859520c9543e5ae2ca2193a8e7c28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputController: {fileID: 858393429}
   gameController: {fileID: 858393424}
   menuController: {fileID: 1370561258}
   networkController: {fileID: 858393423}
@@ -3695,6 +3744,7 @@ MonoBehaviour:
   fallingShapeTemplate: {fileID: -3182868517047506160, guid: d861ddd771e98a046bd4995fac6d5288, type: 3}
   blockTemplate: {fileID: 771673464604701970, guid: 6649352b212ec1640bae16559d3fb9c0, type: 3}
   fallingBlockTemplate: {fileID: -4374764245977914493, guid: f95aabb1d5cea0b43b28cab5f03857ff, type: 3}
+  inputController: {fileID: 858393429}
   world: {fileID: 2032613557}
   gameController: {fileID: 858393424}
   menuController: {fileID: 1370561258}
@@ -3709,6 +3759,7 @@ MonoBehaviour:
   steamId: 0
   containerName: 
   dead: 0
+  maxBlockHeight: 0
 --- !u!114 &1867771294 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1408002484745133006, guid: 57946a97612f65247ba2c718c5f50d03, type: 3}
@@ -4443,6 +4494,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 858393428}
     - target: {fileID: 7734639290061446102, guid: 4e2a6eebadbafa147bd85d21b7b306b1, type: 3}
+      propertyPath: inputController
+      value: 
+      objectReference: {fileID: 858393429}
+    - target: {fileID: 7734639290061446102, guid: 4e2a6eebadbafa147bd85d21b7b306b1, type: 3}
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 1687258583}
@@ -4527,19 +4582,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   containerTemplate: {fileID: 2526497043636503700, guid: 57946a97612f65247ba2c718c5f50d03, type: 3}
   botContainerTemplate: {fileID: 7829421909001906283, guid: 4a7edbe8b7490024b8c5df6032f8fd27, type: 3}
+  inputController: {fileID: 858393429}
   gameController: {fileID: 858393424}
   menuController: {fileID: 1370561258}
   networkController: {fileID: 858393423}
   cameraController: {fileID: 1687258583}
   audioController: {fileID: 441727066}
-  textures: {fileID: 858393428}
   selectorOverlay: {fileID: 778499347}
   demoContainer: {fileID: 1813493984}
   menuMain: {fileID: 5792942197404027228, guid: d0d66c19eec593246b5a59618348f833, type: 3}
   menuPause: {fileID: 1478632573244512379, guid: e78c5f73faa14e240b8457f15dd1e736, type: 3}
   menuGameOver: {fileID: 8846274034861430407, guid: 8f4980fd573687244bbb0f78c909185f, type: 3}
   spectatorPrefab: {fileID: -2121418648541248720, guid: 2e4042f94ec815943b7c2da17df1c0e3, type: 3}
-  tutorialHelperPrefab: {fileID: 7734639290061446102, guid: 4e2a6eebadbafa147bd85d21b7b306b1, type: 3}
   boundary: {fileID: 312672145}
 --- !u!4 &2032613558
 Transform:

@@ -5,6 +5,7 @@ using Sabotris.UI.Menu;
 using Sabotris.Worlds;
 using Steamworks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -24,10 +25,14 @@ namespace Sabotris.Game
 
         public Container ControllingContainer { get; set; }
 
+        public InputActionAsset inputActions;
+
         private void Start()
         {
             // Util.Random.SetSeed(0); // DEBUG ONLY
 
+            inputActions.Enable();
+            
             _renderFeatureSsao = forwardRendererData.rendererFeatures.Find((feature) => feature.name.Equals("NewScreenSpaceAmbientOcclusion"));
             renderVolume.profile.TryGet(out _dof);
 

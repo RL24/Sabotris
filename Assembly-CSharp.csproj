@@ -147,7 +147,7 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuLobbyListItem.cs" />
      <Compile Include="Assets\Scripts\Network\Client.cs" />
-     <Compile Include="Assets\Scripts\Util\GamepadUtil.cs" />
+     <Compile Include="Assets\Scripts\Util\Input\GamepadUtil.cs" />
      <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpRandomBlock.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
      <Compile Include="Assets\Scripts\Game\GameController.cs" />
@@ -163,6 +163,7 @@
      <Compile Include="Assets\Scripts\Network\Server.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsGameplay.cs" />
      <Compile Include="Assets\Scripts\Util\FileUtil.cs" />
+     <Compile Include="Assets\Scripts\Util\Input\InputController.cs" />
      <Compile Include="Assets\Scripts\Network\Handler\PacketHandler.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
      <Compile Include="Assets\Scripts\Worlds\Container.cs" />
@@ -178,6 +179,7 @@
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuCarousel.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
      <Compile Include="Assets\Scripts\Steamworks.NET\SteamManager.cs" />
+     <Compile Include="Assets\Scripts\Util\Input\RebindHelper.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Block\PacketBlockBulkCreate.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuGameOver.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuFadeText.cs" />
@@ -193,7 +195,6 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuLobby.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
-     <Compile Include="Assets\Scripts\Util\InputUtil.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menu.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsInputBindings.cs" />

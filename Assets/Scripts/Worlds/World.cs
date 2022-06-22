@@ -14,6 +14,7 @@ using Sabotris.UI;
 using Sabotris.UI.Menu;
 using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
+using Sabotris.Util.Input;
 using Steamworks;
 using UnityEngine;
 
@@ -21,26 +22,23 @@ namespace Sabotris.Worlds
 {
     public class World : MonoBehaviour
     {
-        private static readonly Vector3 MinVec = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-        private static readonly Vector3 MaxVec = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         private const float PositionUpdateDelay = 200;
         
         public Container containerTemplate;
         public BotContainer botContainerTemplate;
 
+        public InputController inputController;
         public GameController gameController;
         public MenuController menuController;
         public NetworkController networkController;
         public CameraController cameraController;
         public AudioController audioController;
-        public Textures textures;
 
         public SelectorOverlay selectorOverlay;
         public DemoContainer demoContainer;
         public Menu menuMain, menuPause, menuGameOver;
         
         public Spectator spectatorPrefab;
-        public TutorialHelper tutorialHelperPrefab;
 
         private const float BoundaryPadding = 100;
         private const float BoundaryHeight = -0.25f;
@@ -66,7 +64,7 @@ namespace Sabotris.Worlds
 
         private void Update()
         {
-            if (InputUtil.ShouldPause() && !menuController.IsInMenu && networkController.Client is {IsConnected: true})
+            if (inputController.ShouldPause() && !menuController.IsInMenu && networkController.Client is {IsConnected: true})
                 menuController.OpenMenu(menuPause);
 
             if (networkController.Server?.Running == true && _positionUpdateTimer.ElapsedMilliseconds > PositionUpdateDelay)
@@ -144,6 +142,7 @@ namespace Sabotris.Worlds
             if (steamId != null)
                 container.steamId = steamId.Value;
 
+            container.inputController = inputController;
             container.world = this;
             container.gameController = gameController;
             container.menuController = menuController;
@@ -188,6 +187,7 @@ namespace Sabotris.Worlds
             container.Id = id;
             container.ContainerName = botName;
 
+            container.inputController = inputController;
             container.world = this;
             container.gameController = gameController;
             container.menuController = menuController;

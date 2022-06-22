@@ -1,6 +1,7 @@
 ﻿using System;
 using Sabotris.IO;
 using Sabotris.Util;
+using Sabotris.Util.Input;
 using UnityEngine;
 
 namespace Sabotris.UI.Menu.Menus
@@ -29,19 +30,19 @@ namespace Sabotris.UI.Menu.Menus
             if (buttonGamepadCameraSensitivity is MenuSlider sgcs)
             {
                 sgcs.OnValueChanged += OnGamepadCameraSensitivityChanged;
-                sgcs.SetValue(InputUtil.GamepadCameraSensitivity * 50);
+                sgcs.SetValue(InputController.GamepadCameraSensitivity * 50);
             }
 
             if (buttonMouseCameraSensitivity is MenuSlider smcs)
             {
                 smcs.OnValueChanged += OnMouseCameraSensitivityChanged;
-                smcs.SetValue(InputUtil.MouseCameraSensitivity * 50);
+                smcs.SetValue(InputController.MouseCameraSensitivity * 50);
             }
 
             if (buttonMouseRotateSensitivity is MenuSlider smrs)
             {
                 smrs.OnValueChanged += OnMouseRotateSensitivityChanged;
-                smrs.SetValue(InputUtil.MouseRotateSensitivity * 10);
+                smrs.SetValue(InputController.MouseRotateSensitivity * 10);
             }
         }
 

@@ -2,7 +2,7 @@
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.LowLevel;
 
-namespace Sabotris.Util
+namespace Sabotris.Util.Input
 {
     public static class GamepadUtil
     {

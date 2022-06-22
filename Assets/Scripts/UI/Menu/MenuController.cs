@@ -3,6 +3,7 @@ using Sabotris.Game;
 using Sabotris.Network;
 using Sabotris.UI.Menu.Menus;
 using Sabotris.Util;
+using Sabotris.Util.Input;
 using Sabotris.Worlds;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -13,6 +14,7 @@ namespace Sabotris.UI.Menu
 {
     public class MenuController : MonoBehaviour
     {
+        public InputController inputController;
         public NetworkController networkController;
         public CameraController cameraController;
         public AudioController audioController;
@@ -71,6 +73,7 @@ namespace Sabotris.UI.Menu
 
             nextMenu = Instantiate(prefab, Vector3.zero, Quaternion.identity, transform);
             nextMenu.name = $"Menu-{prefab.name}";
+            nextMenu.inputController = inputController;
             nextMenu.menuController = this;
             nextMenu.networkController = networkController;
             nextMenu.cameraController = cameraController;

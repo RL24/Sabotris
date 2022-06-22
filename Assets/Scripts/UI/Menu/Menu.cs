@@ -6,6 +6,7 @@ using Sabotris.Game;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Util;
+using Sabotris.Util.Input;
 using Sabotris.Worlds;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace Sabotris.UI.Menu
 {
     public abstract class Menu : MonoBehaviour
     {
+        public InputController inputController;
         public MenuController menuController;
         public NetworkController networkController;
         public CameraController cameraController;
@@ -83,8 +85,8 @@ namespace Sabotris.UI.Menu
             if (!Open)
                 return;
 
-            var navigate = Mathf.RoundToInt(InputUtil.GetMoveUINavigateVertical()) * Interactable.Int();
-            var navigateHor = Mathf.RoundToInt(InputUtil.GetMoveUINavigateHorizontal()) * Interactable.Int();
+            var navigate = Mathf.RoundToInt(inputController.GetMoveUINavigateVertical()) * Interactable.Int();
+            var navigateHor = Mathf.RoundToInt(inputController.GetMoveUINavigateHorizontal()) * Interactable.Int();
 
             if (_selectTimer.ElapsedMilliseconds > _selectDelayMs || navigate == 0)
             {
@@ -120,13 +122,13 @@ namespace Sabotris.UI.Menu
 
             if (Interactable)
             {
-                if (InputUtil.GetUISelect())
+                if (inputController.GetUISelect())
                 {
                     if (_selectedButton != -1)
                         buttons[SelectedButton].NavigateSelect();
                     else SelectedButton = _lastSelectedButton;
                 }
-                else if (InputUtil.GetUIBack())
+                else if (inputController.GetUIBack())
                     GoBack();
             }
         }

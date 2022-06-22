@@ -4,6 +4,7 @@ using System.Linq;
 using Sabotris.Network;
 using Sabotris.Powers;
 using Sabotris.Util;
+using Sabotris.Util.Input;
 using Sabotris.Worlds;
 using Unity.Mathematics;
 using UnityEngine;
@@ -13,7 +14,8 @@ namespace Sabotris.Game
     public class ContainerSelectorController : MonoBehaviour
     {
         public const int PowerUpUseTimeoutSeconds = 5;
-        
+
+        public InputController inputController;
         public CameraController cameraController;
         public NetworkController networkController;
          
@@ -42,7 +44,7 @@ namespace Sabotris.Game
             if (!_selectableContainers.Any() || !Active)
                 return;
             
-            var changeContainer = InputUtil.GetChangeContainerSelection();
+            var changeContainer = inputController.GetChangeContainerSelection();
             if (changeContainer != 0 && !_selectDelayed && !_doneSelecting)
             {
                 _selectedIndex += changeContainer;
@@ -68,7 +70,7 @@ namespace Sabotris.Game
             position = container.rawPosition + (Vector3.back * 20) + (Vector3.up * 22);
             rotation = Quaternion.Euler(30, 0, 0);
 
-            if (!(InputUtil.GetSelectContainer() || PowerUpTimer.ElapsedMilliseconds > (networkController.Client?.LobbyData.PowerUpAutoPickDelay ?? PowerUpUseTimeoutSeconds) * 1000) || _doneSelecting)
+            if (!(inputController.GetSelectContainer() || PowerUpTimer.ElapsedMilliseconds > (networkController.Client?.LobbyData.PowerUpAutoPickDelay ?? PowerUpUseTimeoutSeconds) * 1000) || _doneSelecting)
                 return;
 
             selectedContainer = container;

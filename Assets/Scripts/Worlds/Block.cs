@@ -9,13 +9,11 @@ namespace Sabotris.Worlds
 {
     public class Block : MonoBehaviour
     {
-        public Material standardMaterial, poweredMaterial;
-        
         public Container parentContainer;
         public Shape parentShape;
         
         public Guid Id;
-        public Color? BlockColor;
+        public Color blockColor;
 
         public bool shifted;
         public bool doRemove;
@@ -31,11 +29,16 @@ namespace Sabotris.Worlds
             _poweredBubbleSpeed = Random.Range(2f, 4f);
             _poweredBubbleAmount = Random.Range(0.05f, 0.15f);
 
-            if (BlockColor != null)
-                foreach (var ren in GetComponentsInChildren<Renderer>())
-                    ren.material.color = BlockColor ?? Color.white;
+            foreach (var ren in GetComponentsInChildren<Renderer>())
+                ren.material.color = blockColor;
 
             transform.localScale = (rawPosition != ShapeUtil.NullVector3Int && parentShape) ? Vector3.zero : Vector3.one;
+        }
+
+        private void Update()
+        {
+            foreach (var ren in GetComponentsInChildren<Renderer>())
+                ren.material.color = Color.Lerp(ren.material.color, blockColor, GameSettings.Settings.gameTransitionSpeed.Delta());
         }
 
         private void FixedUpdate()

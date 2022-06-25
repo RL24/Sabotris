@@ -2,7 +2,7 @@
 using Sabotris.Util;
 using UnityEngine;
 
-namespace Sabotris.Worlds
+namespace Sabotris.Worlds.Tutorial
 {
     public class TutorialItem : MonoBehaviour
     {

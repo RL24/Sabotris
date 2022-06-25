@@ -21,7 +21,6 @@ using Sabotris.Util;
 using Sabotris.Util.Input;
 using TMPro;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 using Random = Sabotris.Util.Random;
 
 namespace Sabotris.Worlds

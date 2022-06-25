@@ -5,7 +5,6 @@ using Sabotris.Game;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
-using Sabotris.Network.Packets.Game;
 using Sabotris.Network.Packets.Players;
 using Sabotris.Powers;
 using Sabotris.Translations;

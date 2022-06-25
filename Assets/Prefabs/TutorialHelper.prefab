@@ -606,8 +606,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6160f610bff45179850d23bb90476b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textures: {fileID: 0}
+  inputActions: {fileID: -944628639613478452, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
+  inputController: {fileID: 0}
   cameraController: {fileID: 0}
+  textures: {fileID: 0}
   yawItem: {fileID: 9012939498622538719}
   pitchItem: {fileID: 9020548530747383587}
   rollItem: {fileID: 7782282139783875614}

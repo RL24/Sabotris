@@ -2,7 +2,7 @@
     "name": "ControlMap",
     "maps": [
         {
-            "name": "Gameplay",
+            "name": "Game",
             "id": "e57b3d92-ed42-4775-b062-4d4fb4093101",
             "actions": [
                 {
@@ -305,7 +305,7 @@
                 },
                 {
                     "name": "",
-                    "id": "d9b11927-a86d-4761-a3a8-3ad83549abdd",
+                    "id": "9cc8ebcf-132e-4114-9448-e840e94c1ba6",
                     "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
                     "processors": "",
@@ -316,7 +316,7 @@
                 },
                 {
                     "name": "",
-                    "id": "69a1e2f3-ec80-4617-9560-b21eec75d72f",
+                    "id": "7e8547ab-0533-4a6d-83d5-a43d061b1389",
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
@@ -1008,12 +1008,6 @@
                     "isPartOfComposite": false
                 }
             ]
-        },
-        {
-            "name": "UI",
-            "id": "264ae369-b422-4f28-8f5f-88459ba1bfd9",
-            "actions": [],
-            "bindings": []
         }
     ],
     "controlSchemes": [

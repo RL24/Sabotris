@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Sabotris.Game;
+﻿using System.Linq;
 using Sabotris.IO;
-using Sabotris.Network;
 using Sabotris.Network.Packets.Block;
-using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using UnityEngine;
 

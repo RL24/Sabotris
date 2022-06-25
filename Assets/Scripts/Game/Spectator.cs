@@ -1,5 +1,4 @@
-﻿using System;
-using Sabotris.IO;
+﻿using Sabotris.IO;
 using Sabotris.Util;
 using UnityEngine;
 

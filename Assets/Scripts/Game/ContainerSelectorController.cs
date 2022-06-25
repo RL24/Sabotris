@@ -3,10 +3,8 @@ using System.Diagnostics;
 using System.Linq;
 using Sabotris.Network;
 using Sabotris.Powers;
-using Sabotris.Util;
 using Sabotris.Util.Input;
 using Sabotris.Worlds;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace Sabotris.Game

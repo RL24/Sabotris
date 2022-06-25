@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Sabotris.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -57,10 +58,16 @@ namespace Sabotris.Util.Input
 
         private static Vector2Control MouseDelta => Mouse.current?.delta;
         private static Vector2Control MouseScroll => Mouse.current?.scroll;
-
+        
         private bool IsPressed(InputActionReference actionRef) => actionRef.action.IsPressed();
 
         private bool WasActionPressed(InputActionReference actionRef) => actionRef.action.WasPressedThisFrame();
+
+        public string GetPath(InputActionReference actionRef, bool gamepad) => actionRef.action.bindings.FirstOrDefault((binding) => binding.effectivePath.StartsWith(gamepad ? "<Gamepad>" : "<Keyboard>")).effectivePath;
+
+        public bool AnyKeyPressed() => Keyboard.current.anyKey.IsPressed();
+
+        public bool AnyGamepadButtonPressed() => Gamepad.current.allControls.Any((x) => x.IsPressed());
 
         public bool ShouldRotateShape() => IsPressed(rotateWithMouse);
 

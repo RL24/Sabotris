@@ -4,10 +4,8 @@ using Sabotris.Game;
 using Sabotris.Util;
 using Sabotris.Util.Input;
 using UnityEngine;
-using Quaternion = UnityEngine.Quaternion;
-using Vector3 = UnityEngine.Vector3;
 
-namespace Sabotris.Worlds
+namespace Sabotris.Worlds.Tutorial
 {
     public class TutorialHelper : MonoBehaviour
     {
@@ -22,11 +20,11 @@ namespace Sabotris.Worlds
 
         private void Update()
         {
-            // if (inputController.AnyKey())
-            //     _isGamepad = false;
-            // if (inputController.AnyButton())
-            //     _isGamepad = true;
-            
+            if (inputController.AnyKeyPressed())
+                _isGamepad = false;
+            if (inputController.AnyGamepadButtonPressed())
+                _isGamepad = true;
+
             if (!shape)
                 return;
 
@@ -71,21 +69,24 @@ namespace Sabotris.Worlds
             pitchItem.itemRotation = rotationToCamera;
             rollItem.itemRotation = rotationToCamera;
 
+            yawItem.left.sprite = textures.GetMapped(inputController.GetPath(inputController.rotateYawLeft, _isGamepad));
+            yawItem.right.sprite = textures.GetMapped(inputController.GetPath(inputController.rotateYawRight, _isGamepad));
+
             if (yawDif < 45)
             {
-                pitchItem.left.sprite = textures.triangle;
-                pitchItem.right.sprite = textures.cross;
+                pitchItem.left.sprite = textures.GetMapped(inputController.GetPath(inputController.rotatePitchUp, _isGamepad));
+                pitchItem.right.sprite = textures.GetMapped(inputController.GetPath(inputController.rotatePitchDown, _isGamepad));
                 
-                rollItem.left.sprite = textures.square;
-                rollItem.right.sprite = textures.circle;
+                rollItem.left.sprite = textures.GetMapped(inputController.GetPath(inputController.rotateRollLeft, _isGamepad));
+                rollItem.right.sprite = textures.GetMapped(inputController.GetPath(inputController.rotateRollRight, _isGamepad));
             }
             else
             {
-                pitchItem.left.sprite = textures.circle;
-                pitchItem.right.sprite = textures.square;
+                pitchItem.left.sprite = textures.GetMapped(inputController.GetPath(inputController.rotateRollRight, _isGamepad));
+                pitchItem.right.sprite = textures.GetMapped(inputController.GetPath(inputController.rotateRollLeft, _isGamepad));
 
-                rollItem.left.sprite = textures.triangle;
-                rollItem.right.sprite = textures.cross;
+                rollItem.left.sprite = textures.GetMapped(inputController.GetPath(inputController.rotatePitchUp, _isGamepad));
+                rollItem.right.sprite = textures.GetMapped(inputController.GetPath(inputController.rotatePitchDown, _isGamepad));
             }
         }
     }

@@ -10,7 +10,6 @@ using Sabotris.Util;
 using Sabotris.Util.Input;
 using Sabotris.Worlds;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Sabotris.Game
 {

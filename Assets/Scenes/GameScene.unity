@@ -2139,12 +2139,25 @@ MonoBehaviour:
   cross: {fileID: 21300000, guid: 5aa97842897cc3640b80caafa5b3ef46, type: 3}
   square: {fileID: 21300000, guid: 262d2b44dade3b84dace411f9fef6b7b, type: 3}
   triangle: {fileID: 21300000, guid: 9c000372826cb0045b8dac7213182487, type: 3}
+  dpadLeft: {fileID: 21300000, guid: cd2bcd447750c4e479b1173d905be17d, type: 3}
+  dpadUp: {fileID: 21300000, guid: c2035c3989bf0664bbf1b2f48a302582, type: 3}
+  dpadRight: {fileID: 21300000, guid: bc7020f53f143584a81cb3a958d10abe, type: 3}
+  dpadDown: {fileID: 21300000, guid: 63e8a58d4baf52b46bc266b5fee75fbf, type: 3}
   joystickBase: {fileID: 21300000, guid: d2b485400c2e2d24e9f0a9fe1620077e, type: 3}
   joystickThumb: {fileID: 21300000, guid: 7c46af1f8cfe23f42a767f03801523ed, type: 3}
   l1: {fileID: 21300000, guid: 929ce08b9d17a5d4fbe76199da061bdd, type: 3}
   l2: {fileID: 21300000, guid: 216a583c4b5083142b31724be74f4778, type: 3}
+  l3: {fileID: 21300000, guid: 7d9d9133d58f9cf4f8049f682c1515e1, type: 3}
   r1: {fileID: 21300000, guid: cf5f7d5518c00714e98007946997e46b, type: 3}
   r2: {fileID: 21300000, guid: 86c071681c0e12541bbde36677427dcf, type: 3}
+  r3: {fileID: 21300000, guid: 2926c20bea86eca4195a9f7f0629ac76, type: 3}
+  keyboardBase: {fileID: 21300000, guid: cc76ac9cf25becb42bad56927143ef09, type: 3}
+  keyU: {fileID: 21300000, guid: 58fe91ae1f843c649885e4d52bfe5537, type: 3}
+  keyI: {fileID: 21300000, guid: 5f120575d46550d44a864d67380e83e2, type: 3}
+  keyO: {fileID: 21300000, guid: 402d907da8de41f40addbfc0c072e971, type: 3}
+  keyJ: {fileID: 21300000, guid: 6e4486768d704a046b90fd8e1b21b37e, type: 3}
+  keyK: {fileID: 21300000, guid: 55866bb1d63892e4fb37a122eb9e4b10, type: 3}
+  keyL: {fileID: 21300000, guid: 705c2f3cccad9234985215b5c592d0b1, type: 3}
 --- !u!114 &858393429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4501,6 +4514,10 @@ PrefabInstance:
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 1687258583}
+    - target: {fileID: 7734639290061446102, guid: 4e2a6eebadbafa147bd85d21b7b306b1, type: 3}
+      propertyPath: inputActionAsset
+      value: 
+      objectReference: {fileID: -944628639613478452, guid: 70589e2be1cbf86458e9438109e4eca9, type: 3}
     - target: {fileID: 7734639290061446103, guid: 4e2a6eebadbafa147bd85d21b7b306b1, type: 3}
       propertyPath: m_Name
       value: TutorialHelper

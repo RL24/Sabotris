@@ -3,7 +3,6 @@ using Sabotris.Game;
 using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets.Block;
-using Sabotris.Network.Packets.Game;
 using Sabotris.Util;
 using UnityEngine;
 

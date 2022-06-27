@@ -262,6 +262,7 @@ namespace Sabotris.UI.Menu.Menus
         [PacketListener(PacketTypeId.ChatMessage, PacketDirection.Server)]
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
         [PacketListener(PacketTypeId.PlayerPositions, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.LayerClear, PacketDirection.Server)]
         public void OnPacketForward(Packet packet)
         {
             SendPacketToAll(packet);
@@ -277,7 +278,6 @@ namespace Sabotris.UI.Menu.Menus
         [PacketListener(PacketTypeId.BlockCreate, PacketDirection.Server)]
         [PacketListener(PacketTypeId.FallingBlockCreate, PacketDirection.Server)]
         [PacketListener(PacketTypeId.LayerMove, PacketDirection.Server)]
-        [PacketListener(PacketTypeId.LayerClear, PacketDirection.Server)]
         [PacketListener(PacketTypeId.LayerAdd, PacketDirection.Server)]
         [PacketListener(PacketTypeId.SpectatorCreate, PacketDirection.Server)]
         [PacketListener(PacketTypeId.SpectatorMove, PacketDirection.Server)]

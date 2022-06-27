@@ -380,7 +380,7 @@ namespace Sabotris.Worlds
 
             if (networkController && networkController.Client?.LobbyData.PowerUps == true)
             {
-                if (!(this is DemoContainer || this is BotContainer) && world.Containers.Count > 1 && _powerUpCount > PowerUpCountDelay)
+                if (!(this is DemoContainer || this is BotContainer) && world.Containers.Count > 1/* && _powerUpCount > PowerUpCountDelay*/)
                 {
                     shape.PowerUp = PowerUpFactory.CreatePowerUp(power);
                     if (shape.PowerUp != null)
@@ -492,10 +492,21 @@ namespace Sabotris.Worlds
             if (absolutePositions.Any((pos) => pos.IsOutside(BottomLeft, TopRight)))
                 return true;
             foreach (var block in _blocks.Values)
-            foreach (var pos in absolutePositions)
-                if (pos.Equals(block.RawPosition))
-                    return true;
+                foreach (var pos in absolutePositions)
+                    if (pos.Equals(block.RawPosition))
+                        return true;
             return false;
+        }
+
+        public ((Vector3Int, Vector3Int)[], Vector3Int[]) GetCollisions(Vector3Int[] absolutePositions)
+        {
+            var outside = absolutePositions.Where((pos) => pos.IsOutside(BottomLeft, TopRight)).Select((pos) => (pos, pos.DistanceOutside(BottomLeft, TopRight)));
+            var collided = new List<Vector3Int>();
+            foreach (var block in _blocks.Values)
+                foreach (var pos in absolutePositions)
+                    if (pos.Equals(block.RawPosition))
+                        collided.Add(pos);
+            return (outside.ToArray(), collided.ToArray());
         }
 
         private IEnumerator CreateEndBlocksForScore()

@@ -12,7 +12,18 @@ namespace Sabotris.Util
 
         private static bool IsGreaterThan(this Vector3Int self, Vector3Int pos) => self.x > pos.x || self.y > pos.y || self.z > pos.z;
 
+        private static int DistanceFrom(this int self, Vector3Int bottomLeft, Vector3Int topRight) => self < bottomLeft.x ? self - bottomLeft.x : self > topRight.x ? self - topRight.x : 0;
+
         public static bool IsOutside(this Vector3Int self, Vector3Int bottomLeft, Vector3Int topRight) => self.IsLessThan(bottomLeft) || self.IsGreaterThan(topRight);
+
+        public static Vector3Int DistanceOutside(this Vector3Int self, Vector3Int bottomLeft, Vector3Int topRight)
+        {
+            return new Vector3Int(
+                self.x.DistanceFrom(bottomLeft, topRight),
+                self.y.DistanceFrom(bottomLeft, topRight),
+                self.z.DistanceFrom(bottomLeft, topRight)
+            );
+        }
 
         public static Vector3Int Round(this Vector3 self, int round)
         {

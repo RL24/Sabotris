@@ -14,6 +14,7 @@ namespace Sabotris.Audio
             shapeMove,
             shapeRotate,
             shapeLock,
+            shapeFailRotate,
             layerDelete,
             playerDie,
             gameOver,

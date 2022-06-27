@@ -65,9 +65,9 @@ namespace Sabotris.Util.Input
 
         public string GetPath(InputActionReference actionRef, bool gamepad) => actionRef.action.bindings.FirstOrDefault((binding) => binding.effectivePath.StartsWith(gamepad ? "<Gamepad>" : "<Keyboard>")).effectivePath;
 
-        public bool AnyKeyPressed() => Keyboard.current.anyKey.IsPressed();
+        public bool AnyKeyPressed() => Keyboard.current?.anyKey.IsPressed() ?? false;
 
-        public bool AnyGamepadButtonPressed() => Gamepad.current.allControls.Any((x) => x.IsPressed());
+        public bool AnyGamepadButtonPressed() => Gamepad.current?.allControls.Any((x) => x.IsPressed()) ?? false;
 
         public bool ShouldRotateShape() => IsPressed(rotateWithMouse);
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,6 +14,7 @@ using Sabotris.UI.Menu;
 using Sabotris.Util;
 using Sabotris.Util.Input;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Sabotris.Worlds
 {
@@ -52,6 +54,10 @@ namespace Sabotris.Worlds
         [SerializeField] private float inputRotateRoll;
 
         public readonly Dictionary<Guid, Block> Blocks = new Dictionary<Guid, Block>();
+
+        private bool _showingCannotMove, _showingCannotRotate;
+        private Vector3 _triedMove;
+        private Quaternion _triedRotation;
         
         private void Start()
         {
@@ -81,16 +87,16 @@ namespace Sabotris.Worlds
         private void Update()
         {
             foreach (var block in Blocks)
-                block.Value.blockColor = shapeColor;
+                block.Value.blockColor = _showingCannotMove || _showingCannotRotate ? Color.red : shapeColor;
             
             if (!IsControlling())
                 return;
 
             DoMove();
 
-            if (inputRotateYaw.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotateYaw = inputController.GetRotateYaw();
-            if (inputRotatePitch.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotatePitch = inputController.GetRotatePitch();
-            if (inputRotateRoll.Same(0, 1f) && !(parentContainer is BotContainer)) inputRotateRoll = inputController.GetRotateRoll();
+            if (inputRotateYaw.Same(0, 1f) && !(parentContainer is ControlledContainer)) inputRotateYaw = inputController.GetRotateYaw();
+            if (inputRotatePitch.Same(0, 1f) && !(parentContainer is ControlledContainer)) inputRotatePitch = inputController.GetRotatePitch();
+            if (inputRotateRoll.Same(0, 1f) && !(parentContainer is ControlledContainer)) inputRotateRoll = inputController.GetRotateRoll();
         }
 
         private void FixedUpdate()
@@ -112,20 +118,41 @@ namespace Sabotris.Worlds
                 if (!RawRotation.eulerAngles.Same(roundedRotationActivator.eulerAngles))
                 {
                     var offsets = GetOffsets(RawPosition, roundedRotationActivator)?.Select((offset) => offset.Item2 + RawPosition).ToArray();
-                    if (!parentContainer.DoesCollide(offsets))
+                    var collided = parentContainer.DoesCollide(offsets);
+                    if (!collided)
                     {
                         RawRotation = rotateActivator = roundedRotationActivator;
                         if (audioController)
                             audioController.shapeRotate.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetShapeRotatePitch());
                     }
                     else
+                    {
+                        _triedRotation = Quaternion.Lerp(RawRotation, roundedRotationActivator, 0.2f);
                         rotateActivator = RawRotation;
+                        StartCoroutine(ShowCannotRotate());
+                    }
                 }
             }
 
-            transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + RawPosition, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
-            transform.rotation = Quaternion.Lerp(transform.rotation, RawRotation, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
+            transform.position = Vector3.Lerp(transform.position, parentContainer.transform.position + (_showingCannotMove ? _triedMove : RawPosition), GameSettings.Settings.gameTransitionSpeed.FixedDelta());
+            transform.rotation = Quaternion.Lerp(transform.rotation, _showingCannotRotate ? _triedRotation : RawRotation, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, GameSettings.Settings.gameTransitionSpeed.FixedDelta());
+        }
+
+        private IEnumerator ShowCannotMove()
+        {
+            audioController.shapeFailRotate.PlayModifiedSound(AudioController.GetGameVolume());
+            _showingCannotMove = true;
+            yield return new WaitForSeconds(0.1f);
+            _showingCannotMove = false;
+        }
+
+        private IEnumerator ShowCannotRotate()
+        {
+            audioController.shapeFailRotate.PlayModifiedSound(AudioController.GetGameVolume());
+            _showingCannotRotate = true;
+            yield return new WaitForSeconds(0.1f);
+            _showingCannotRotate = false;
         }
 
         protected void CreateBlock(Guid blockId, Vector3Int offset)
@@ -227,22 +254,21 @@ namespace Sabotris.Worlds
                 ? Vector3.zero
                 : Quaternion.AngleAxis(cameraController.Yaw + 90, Vector3.up) * Vector3Int.forward;
 
+            var moveVecs = new List<Vector3>();
             var isMoving = advance != 0 || strafe != 0;
             if (isMoving || isDropping)
             {
-                var vecs = new List<Vector3>();
-
                 if (isMoving)
                 {
-                    vecs.Add(new Vector3(advanceDir.x * advance + strafeDir.x * strafe, 0, 0));
-                    vecs.Add(new Vector3(0, 0, advanceDir.z * advance + strafeDir.z * strafe));
+                    moveVecs.Add(new Vector3(advanceDir.x * advance + strafeDir.x * strafe, 0, 0));
+                    moveVecs.Add(new Vector3(0, 0, advanceDir.z * advance + strafeDir.z * strafe));
                 }
 
                 if (isDropping)
-                    vecs.Add(Vector3.down);
+                    moveVecs.Add(Vector3.down);
 
                 moveVec = (
-                    from vec in vecs
+                    from vec in moveVecs
                     let rounded = Vector3Int.RoundToInt(vec)
                     where !parentContainer.DoesCollide(Offsets.Select((offset) => offset.Item2 + RawPosition + rounded).ToArray())
                     select vec
@@ -264,6 +290,16 @@ namespace Sabotris.Worlds
                 RawPosition += roundedMoveVec;
                 if (roundedMoveVec.x != 0 || roundedMoveVec.z != 0)
                     _moveTimer.Start();
+            } else if (isMoving)
+            {
+                var triedToMoveTo = Vector3.zero;
+                triedToMoveTo = (
+                    from vec in moveVecs
+                    let rounded = Vector3Int.RoundToInt(vec)
+                    select vec
+                ).Aggregate(triedToMoveTo, (a, b) => a + b);
+                _triedMove = Vector3.Lerp(RawPosition, RawPosition + Vector3Int.RoundToInt(triedToMoveTo), 0.2f);
+                StartCoroutine(ShowCannotMove());
             }
         }
 

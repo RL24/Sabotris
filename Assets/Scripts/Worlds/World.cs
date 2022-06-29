@@ -180,7 +180,7 @@ namespace Sabotris.Worlds
                 c.rawPosition = GetContainerPosition(i++);
         }
 
-        private void CreateBot(Guid id, string botName)
+        private void CreateBot(Guid id, string botName, bool ready)
         {
             var container = Instantiate(networkController.Server?.Running == true ? botContainerTemplate : containerTemplate, GetContainerPosition(Containers.Count), Quaternion.identity);
             container.name = $"Container-Bot-{botName}";
@@ -194,6 +194,7 @@ namespace Sabotris.Worlds
             container.menuController = menuController;
             container.networkController = networkController;
             container.cameraController = cameraController;
+            container.wasReadyOnCreate = ready;
 
             container.rawPosition = container.transform.position;
 
@@ -277,7 +278,7 @@ namespace Sabotris.Worlds
             }
 
             foreach (var bot in packet.Bots)
-                CreateBot(bot.Id, bot.Name);
+                CreateBot(bot.Id, bot.Name, bot.Ready);
         }
 
         [PacketListener(PacketTypeId.PlayerDisconnected, PacketDirection.Client)]
@@ -301,7 +302,7 @@ namespace Sabotris.Worlds
         [PacketListener(PacketTypeId.BotConnected, PacketDirection.Client)]
         public void OnBotConnected(PacketBotConnected packet)
         {
-            CreateBot(packet.Bot.Id, packet.Bot.Name);
+            CreateBot(packet.Bot.Id, packet.Bot.Name, packet.Bot.Ready);
         }
 
         [PacketListener(PacketTypeId.BotDisconnected, PacketDirection.Client)]

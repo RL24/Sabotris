@@ -164,14 +164,35 @@ namespace Sabotris.UI.Menu.Menus
 
             void ConnectedToServer(object sender, HSteamNetConnection? connection)
             {
+                if (networkController.Client != null)
+                {
+                    networkController.Client.OnConnectedToServerEvent -= ConnectedToServer;
+                    networkController.Client.OnFailedToConnectToServerEvent -= FailedToConnect;
+                }
+
                 if (connection != null)
                     menuController.OpenMenu(menuLobby);
                 else
                     SetButtonsDisabled(false);
             }
 
+            void FailedToConnect(object sender, EventArgs args)
+            {
+                if (networkController.Client != null)
+                {
+                    networkController.Client.OnConnectedToServerEvent -= ConnectedToServer;
+                    networkController.Client.OnFailedToConnectToServerEvent -= FailedToConnect;
+                }
+                SetButtonsDisabled(false);
+                RefreshLobbies();
+            }
+
             if (networkController.Client != null)
+            {
                 networkController.Client.OnConnectedToServerEvent += ConnectedToServer;
+                networkController.Client.OnFailedToConnectToServerEvent += FailedToConnect;
+            }
+
             networkController.Client?.JoinLobby(lobbyId.ToSteamID());
         }
 

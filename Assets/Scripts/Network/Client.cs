@@ -104,6 +104,7 @@ namespace Sabotris.UI.Menu.Menus
             if ((EChatRoomEnterResponse) param.m_EChatRoomEnterResponse != EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess)
             {
                 Logging.Log(false, "Failed to join lobby: {0}", (EChatRoomEnterResponse) param.m_EChatRoomEnterResponse);
+                OnFailedToConnectToServerEvent?.Invoke(this, null);
                 return;
             }
 

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Chat;
 using Sabotris.Network.Packets.Game;
+using Sabotris.Network.Packets.Players;
 using Sabotris.Translations;
 using TMPro;
 using UnityEngine;
@@ -36,12 +38,6 @@ namespace Sabotris.UI.Menu.Menus
         protected override void Start()
         {
             base.Start();
-
-            if (networkController.Server != null)
-            {
-                networkController.Server.OnStartMatchCountdown += OnStartMatchCountdown;
-                networkController.Server.OnStopMatchCountdown += OnStopMatchCountdown;
-            }
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
@@ -90,12 +86,6 @@ namespace Sabotris.UI.Menu.Menus
                 menuButton.OnClick -= OnClickButton;
 
             networkController.Client?.DeregisterListener(this);
-            
-            if (networkController.Server != null)
-            {
-                networkController.Server.OnStartMatchCountdown -= OnStartMatchCountdown;
-                networkController.Server.OnStopMatchCountdown -= OnStopMatchCountdown;
-            }
         }
 
         private void OnReadyChanged(object sender, bool ready)
@@ -138,15 +128,20 @@ namespace Sabotris.UI.Menu.Menus
             return _cameraRotation;
         }
 
-        private void OnStartMatchCountdown(object sender, EventArgs eventArgs)
+        private IEnumerator StartCountdown()
         {
-            if (_countdownCoroutine != null)
-                OnStopMatchCountdown(null, null);
-            _countdownCoroutine = StartCoroutine(StartCountdown());
+            networkController.Server?.SetLobbyPrivacy(true);
+            
+            yield return countdownTimer.StartCountdown();
+            
+            if (networkController.Server != null)
+                networkController.Client?.SendPacket(new PacketGameStart());
         }
 
-        private void OnStopMatchCountdown(object sender, EventArgs eventArgs)
+        private void StopCountdown()
         {
+            networkController.Server?.SetLobbyPrivacy(false);
+            
             countdownTimer.StopCountdown();
             if (_countdownCoroutine != null)
             {
@@ -155,17 +150,29 @@ namespace Sabotris.UI.Menu.Menus
             }
         }
 
-        private IEnumerator StartCountdown()
-        {
-            yield return countdownTimer.StartCountdown();
-            
-            networkController.Client?.SendPacket(new PacketGameStart());
-        }
-
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]
         public void OnGameStart(PacketGameStart packet)
         {
             menuController.OpenMenu(null);
+        }
+
+        [PacketListener(PacketTypeId.PlayerConnected, PacketDirection.Client)]
+        [PacketListener(PacketTypeId.PlayerDisconnected, PacketDirection.Client)]
+        public void OnPlayerConnectionChanged(Packet packet)
+        {
+            StopCountdown();
+        }
+
+        [PacketListener(PacketTypeId.PlayerReady, PacketDirection.Client)]
+        public void OnPlayerReady(PacketPlayerReady packet)
+        {
+            var allReady = world.Containers.All((p) => p.ready);
+            if (allReady)
+            {
+                if (_countdownCoroutine != null)
+                    StopCountdown();
+                _countdownCoroutine = StartCoroutine(StartCountdown());
+            } else StopCountdown();
         }
     }
 }

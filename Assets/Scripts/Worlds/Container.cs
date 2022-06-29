@@ -75,6 +75,7 @@ namespace Sabotris.Worlds
         public GameObject floor;
         public TMP_Text nameText, dropSpeedText;
         public bool wasReadyOnCreate;
+        public bool ready;
 
         public Guid Id;
         public ulong steamId;
@@ -553,8 +554,9 @@ namespace Sabotris.Worlds
             PowerUpTimer.Stop();
         }
 
-        private void SetReady(bool ready)
+        private void SetReady(bool isReady)
         {
+            ready = isReady;
             foreach (var ren in floor.GetComponentsInChildren<Renderer>())
                 ren.material.color = ready ? ReadyColor : NotReadyColor;
         }

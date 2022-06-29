@@ -20,8 +20,6 @@ namespace Sabotris.UI.Menu.Menus
     {
         public event EventHandler OnServerStartEvent;
         public event EventHandler<DisconnectReason> OnServerStopEvent;
-        public event EventHandler OnStartMatchCountdown;
-        public event EventHandler OnStopMatchCountdown;
 
         private readonly World _world;
 
@@ -68,7 +66,7 @@ namespace Sabotris.UI.Menu.Menus
             _bots.Clear();
             for (var i = 0; i < _lobbyData.BotCount; i++)
             {
-                var player = new Player(Guid.NewGuid(), Random.RandomName(5), false);
+                var player = new Player(Guid.NewGuid(), Random.RandomName(5), true);
                 _bots.Add(player.Id, player);
             }
 
@@ -151,6 +149,12 @@ namespace Sabotris.UI.Menu.Menus
 
             SteamMatchmaking.LeaveLobby(LobbyId.Value);
             LobbyId = null;
+        }
+
+        public void SetLobbyPrivacy(bool priv)
+        {
+            if (LobbyId != null && _lobbyData != null)
+                SteamMatchmaking.SetLobbyType(LobbyId.Value, _lobbyData.PracticeMode ? ELobbyType.k_ELobbyTypeInvisible : priv ? ELobbyType.k_ELobbyTypePrivate : ELobbyType.k_ELobbyTypePublic);
         }
 
         public void DisconnectSockets(DisconnectReason? reason = null)
@@ -270,12 +274,6 @@ namespace Sabotris.UI.Menu.Menus
                 return;
 
             player.Ready = packet.Ready;
-
-            var allReady = _steamConnections.Values.All((p) => p.Item1.Ready);
-            if (allReady)
-                OnStartMatchCountdown?.Invoke(this, null);
-            else
-                OnStopMatchCountdown?.Invoke(this, null);
             
             SendPacketToAll(packet);
         }

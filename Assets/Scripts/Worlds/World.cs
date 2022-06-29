@@ -110,7 +110,7 @@ namespace Sabotris.Worlds
                 return;
 
             demoContainer.gameObject.SetActive(false);
-            gameController.ControllingContainer = CreateContainer(Client.UserId, Client.Username, Client.SteamId.m_SteamID);
+            gameController.ControllingContainer = CreateContainer(Client.UserId, Client.Username, false, Client.SteamId.m_SteamID);
         }
 
         private void DisconnectedFromServerEvent(object sender, DisconnectReason disconnectReason)
@@ -128,7 +128,7 @@ namespace Sabotris.Worlds
             Spectators.Clear();
         }
 
-        private Container CreateContainer(Guid id, string playerName, ulong? steamId = null)
+        private Container CreateContainer(Guid id, string playerName, bool ready, ulong? steamId = null)
         {
             var existingContainer = Containers.Find((c) => c.Id == id);
             if (existingContainer)
@@ -150,6 +150,7 @@ namespace Sabotris.Worlds
             container.cameraController = cameraController;
             container.audioController = audioController;
             container.selectorOverlay = selectorOverlay;
+            container.wasReadyOnCreate = ready;
 
             container.rawPosition = container.transform.position;
 
@@ -259,7 +260,7 @@ namespace Sabotris.Worlds
             if (packet.Player.Id == Client.UserId)
                 return;
 
-            CreateContainer(packet.Player.Id, packet.Player.Name);
+            CreateContainer(packet.Player.Id, packet.Player.Name, packet.Player.Ready);
 
             audioController.playerJoinLobby.PlayModifiedSound(AudioController.GetGameVolume(), AudioController.GetPlayerJoinLeavePitch());
         }
@@ -272,7 +273,7 @@ namespace Sabotris.Worlds
                 if (player.Id == Client.UserId)
                     continue;
 
-                CreateContainer(player.Id, player.Name);
+                CreateContainer(player.Id, player.Name, player.Ready);
             }
 
             foreach (var bot in packet.Bots)

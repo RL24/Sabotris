@@ -9,11 +9,12 @@ namespace Sabotris.Game
         public ulong? SteamId { get; }
         public bool Ready { get; set; }
 
-        public Player(Guid id, string name, ulong? steamId = null)
+        public Player(Guid id, string name, bool ready, ulong? steamId = null)
         {
             Id = id;
             Name = name;
             SteamId = steamId;
+            Ready = ready;
         }
     }
 }

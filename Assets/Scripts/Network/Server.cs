@@ -68,7 +68,7 @@ namespace Sabotris.UI.Menu.Menus
             _bots.Clear();
             for (var i = 0; i < _lobbyData.BotCount; i++)
             {
-                var player = new Player(Guid.NewGuid(), Random.RandomName(5));
+                var player = new Player(Guid.NewGuid(), Random.RandomName(5), false);
                 _bots.Add(player.Id, player);
             }
 
@@ -108,7 +108,7 @@ namespace Sabotris.UI.Menu.Menus
             var steamId = param.m_info.m_identityRemote.GetSteamID();
 
             _steamConnections.TryGetValue(steamId.m_SteamID, out var player);
-            player.Item1 ??= new Player(Guid.NewGuid(), SteamFriends.GetFriendPersonaName(steamId), steamId.m_SteamID);
+            player.Item1 ??= new Player(Guid.NewGuid(), SteamFriends.GetFriendPersonaName(steamId), false, steamId.m_SteamID);
 
             switch (param.m_info.m_eState)
             {

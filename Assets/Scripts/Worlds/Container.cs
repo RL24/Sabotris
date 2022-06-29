@@ -74,6 +74,7 @@ namespace Sabotris.Worlds
         public Vector3 rawPosition;
         public GameObject floor;
         public TMP_Text nameText, dropSpeedText;
+        public bool wasReadyOnCreate;
 
         public Guid Id;
         public ulong steamId;
@@ -110,6 +111,8 @@ namespace Sabotris.Worlds
                 nameText.transform.position = new Vector3(nameText.transform.position.x, -2, -(Radius * 2 + 1) * 0.5f);
             if (dropSpeedText)
                 dropSpeedText.transform.position = new Vector3(dropSpeedText.transform.position.x, -4, -(Radius * 2 + 1) * 0.5f);
+            
+            SetReady(wasReadyOnCreate);
         }
 
         private void OnDestroy()
@@ -550,11 +553,16 @@ namespace Sabotris.Worlds
             PowerUpTimer.Stop();
         }
 
+        private void SetReady(bool ready)
+        {
+            foreach (var ren in floor.GetComponentsInChildren<Renderer>())
+                ren.material.color = ready ? ReadyColor : NotReadyColor;
+        }
+
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]
         public void OnGameStart(PacketGameStart packet)
         {
-            foreach (var ren in floor.GetComponentsInChildren<Renderer>())
-                ren.material.color = Color.white;
+            SetReady(false);
         }
 
         [PacketListener(PacketTypeId.GameEnd, PacketDirection.Client)]
@@ -689,8 +697,7 @@ namespace Sabotris.Worlds
             if (packet.Id != Id)
                 return;
 
-            foreach (var ren in floor.GetComponentsInChildren<Renderer>())
-                ren.material.color = packet.Ready ? ReadyColor : NotReadyColor;
+            SetReady(packet.Ready);
         }
 
         public virtual (float, float) GetMovement()

@@ -76,7 +76,7 @@ namespace Sabotris.Network.Packets
             if (type == typeof((Guid, Vector3Int, Color))) return ((Guid) ReadValue(incoming, typeof(Guid)), (Vector3Int) ReadValue(incoming, typeof(Vector3Int)), (Color) ReadValue(incoming, typeof(Color)));
             if (type == typeof((Guid, int))) return ((Guid) ReadValue(incoming, typeof(Guid)), incoming.ReadInt32());
             if (type == typeof((long, int))) return (incoming.ReadInt64(), incoming.ReadInt32());
-            if (type == typeof(Player)) return new Player((Guid) ReadValue(incoming, typeof(Guid)), incoming.ReadString(), incoming.ReadBoolean() ? incoming.ReadUInt64() : (ulong?) null);
+            if (type == typeof(Player)) return new Player((Guid) ReadValue(incoming, typeof(Guid)), incoming.ReadString(), incoming.ReadBoolean(), incoming.ReadBoolean() ? incoming.ReadUInt64() : (ulong?) null);
             if (type == typeof(PlayerScore)) return new PlayerScore(incoming.ReadInt32(), incoming.ReadInt32());
             if (type == typeof(Color)) return new Color(incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat(), incoming.ReadFloat());
             if (type == typeof(Power)) return (Power) incoming.ReadInt16();
@@ -221,6 +221,7 @@ namespace Sabotris.Network.Packets
                 {
                     WriteValue(outgoing, parsed.Id);
                     outgoing.Write(parsed.Name);
+                    outgoing.Write(parsed.Ready);
                     outgoing.Write(parsed.SteamId != null);
                     if (parsed.SteamId != null)
                         outgoing.Write(parsed.SteamId.Value);

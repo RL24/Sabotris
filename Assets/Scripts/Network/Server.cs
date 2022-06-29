@@ -6,6 +6,7 @@ using Sabotris.Game;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Bot;
+using Sabotris.Network.Packets.Chat;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Network.Packets.Players;
 using Sabotris.Util;
@@ -19,6 +20,8 @@ namespace Sabotris.UI.Menu.Menus
     {
         public event EventHandler OnServerStartEvent;
         public event EventHandler<DisconnectReason> OnServerStopEvent;
+        public event EventHandler OnStartMatchCountdown;
+        public event EventHandler OnStopMatchCountdown;
 
         private readonly World _world;
 
@@ -259,7 +262,24 @@ namespace Sabotris.UI.Menu.Menus
             SendPacketToAll(packet);
         }
 
-        [PacketListener(PacketTypeId.ChatMessage, PacketDirection.Server)]
+        [PacketListener(PacketTypeId.PlayerReady, PacketDirection.Server)]
+        public void OnPacketPlayerReady(PacketPlayerReady packet)
+        {
+            var player = _steamConnections.Values.Select((p) => p.Item1).FirstOrDefault((p) => p.Id == packet.Id);
+            if (player == null)
+                return;
+
+            player.Ready = packet.Ready;
+
+            var allReady = _steamConnections.Values.All((p) => p.Item1.Ready);
+            if (allReady)
+                OnStartMatchCountdown?.Invoke(this, null);
+            else
+                OnStopMatchCountdown?.Invoke(this, null);
+            
+            SendPacketToAll(packet);
+        }
+        
         [PacketListener(PacketTypeId.PlayerScore, PacketDirection.Server)]
         [PacketListener(PacketTypeId.PlayerPositions, PacketDirection.Server)]
         [PacketListener(PacketTypeId.LayerClear, PacketDirection.Server)]

@@ -234,7 +234,7 @@ namespace Sabotris.UI.Menu.Menus
             LeaveLobby();
             DisconnectSocket(DisconnectReason.ServerClosed);
         }
-
+        
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]
         public void OnPacketGameStart(PacketGameStart packet)
         {

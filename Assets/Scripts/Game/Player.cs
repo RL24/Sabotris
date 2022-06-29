@@ -7,6 +7,7 @@ namespace Sabotris.Game
         public Guid Id { get; set; }
         public string Name { get; }
         public ulong? SteamId { get; }
+        public bool Ready { get; set; }
 
         public Player(Guid id, string name, ulong? steamId = null)
         {

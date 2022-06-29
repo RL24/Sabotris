@@ -9,6 +9,7 @@ using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Block;
+using Sabotris.Network.Packets.Chat;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Network.Packets.Layer;
 using Sabotris.Network.Packets.Players;
@@ -45,6 +46,9 @@ namespace Sabotris.Worlds
         private const float ClearedLayerDropSpeed = 0.25f;
         private const float DropNewShapeSpeed = 0.4f;
         private const int PowerUpCountDelay = 10;
+
+        protected static readonly Color ReadyColor = new Color(0.65f, 1, 0.65f, 1);
+        private static readonly Color NotReadyColor = Color.white;
         
         protected int Radius => (networkController ? networkController.Client?.LobbyData?.PlayFieldSize : null) ?? 2;
         private Vector3Int BottomLeft => new Vector3Int(-Radius, 1, -Radius);
@@ -84,8 +88,6 @@ namespace Sabotris.Worlds
 
         private readonly Dictionary<Guid, Shape> _shapes = new Dictionary<Guid, Shape>();
         private readonly Dictionary<Guid, Block> _blocks = new Dictionary<Guid, Block>();
-
-        public int maxBlockHeight;
 
         public Vector3Int DropPosition { get; } = new Vector3Int(0, 20, 0);
 
@@ -380,7 +382,7 @@ namespace Sabotris.Worlds
 
             if (networkController && networkController.Client?.LobbyData.PowerUps == true)
             {
-                if (!(this is DemoContainer || this is BotContainer) && world.Containers.Count > 1/* && _powerUpCount > PowerUpCountDelay*/)
+                if (!(this is DemoContainer || this is BotContainer) && world.Containers.Count > 1 && _powerUpCount > PowerUpCountDelay)
                 {
                     shape.PowerUp = PowerUpFactory.CreatePowerUp(power);
                     if (shape.PowerUp != null)
@@ -548,6 +550,13 @@ namespace Sabotris.Worlds
             PowerUpTimer.Stop();
         }
 
+        [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]
+        public void OnGameStart(PacketGameStart packet)
+        {
+            foreach (var ren in floor.GetComponentsInChildren<Renderer>())
+                ren.material.color = Color.white;
+        }
+
         [PacketListener(PacketTypeId.GameEnd, PacketDirection.Client)]
         public void OnGameEnd(PacketGameEnd packet)
         {
@@ -672,6 +681,16 @@ namespace Sabotris.Worlds
                 return;
 
             _score = packet.Score;
+        }
+
+        [PacketListener(PacketTypeId.PlayerReady, PacketDirection.Client)]
+        public void OnPlayerReady(PacketPlayerReady packet)
+        {
+            if (packet.Id != Id)
+                return;
+
+            foreach (var ren in floor.GetComponentsInChildren<Renderer>())
+                ren.material.color = packet.Ready ? ReadyColor : NotReadyColor;
         }
 
         public virtual (float, float) GetMovement()

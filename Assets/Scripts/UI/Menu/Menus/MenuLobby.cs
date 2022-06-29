@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Chat;
@@ -14,12 +15,9 @@ namespace Sabotris.UI.Menu.Menus
         private readonly Vector3 _cameraPosition = new Vector3(-3, 8, -17);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(34, 34, 5);
 
-        public MenuChatHistoryItem chatHistoryItemTemplate;
-
-        public SmoothScrollRect chatHistoryScrollBox;
-        public RectTransform chatHistory;
-        public MenuInput inputChatMessage;
-        public MenuButton buttonStartGame, buttonBack;
+        public MenuCountdown countdownTimer;
+        public MenuToggle toggleReady;
+        public MenuButton buttonBack;
 
         public TMP_Text botCountText,
             botDifficultyText,
@@ -33,21 +31,22 @@ namespace Sabotris.UI.Menu.Menus
 
         public Menu menuHost, menuJoin;
 
+        private Coroutine _countdownCoroutine;
+
         protected override void Start()
         {
             base.Start();
 
+            if (networkController.Server != null)
+            {
+                networkController.Server.OnStartMatchCountdown += OnStartMatchCountdown;
+                networkController.Server.OnStopMatchCountdown += OnStopMatchCountdown;
+            }
+
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
 
-            inputChatMessage.OnSubmitEvent += OnSubmitChatMessage;
-
-            if (!networkController.Server.Running)
-            {
-                SelectedButton = -1;
-                buttons.Remove(buttonStartGame);
-                Destroy(buttonStartGame.gameObject);
-            }
+            toggleReady.OnValueChanged += OnReadyChanged;
 
             networkController.Client?.RegisterListener(this);
 
@@ -90,9 +89,22 @@ namespace Sabotris.UI.Menu.Menus
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
 
-            inputChatMessage.OnSubmitEvent -= OnSubmitChatMessage;
-
             networkController.Client?.DeregisterListener(this);
+            
+            if (networkController.Server != null)
+            {
+                networkController.Server.OnStartMatchCountdown -= OnStartMatchCountdown;
+                networkController.Server.OnStopMatchCountdown -= OnStopMatchCountdown;
+            }
+        }
+
+        private void OnReadyChanged(object sender, bool ready)
+        {
+            networkController.Client?.SendPacket(new PacketPlayerReady
+            {
+                Id = Client.UserId,
+                Ready = ready
+            });
         }
 
         private void OnClickButton(object sender, EventArgs args)
@@ -100,26 +112,8 @@ namespace Sabotris.UI.Menu.Menus
             if (!Open)
                 return;
 
-            if (sender.Equals(buttonStartGame))
-                networkController.Client?.SendPacket(new PacketGameStart());
-            else if (sender.Equals(buttonBack))
+            if (sender.Equals(buttonBack))
                 GoBack();
-        }
-
-        private void OnSubmitChatMessage(object sender, string message)
-        {
-            if (message.Length == 0)
-                return;
-
-            networkController.Client?.SendPacket(new PacketChatMessage
-            {
-                Id = Guid.NewGuid(),
-                Author = Client.UserId,
-                AuthorName = Client.Username,
-                Message = message
-            });
-            if (sender is MenuInput input)
-                input.inputField.text = "";
         }
 
         protected override void GoBack()
@@ -144,23 +138,34 @@ namespace Sabotris.UI.Menu.Menus
             return _cameraRotation;
         }
 
+        private void OnStartMatchCountdown(object sender, EventArgs eventArgs)
+        {
+            if (_countdownCoroutine != null)
+                OnStopMatchCountdown(null, null);
+            _countdownCoroutine = StartCoroutine(StartCountdown());
+        }
+
+        private void OnStopMatchCountdown(object sender, EventArgs eventArgs)
+        {
+            countdownTimer.StopCountdown();
+            if (_countdownCoroutine != null)
+            {
+                StopCoroutine(_countdownCoroutine);
+                _countdownCoroutine = null;
+            }
+        }
+
+        private IEnumerator StartCountdown()
+        {
+            yield return countdownTimer.StartCountdown();
+            
+            networkController.Client?.SendPacket(new PacketGameStart());
+        }
+
         [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]
         public void OnGameStart(PacketGameStart packet)
         {
             menuController.OpenMenu(null);
-        }
-
-        [PacketListener(PacketTypeId.ChatMessage, PacketDirection.Client)]
-        public void OnChatMessage(PacketChatMessage packet)
-        {
-            var chatMessage = Instantiate(chatHistoryItemTemplate, Vector3.zero, Quaternion.identity, chatHistory.transform);
-            chatMessage.name = $"ChatMessage-{packet.Id}-{packet.Author}";
-            chatMessage.menu = this;
-            chatMessage.Author = packet.AuthorName;
-            chatMessage.Message = packet.Message;
-
-            chatHistory.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Math.Max(500, chatHistory.childCount * 40));
-            chatHistoryScrollBox.content.anchoredPosition = new Vector2(0, Math.Max(500, chatHistory.childCount * 40) - 500);
         }
     }
 }

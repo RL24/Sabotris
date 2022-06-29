@@ -14,7 +14,6 @@ using Sabotris.UI.Menu;
 using Sabotris.Util;
 using Sabotris.Util.Input;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace Sabotris.Worlds
 {

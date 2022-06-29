@@ -80,7 +80,7 @@
      <Compile Include="Assets\Scripts\Worlds\Tutorial\TutorialHelper.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Bot\PacketBotConnected.cs" />
      <Compile Include="Assets\Scripts\Worlds\World.cs" />
-     <Compile Include="Assets\Scripts\Network\Packets\Chat\PacketChatMessage.cs" />
+     <Compile Include="Assets\Scripts\Network\Packets\Chat\PacketPlayerReady.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\PacketTypes.cs" />
      <Compile Include="Assets\Scripts\UI\TranslatableTMP.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
@@ -199,6 +199,7 @@
      <Compile Include="Assets\Scripts\UI\Menu\Menu.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuSettingsInputBindings.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
+     <Compile Include="Assets\Scripts\UI\Menu\Components\MenuCountdown.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

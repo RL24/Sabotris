@@ -9,6 +9,14 @@ namespace Sabotris.Worlds
 
         private float ClampDifficulty => MaxDifficulty - Mathf.Clamp(networkController.Client?.LobbyData?.BotDifficulty ?? 5, MinDifficulty, MaxDifficulty);
 
+        protected override void Start()
+        {
+            base.Start();
+            
+            foreach (var ren in floor.GetComponentsInChildren<Renderer>())
+                ren.material.color = ReadyColor;
+        }
+
         protected override float GetScanDelay()
         {
             return ClampDifficulty * 0.1f;

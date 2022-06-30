@@ -134,7 +134,7 @@ namespace Sabotris.UI.Menu.Menus
             
             yield return countdownTimer.StartCountdown();
             
-            if (networkController.Server != null)
+            if (networkController.Server?.Running == true)
                 networkController.Client?.SendPacket(new PacketGameStart());
         }
 

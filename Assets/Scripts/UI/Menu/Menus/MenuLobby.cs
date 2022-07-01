@@ -166,6 +166,10 @@ namespace Sabotris.UI.Menu.Menus
         [PacketListener(PacketTypeId.PlayerReady, PacketDirection.Client)]
         public void OnPlayerReady(PacketPlayerReady packet)
         {
+            var container = world.Containers.First((c) => c.Id == packet.Id);
+            if (container)
+                container.SetReady(packet.Ready);
+            
             var allReady = world.Containers.All((p) => p.ready);
             if (allReady)
             {

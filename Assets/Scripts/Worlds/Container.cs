@@ -554,7 +554,7 @@ namespace Sabotris.Worlds
             PowerUpTimer.Stop();
         }
 
-        private void SetReady(bool isReady)
+        public void SetReady(bool isReady)
         {
             ready = isReady;
             foreach (var ren in floor.GetComponentsInChildren<Renderer>())
@@ -691,15 +691,6 @@ namespace Sabotris.Worlds
                 return;
 
             _score = packet.Score;
-        }
-
-        [PacketListener(PacketTypeId.PlayerReady, PacketDirection.Client)]
-        public void OnPlayerReady(PacketPlayerReady packet)
-        {
-            if (packet.Id != Id)
-                return;
-
-            SetReady(packet.Ready);
         }
 
         public virtual (float, float) GetMovement()

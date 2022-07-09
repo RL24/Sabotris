@@ -2011,8 +2011,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6c407bc912816242a284f793be767a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkController: {fileID: 858393423}
   menuController: {fileID: 1370561258}
   world: {fileID: 2032613557}
+  menuLobby: {fileID: 4760543252229514958, guid: 297d0159c950c20468b0b18d8e0d327e, type: 3}
   forwardRendererData: {fileID: 11400000, guid: 4a8e21d5c33334b11b34a596161b9360, type: 2}
   renderVolume: {fileID: 653260036}
   tutorialHelper: {fileID: 2016058821}
@@ -3839,10 +3841,8 @@ MonoBehaviour:
   canvasGroup: {fileID: 1874238368}
   playerList: {fileID: 692258947}
   scoreList: {fileID: 337803669}
-  powerUpList: {fileID: 0}
   playerItemPrefab: {fileID: 1622752230055660715, guid: 87e32b3280275544c9971e54c56abf69, type: 3}
   scoreItemPrefab: {fileID: 6908404537303704631, guid: 54d9e0e900ddfb14788b6a2049204a57, type: 3}
-  powerUpItemPrefab: {fileID: 1622752230055660715, guid: c60eac7aa46791342bdb2c9e9eb9a06b, type: 3}
 --- !u!1 &1965307843
 GameObject:
   m_ObjectHideFlags: 0

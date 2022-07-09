@@ -7,6 +7,7 @@ using Sabotris.Network.Packets.Chat;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Network.Packets.Players;
 using Sabotris.Translations;
+using Steamworks;
 using TMPro;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ namespace Sabotris.UI.Menu.Menus
 
         public MenuCountdown countdownTimer;
         public MenuToggle toggleReady;
-        public MenuButton buttonBack;
+        public MenuButton buttonInvite, buttonBack;
 
         public TMP_Text botCountText,
             botDifficultyText,
@@ -102,6 +103,8 @@ namespace Sabotris.UI.Menu.Menus
             if (!Open)
                 return;
 
+            if (sender.Equals(buttonInvite) && networkController.Client?.LobbyId != null)
+                SteamFriends.ActivateGameOverlayInviteDialog(networkController.Client.LobbyId.Value);
             if (sender.Equals(buttonBack))
                 GoBack();
         }

@@ -39,7 +39,7 @@ namespace Sabotris.Translations
         LOBBY = 0x310,
         UiMenuTitleLobby = 0x311,
         UiMenuInputEnterText = 0x312,
-        UiMenuButtonStartGame = 0x313,
+        UiMenuButtonReady = 0x313,
         UiMenuDisplayPlayFieldSize = 0x314,
         UiMenuDisplayMaxPlayers = 0x315,
         UiMenuDisplayBlocksPerShape = 0x316,
@@ -49,6 +49,7 @@ namespace Sabotris.Translations
         UiMenuDisplayBotDifficulty = 0x320,
         UiMenuDisplayPowerUps = 0x321,
         UiMenuDisplayPowerUpAutoPickDelay = 0x322,
+        UiMenuButtonInvite = 0x323,
 
         SETTINGS = 0x40,
         UiMenuTitleSettings = 0x41,

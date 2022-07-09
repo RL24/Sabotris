@@ -44,7 +44,7 @@
 
             _translations.Add(TranslationKey.UiMenuTitleLobby, "Atrio");
             _translations.Add(TranslationKey.UiMenuInputEnterText, "Inserire il Testo...");
-            _translations.Add(TranslationKey.UiMenuButtonStartGame, "Inizia il Gioco");
+            _translations.Add(TranslationKey.UiMenuButtonReady, "Pronto");
             _translations.Add(TranslationKey.UiMenuDisplayBotCount, "Numero di ai: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBotDifficulty, "Difficoltà di ai: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Dimensione del Contenitore: {0}x{0}");
@@ -54,6 +54,7 @@
             _translations.Add(TranslationKey.UiMenuDisplayPowerUps, "Potenziamento: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayGenerateVerticalBlocks, "Forme Verticali: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPracticeMode, "Pratica: {0}");
+            _translations.Add(TranslationKey.UiMenuButtonInvite, "Invita gli amici");
 
             // Settings
 

@@ -24,7 +24,7 @@ namespace Sabotris.UI.Menu.Menus
         private static readonly HSteamNetConnection LocalConnection = new HSteamNetConnection(0);
         private readonly SteamNetConnectionStatusChangedCallback_t _localConnectionStatus;
 
-        private CSteamID? _lobbyId;
+        public CSteamID? LobbyId;
         private HSteamNetConnection? _connection;
 
         private bool IsHosting => NetworkController.Server.Running || NetworkController.Server.Starting || _connection == LocalConnection;
@@ -88,6 +88,7 @@ namespace Sabotris.UI.Menu.Menus
         {
             if (IsHosting)
             {
+                LobbyId = lobbyId;
                 _connection = LocalConnection;
                 NetworkController.Server.OnConnectionStatusChanged(_localConnectionStatus);
                 return;
@@ -98,9 +99,9 @@ namespace Sabotris.UI.Menu.Menus
 
         private void LobbyEnteredCallback(LobbyEnter_t param)
         {
-            if (IsHosting)
+            if (IsHosting || IsConnected)
                 return;
-
+            
             if ((EChatRoomEnterResponse) param.m_EChatRoomEnterResponse != EChatRoomEnterResponse.k_EChatRoomEnterResponseSuccess)
             {
                 Logging.Log(false, "Failed to join lobby: {0}", (EChatRoomEnterResponse) param.m_EChatRoomEnterResponse);
@@ -108,8 +109,8 @@ namespace Sabotris.UI.Menu.Menus
                 return;
             }
 
-            _lobbyId = param.m_ulSteamIDLobby.ToSteamID();
-            CreateSocket(_lobbyId.Value);
+            LobbyId = param.m_ulSteamIDLobby.ToSteamID();
+            CreateSocket(LobbyId.Value);
         }
 
         private void CreateSocket(CSteamID lobbyId)
@@ -160,11 +161,11 @@ namespace Sabotris.UI.Menu.Menus
 
         private void LeaveLobby()
         {
-            if (_lobbyId == null)
+            if (LobbyId == null)
                 return;
 
-            SteamMatchmaking.LeaveLobby(_lobbyId.Value);
-            _lobbyId = null;
+            SteamMatchmaking.LeaveLobby(LobbyId.Value);
+            LobbyId = null;
         }
 
         public void DisconnectSocket(DisconnectReason? reason = null)

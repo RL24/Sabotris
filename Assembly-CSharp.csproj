@@ -130,6 +130,7 @@
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerDisconnected.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
+     <Compile Include="Assets\Scripts\Util\SteamMatchmakingUtil.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuButton.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
      <Compile Include="Assets\Scripts\Worlds\Block.cs" />
@@ -153,6 +154,7 @@
      <Compile Include="Assets\Scripts\Game\GameController.cs" />
      <Compile Include="Assets\Scripts\Powers\PowerUps\PowerUpAddLayer.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Layer\PackerLayerAdd.cs" />
+     <Compile Include="Assets\Scripts\Util\Atomic.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuBind.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Components\MenuCountdown.cs" />

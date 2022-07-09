@@ -44,7 +44,7 @@
 
             _translations.Add(TranslationKey.UiMenuTitleLobby, "Empfangshalle");
             _translations.Add(TranslationKey.UiMenuInputEnterText, "Text Eingeben...");
-            _translations.Add(TranslationKey.UiMenuButtonStartGame, "Spiel Starten");
+            _translations.Add(TranslationKey.UiMenuButtonReady, "Bereit");
             _translations.Add(TranslationKey.UiMenuDisplayBotCount, "Anzahl der AI: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBotDifficulty, "AI Schwierigkeitsgrad: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Behältergröße: {0}x{0}");
@@ -54,6 +54,7 @@
             _translations.Add(TranslationKey.UiMenuDisplayPowerUps, "Einschalten: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayGenerateVerticalBlocks, "Vertikale Blöcke: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPracticeMode, "Üben: {0}");
+            _translations.Add(TranslationKey.UiMenuButtonInvite, "Freunde einladen");
 
             // Settings
 

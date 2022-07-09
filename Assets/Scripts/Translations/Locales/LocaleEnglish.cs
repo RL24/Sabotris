@@ -13,6 +13,7 @@
 
             // Main menu
 
+            _translations.Add(TranslationKey.UiMenuButtonQuickPlay, "Quick Play");
             _translations.Add(TranslationKey.UiMenuButtonHostGame, "Host Game");
             _translations.Add(TranslationKey.UiMenuButtonJoinGame, "Join Game");
             _translations.Add(TranslationKey.UiMenuButtonSettings, "Settings");
@@ -45,6 +46,7 @@
             _translations.Add(TranslationKey.UiMenuTitleLobby, "Lobby");
             _translations.Add(TranslationKey.UiMenuInputEnterText, "Enter Text...");
             _translations.Add(TranslationKey.UiMenuButtonReady, "Ready");
+            _translations.Add(TranslationKey.UiMenuButtonInvite, "Invite Friends");
             _translations.Add(TranslationKey.UiMenuDisplayBotCount, "Number of AI: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBotDifficulty, "AI Difficulty: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Container Size: {0}x{0}");
@@ -54,7 +56,6 @@
             _translations.Add(TranslationKey.UiMenuDisplayPowerUps, "Power Ups: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayGenerateVerticalBlocks, "Vertical Shapes: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPracticeMode, "Practice: {0}");
-            _translations.Add(TranslationKey.UiMenuButtonInvite, "Invite Friends");
 
             // Settings
 

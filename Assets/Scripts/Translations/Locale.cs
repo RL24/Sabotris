@@ -15,6 +15,7 @@ namespace Sabotris.Translations
         UiMenuButtonJoinGame = 0x12,
         UiMenuButtonSettings = 0x13,
         UiMenuButtonExit = 0x14,
+        UiMenuButtonQuickPlay = 0x15,
 
         HOST_GAME = 0x20,
         UiMenuTitleHostGame = 0x21,

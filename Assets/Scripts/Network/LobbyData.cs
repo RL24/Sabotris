@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using Sabotris.UI.Menu.Menus;
 using Steamworks;
+using UnityEngine;
 
 namespace Sabotris.Network
 {
@@ -25,7 +26,7 @@ namespace Sabotris.Network
         public int PlayerCount;
         public int BotCount;
         public int BotDifficulty = 5;
-        public int PlayFieldSize = 5;
+        public int PlayFieldSize = 2;
         public int MaxPlayers = 4;
         public int BlocksPerShape = 4;
         public bool GenerateVerticalBlocks;

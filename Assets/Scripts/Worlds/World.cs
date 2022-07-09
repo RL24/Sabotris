@@ -329,6 +329,6 @@ namespace Sabotris.Worlds
             DestroySpectator(packet.Id);
         }
 
-        private Vector3 GetContainerPosition(int index) => Vector3.right * (index * ((networkController.Client?.LobbyData?.PlayFieldSize ?? 5) * 2 + 4));
+        private Vector3 GetContainerPosition(int index) => Vector3.right * (index * ((networkController.Client?.LobbyData?.PlayFieldSize ?? 2) * 2 + 4));
     }
 }

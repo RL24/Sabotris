@@ -147,7 +147,7 @@ namespace Sabotris.UI.Menu.Menus
             lobbyListItem.LobbyPlayerCount = (lobbyData.PlayerCount == -1 ? (int?) null : lobbyData.PlayerCount);
             lobbyListItem.MaxLobbyPlayers = lobbyData.MaxPlayers;
 
-            if (lobbyId != 0 && lobbyData.PlayerCount <= lobbyData.MaxPlayers)
+            if (lobbyId != 0 && lobbyData.PlayerCount < lobbyData.MaxPlayers)
             {
                 buttons.Add(lobbyListItem);
                 lobbyListItem.OnClick += OnClickLobbyItem;

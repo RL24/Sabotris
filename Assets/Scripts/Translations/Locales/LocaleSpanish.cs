@@ -13,6 +13,7 @@
 
             // Main menu	
 
+            _translations.Add(TranslationKey.UiMenuButtonQuickPlay, "Juego rápido");
             _translations.Add(TranslationKey.UiMenuButtonHostGame, "Empezar Juego");
             _translations.Add(TranslationKey.UiMenuButtonJoinGame, "Únete a un Juego");
             _translations.Add(TranslationKey.UiMenuButtonSettings, "Ajustes");
@@ -45,6 +46,7 @@
             _translations.Add(TranslationKey.UiMenuTitleLobby, "Vestíbulo");
             _translations.Add(TranslationKey.UiMenuInputEnterText, "Ingrese Texto...");
             _translations.Add(TranslationKey.UiMenuButtonReady, "Listo");
+            _translations.Add(TranslationKey.UiMenuButtonInvite, "Invitar a amigos");
             _translations.Add(TranslationKey.UiMenuDisplayBotCount, "Número de ai: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayBotDifficulty, "Dificultad de ai: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPlayFieldSize, "Tamaño del Contenedor: {0}x{0}");
@@ -54,7 +56,6 @@
             _translations.Add(TranslationKey.UiMenuDisplayPowerUps, "Potencia: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayGenerateVerticalBlocks, "Bloques Verticales: {0}");
             _translations.Add(TranslationKey.UiMenuDisplayPracticeMode, "Práctica: {0}");
-            _translations.Add(TranslationKey.UiMenuButtonInvite, "Invitar a amigos");
 
             // Settings	
 

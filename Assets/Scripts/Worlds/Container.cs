@@ -9,7 +9,6 @@ using Sabotris.IO;
 using Sabotris.Network;
 using Sabotris.Network.Packets;
 using Sabotris.Network.Packets.Block;
-using Sabotris.Network.Packets.Chat;
 using Sabotris.Network.Packets.Game;
 using Sabotris.Network.Packets.Layer;
 using Sabotris.Network.Packets.Players;
@@ -37,9 +36,6 @@ namespace Sabotris.Worlds
 
     public class Container : MonoBehaviour
     {
-        public event EventHandler<PowerUp> OnAddPowerUp;
-        public event EventHandler<PowerUp> OnRemovePowerUp;
-        
         private const float AddLayerSpeed = 0.1f;
         private const float AddedLayerRaiseSpeed = 0.25f;
         private const float ClearLayerSpeed = 0.1f;
@@ -155,7 +151,6 @@ namespace Sabotris.Worlds
                 if (powerUp != null)
                 {
                     _powerUps.Remove(powerUp);
-                    OnRemovePowerUp?.Invoke(this, powerUp);
                     selectorOverlay.Open(powerUp, PowerUpTimer);
                     PowerUpTimer.Restart();
                     powerUp.Use(this);
@@ -280,7 +275,6 @@ namespace Sabotris.Worlds
                 {
                     var powerUp = powerUpEntries.Value[Random.Range(0, powerUpEntries.Value.Count - 1)];
                     _powerUps.Add(powerUp);
-                    OnAddPowerUp?.Invoke(this, powerUp);
                 }
             }
 

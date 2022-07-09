@@ -134,7 +134,10 @@ namespace Sabotris.UI.Menu.Menus
             }
             
             networkController.Server.OnServerStartEvent += ServerStarted;
-            networkController.Server?.CreateLobby(new LobbyData());
+            networkController.Server?.CreateLobby(new LobbyData
+            {
+                LobbyName = $"{Client.Username}'s Lobby"
+            });
             SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, 4);
         }
 

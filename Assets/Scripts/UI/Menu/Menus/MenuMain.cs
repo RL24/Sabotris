@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Net;
 using Sabotris.Network;
 using Sabotris.Util;
 using Steamworks;
@@ -18,11 +19,17 @@ namespace Sabotris.UI.Menu.Menus
             buttonSettings,
             buttonExit;
 
+        public MenuButton buttonDiscord,
+            buttonTwitter;
+
         public Menu menuLobby, menuHostGame, menuJoinGame, menuSettings;
 
         protected override void Start()
         {
             base.Start();
+            
+            buttonDiscord.OnClick += OnClickButton;
+            buttonTwitter.OnClick += OnClickButton;
 
             foreach (var menuButton in buttons)
                 menuButton.OnClick += OnClickButton;
@@ -34,6 +41,9 @@ namespace Sabotris.UI.Menu.Menus
         {
             base.OnDestroy();
 
+            buttonDiscord.OnClick -= OnClickButton;
+            buttonTwitter.OnClick -= OnClickButton;
+            
             foreach (var menuButton in buttons)
                 menuButton.OnClick -= OnClickButton;
         }
@@ -43,7 +53,11 @@ namespace Sabotris.UI.Menu.Menus
             if (!Open)
                 return;
 
-            if (sender.Equals(buttonQuickPlay))
+            if (sender.Equals(buttonDiscord))
+                Application.OpenURL("https://discord.gg/Ef2NDZZJfH");
+            else if (sender.Equals(buttonTwitter))
+                Application.OpenURL("https://twitter.com/Sabotris");
+            else if (sender.Equals(buttonQuickPlay))
                 StartCoroutine(QuickPlay());
             else if (sender.Equals(buttonHost))
                 menuController.OpenMenu(menuHostGame);

@@ -150,7 +150,7 @@ namespace Sabotris.UI.Menu
                 menuButton.isDisabled = disabled;
         }
 
-        private void OnMouseEnterButton(object sender, EventArgs args)
+        protected void OnMouseEnterButton(object sender, EventArgs args)
         {
             if (!Open || !Interactable)
                 return;
@@ -158,7 +158,7 @@ namespace Sabotris.UI.Menu
             SelectedButton = _lastSelectedButton = buttons.IndexOf(sender as MenuButton);
         }
 
-        private void OnMouseExitButton(object sender, EventArgs args)
+        protected void OnMouseExitButton(object sender, EventArgs args)
         {
             if (!Open || !Interactable || SelectedButton < 0 || SelectedButton >= buttons.Count)
                 return;

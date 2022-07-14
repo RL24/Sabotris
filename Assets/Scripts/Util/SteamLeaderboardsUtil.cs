@@ -88,7 +88,7 @@ namespace Sabotris.Util
                 for (var i = 0; i < leaderboardScoresDownloaded.m_cEntryCount; i++)
                 {
                     var details = new int[0];
-                    SteamUserStats.GetDownloadedLeaderboardEntry(leaderboardScoresDownloaded.m_hSteamLeaderboardEntries, 0, out var leaderboardEntry, details, 0);
+                    SteamUserStats.GetDownloadedLeaderboardEntry(leaderboardScoresDownloaded.m_hSteamLeaderboardEntries, i, out var leaderboardEntry, details, 0);
                     leaderboardEntries.Value.Add(leaderboardEntry);
                 }
 

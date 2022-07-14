@@ -189,6 +189,9 @@ namespace Sabotris.Worlds
 
                 dead = true;
 
+                if (gameController.ControllingContainer == this)
+                    StartCoroutine(SteamLeaderboardsUtil.UploadLeaderboardScore(_score.Score));
+                
                 if (ShouldSendPacket())
                     networkController.Client?.SendPacket(new PacketPlayerDead {Id = Id});
             }

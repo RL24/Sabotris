@@ -1,6 +1,7 @@
 ﻿.idea/
-Build/Linux/
-Build/Windows/
+Build/content-linux/
+Build/content-mac/
+Build/content-windows/
 Library/
 Logs/
 obj/

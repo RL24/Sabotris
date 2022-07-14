@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections;
-using System.Net;
+using System.Collections.Generic;
+using System.Linq;
 using Sabotris.Network;
 using Sabotris.Util;
 using Steamworks;
 using UnityEngine;
+using Random = Sabotris.Util.Random;
 
 namespace Sabotris.UI.Menu.Menus
 {
     public class MenuMain : Menu
     {
+        
         private readonly Vector3 _cameraPosition = new Vector3(-4.5f, 7.5f, -10);
         private readonly Quaternion _cameraRotation = Quaternion.Euler(30, 30, 4);
 
@@ -22,11 +25,18 @@ namespace Sabotris.UI.Menu.Menus
         public MenuButton buttonDiscord,
             buttonTwitter;
 
+        private Coroutine _loadingLeaderboard;
+        public RectTransform leaderboard;
+        public MenuLeaderboardItem leaderboardItem;
+        private readonly List<MenuLeaderboardItem> _leaderboardItems = new List<MenuLeaderboardItem>();
+
         public Menu menuLobby, menuHostGame, menuJoinGame, menuSettings;
 
         protected override void Start()
         {
             base.Start();
+
+            _loadingLeaderboard = StartCoroutine(LoadLeaderboard());
             
             buttonDiscord.OnClick += OnClickButton;
             buttonTwitter.OnClick += OnClickButton;
@@ -40,6 +50,8 @@ namespace Sabotris.UI.Menu.Menus
         protected override void OnDestroy()
         {
             base.OnDestroy();
+            
+            StopCoroutine(_loadingLeaderboard);
 
             buttonDiscord.OnClick -= OnClickButton;
             buttonTwitter.OnClick -= OnClickButton;
@@ -153,6 +165,35 @@ namespace Sabotris.UI.Menu.Menus
                 LobbyName = $"{Client.Username}'s Lobby"
             });
             SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, 4);
+        }
+
+        private IEnumerator LoadLeaderboard()
+        {
+            if (!leaderboard)
+                yield break;
+
+            var leaderboardEntries = new Atomic<List<LeaderboardEntry_t>>(new List<LeaderboardEntry_t>());
+            yield return SteamLeaderboardsUtil.GetLeaderboardScores(leaderboardEntries);
+            
+            foreach (var item in _leaderboardItems)
+                Destroy(item.gameObject);
+            _leaderboardItems.Clear();
+            
+            foreach (var entry in leaderboardEntries.Value.OrderByDescending((x) => x.m_nScore))
+                AddScoreboardEntry(entry);
+            
+            leaderboard.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, leaderboard.childCount * 40);
+        }
+
+        private void AddScoreboardEntry(LeaderboardEntry_t entry)
+        {
+            var item = Instantiate(leaderboardItem, Vector3.zero, Quaternion.identity, leaderboard.transform);
+            item.name = $"ScoreEntry-{entry.m_steamIDUser}";
+            item.menu = this;
+            item.playerName = SteamFriends.GetFriendPersonaName(entry.m_steamIDUser);
+            item.playerHighscore = $"{entry.m_nScore}";
+
+            _leaderboardItems.Add(item);
         }
 
         protected override void GoBack()

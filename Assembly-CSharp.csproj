@@ -137,11 +137,13 @@
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
      <Compile Include="Assets\Scripts\Worlds\FallingShape.cs" />
      <Compile Include="Assets\Scripts\Worlds\FallingBlock.cs" />
+     <Compile Include="Assets\Scripts\Util\SteamLeaderboardsUtil.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuHostGame.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
      <Compile Include="Assets\Scripts\UI\Hud.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
+     <Compile Include="Assets\Scripts\UI\Menu\Components\MenuLeaderboardItem.cs" />
      <Compile Include="Assets\Scripts\Network\Packets\Player\PacketPlayerList.cs" />
      <Compile Include="Assets\Scripts\UI\Menu\Menus\MenuPause.cs" />
      <Compile Include="Assets\Scripts\Translations\Localization.cs" />

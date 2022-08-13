@@ -1,6 +1,9 @@
 using System;
+using Sabotris.Achievements;
 using Sabotris.IO;
 using Sabotris.Network;
+using Sabotris.Network.Packets;
+using Sabotris.Network.Packets.Game;
 using Sabotris.Translations;
 using Sabotris.UI.Menu;
 using Sabotris.Worlds;
@@ -17,11 +20,12 @@ namespace Sabotris.Game
     {
         public NetworkController networkController;
         public MenuController menuController;
+        public AchievementController achievementController;
         public World world;
 
         public Menu menuLobby;
 
-        public ForwardRendererData forwardRendererData;
+        public UniversalRendererData forwardRendererData;
         public Volume renderVolume;
         public TutorialHelper tutorialHelper;
 
@@ -50,6 +54,8 @@ namespace Sabotris.Game
             GameSettings.Save();
 
             Callback<GameLobbyJoinRequested_t>.Create(LobbyJoinRequestReceived);
+            
+            networkController.Client?.RegisterListener(this);
         }
 
         private void Update()
@@ -124,6 +130,13 @@ namespace Sabotris.Game
             networkController.Client.OnFailedToConnectToServerEvent += FailedToConnect;
 
             networkController.Client?.JoinLobby(joinRequest.m_steamIDLobby);
+        }
+
+        [PacketListener(PacketTypeId.GameStart, PacketDirection.Client)]
+        public void OnGameStart(PacketGameStart packet)
+        {
+            if (networkController.Server?.Running == true)
+                achievementController.Achieve(Achievement.HostAMatch);
         }
     }
 }
